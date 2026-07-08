@@ -29,7 +29,7 @@
 (function(){
   try{
     var l = localStorage.getItem('doriyums_lang');
-    if(l !== 'fr') l = 'en';
+    if(l !== 'fr' && l !== 'ar') l = 'en';
     document.documentElement.lang = l;
     var t = localStorage.getItem('doriyums_theme');
     document.documentElement.setAttribute('data-theme', t === 'gallery' ? 'gallery' : 'maison');
@@ -40,9 +40,9 @@
 <!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" media="print" onload="this.media='all'" />
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" /></noscript>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700&display=swap" media="print" onload="this.media='all'" />
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700&display=swap" /></noscript>
 
 <!-- Hero imagery -->
 <link rel="preload" as="image" href="assets/logo.webp" fetchpriority="high" type="image/webp" />
@@ -487,6 +487,89 @@ html[data-theme="gallery"] .footer .brand-name{color:var(--accent-soft)}
 .float-wa{background:#25D366}
 .float-ig{background:linear-gradient(135deg,#F2C2C9,#E0959E 50%,#C97889)}
 html[data-theme="gallery"] .float-ig{background:linear-gradient(135deg,#E8C547,#D4AF37 50%,#9A7B26)}
+.float-fb{background:#1877F2}
+
+/* ── Arabic (LTR layout kept; only glyphs/typography adapt) ── */
+html[lang="ar"]{--serif:'Amiri','Cormorant Garamond',serif;--sans:'Tajawal','Inter',sans-serif}
+html[lang="ar"] body{font-weight:400}
+/* plaintext repairs intra-sentence ordering ONLY where Arabic mixes with Latin/digits
+   (tier note, story paragraphs with the Latin brand name); explicit text-align keeps
+   these blocks left-aligned so alignment stays identical to EN/FR */
+html[lang="ar"] :is(.om-tier, .story-copy p){unicode-bidi:plaintext;text-align:left}
+html[lang="ar"] .eyebrow,
+html[lang="ar"] .hero h1 em,
+html[lang="ar"] .story-sign,
+html[lang="ar"] .order-note,
+html[lang="ar"] .quote p,
+html[lang="ar"] .hero-frame-caption{font-style:normal}
+
+/* ── order modal ── */
+body.modal-open{overflow:hidden}
+.modal-backdrop{
+  position:fixed;inset:0;z-index:90;display:none;
+  align-items:flex-start;justify-content:center;overflow-y:auto;
+  padding:28px 18px;
+  background:rgba(58,31,31,.6);
+  -webkit-backdrop-filter:blur(12px) saturate(120%);backdrop-filter:blur(12px) saturate(120%);
+}
+.modal-backdrop.open{display:flex}
+html[data-theme="gallery"] .modal-backdrop{background:rgba(0,0,0,.74)}
+.modal{
+  background:var(--gilt);border:1px solid var(--gilt-edge);padding:10px;
+  max-width:880px;width:100%;margin:auto;
+  box-shadow:var(--shadow-lift), inset 0 0 0 1px rgba(255,255,255,.28);
+}
+.modal-inner{background:var(--mat);padding:26px;position:relative;display:grid;grid-template-columns:.85fr 1.15fr;gap:26px}
+.modal-close{
+  position:absolute;top:12px;right:12px;z-index:2;
+  appearance:none;border:1px solid rgba(156,86,102,.45);background:rgba(255,250,236,.85);
+  color:#9C5666;width:36px;height:36px;border-radius:50%;cursor:pointer;display:grid;place-items:center;
+  transition:all .3s var(--ease);
+}
+.modal-close:hover{background:#E0959E;border-color:#E0959E;color:#FFFAEC}
+.modal-close svg{width:16px;height:16px}
+.modal-media img{width:100%;aspect-ratio:1/1;object-fit:cover;border:1px solid rgba(62,36,24,.25)}
+.om-name{font-family:var(--serif);font-size:2rem;font-weight:600;color:#3A1F1F;margin:0 0 4px}
+.om-desc{font-size:.92rem;color:#6d4a44;margin:0 0 14px}
+.om-label{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:#9C5666;margin:14px 0 8px}
+.qty-row{display:flex;flex-wrap:wrap;gap:8px}
+.qty-btn{
+  appearance:none;cursor:pointer;font-family:var(--sans);font-size:.92rem;font-weight:500;
+  color:#3A1F1F;background:rgba(255,250,236,.7);border:1px solid rgba(156,86,102,.45);
+  border-radius:999px;padding:9px 18px;transition:all .25s var(--ease);
+}
+.qty-btn:hover{border-color:#E0959E;color:#9C5666}
+.qty-btn.active{background:#E0959E;border-color:#E0959E;color:#FFFAEC}
+.qty-current{margin:12px 0 4px;font-size:.95rem;color:#6d4a44}
+.qty-current b{font-family:var(--serif);font-size:1.5rem;color:#3A1F1F;font-weight:600}
+.om-price-row{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:7px 0;border-bottom:1px dashed rgba(156,86,102,.3);font-size:.92rem;color:#6d4a44}
+.om-price-row b{color:#3A1F1F;font-weight:600;font-variant-numeric:tabular-nums}
+.om-price-row.om-total b{font-family:var(--serif);font-size:1.55rem;color:#9C5666}
+.om-tier{font-size:.78rem;color:#9C5666;font-style:italic;margin:10px 0 0}
+html[lang="ar"] .om-tier{font-style:normal}
+.om-form{display:grid;gap:12px;margin-top:16px}
+.om-field span{display:block;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:#9C5666;margin-bottom:6px}
+.om-input, .om-select{
+  width:100%;font-family:var(--sans);font-size:.95rem;color:#3A1F1F;
+  background:#FFFAEC;border:1px solid rgba(156,86,102,.45);border-radius:10px;
+  padding:11px 13px;outline:none;transition:border-color .25s var(--ease), box-shadow .25s var(--ease);
+}
+.om-input:focus, .om-select:focus{border-color:#E0959E;box-shadow:0 0 0 3px rgba(224,149,158,.2)}
+.om-input::placeholder{color:#B08F8F}
+.phone-wrap{display:flex;align-items:stretch}
+.phone-wrap .cc{
+  display:flex;align-items:center;padding:0 12px;font-weight:500;color:#9C5666;
+  background:rgba(224,149,158,.14);border:1px solid rgba(156,86,102,.45);border-right:0;
+  border-radius:10px 0 0 10px;font-variant-numeric:tabular-nums;
+}
+.phone-wrap .om-input{border-radius:0 10px 10px 0}
+.om-err{color:#B0304A;font-size:.85rem;margin:2px 0 0}
+.om-confirm{width:100%;justify-content:center;margin-top:14px}
+@media (max-width: 760px){
+  .modal-inner{grid-template-columns:1fr;padding:20px;gap:18px}
+  .modal-media img{aspect-ratio:16/10}
+  .modal-backdrop{padding:14px 10px}
+}
 
 /* ── responsive ── */
 @media (max-width: 1020px){
@@ -544,6 +627,7 @@ html[data-theme="gallery"] .float-ig{background:linear-gradient(135deg,#E8C547,#
       <div class="lang-switch" role="group" aria-label="Language">
         <button type="button" data-lang="en" aria-pressed="true">EN</button>
         <button type="button" data-lang="fr" aria-pressed="false">FR</button>
+        <button type="button" data-lang="ar" aria-pressed="false">AR</button>
       </div>
       <button class="theme-btn" id="themeBtn" type="button" aria-label="Switch theme">
         <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M4.9 19.1l1.7-1.7M17.4 6.6l1.7-1.7"/></svg>
@@ -566,6 +650,7 @@ html[data-theme="gallery"] .float-ig{background:linear-gradient(135deg,#E8C547,#
   <div class="lang-switch" role="group" aria-label="Language" style="margin-top:18px;width:max-content">
     <button type="button" data-lang="en" aria-pressed="true">EN</button>
     <button type="button" data-lang="fr" aria-pressed="false">FR</button>
+    <button type="button" data-lang="ar" aria-pressed="false">AR</button>
   </div>
   <a class="btn btn-primary wa-link" href="https://wa.me/213551401704" target="_blank" rel="noopener" data-i18n="nav.cta">Order on WhatsApp</a>
 </nav>
@@ -649,7 +734,7 @@ html[data-theme="gallery"] .float-ig{background:linear-gradient(135deg,#E8C547,#
           <div class="placard-en" data-i18n="f1.en">Strawberry</div>
           <hr class="placard-rule" />
           <p class="placard-desc" data-i18n="f1.d">Delicate strawberry cream in a blush-pink shell.</p>
-          <a class="placard-order wa-flavor" data-flavor="Fraise" href="https://wa.me/213551401704" target="_blank" rel="noopener">
+          <a class="placard-order wa-flavor" data-flavor="Fraise" data-price="120" href="https://wa.me/213551401704" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.7 8.7 0 0 1-3.9-.9L3 20l1-4.9a8.4 8.4 0 1 1 17-3.6z"/></svg>
             <span data-i18n="col.order">Order this flavor</span>
           </a>
@@ -664,7 +749,7 @@ html[data-theme="gallery"] .float-ig{background:linear-gradient(135deg,#E8C547,#
           <div class="placard-en" data-i18n="f2.en">Pistachio</div>
           <hr class="placard-rule" />
           <p class="placard-desc" data-i18n="f2.d">Slow-roasted pistachio, gently sweet and nutty.</p>
-          <a class="placard-order wa-flavor" data-flavor="Pistache" href="https://wa.me/213551401704" target="_blank" rel="noopener">
+          <a class="placard-order wa-flavor" data-flavor="Pistache" data-price="180" href="https://wa.me/213551401704" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.7 8.7 0 0 1-3.9-.9L3 20l1-4.9a8.4 8.4 0 1 1 17-3.6z"/></svg>
             <span data-i18n="col.order">Order this flavor</span>
           </a>
@@ -679,7 +764,7 @@ html[data-theme="gallery"] .float-ig{background:linear-gradient(135deg,#E8C547,#
           <div class="placard-en" data-i18n="f3.en">Dark chocolate</div>
           <hr class="placard-rule" />
           <p class="placard-desc" data-i18n="f3.d">Deep dark-chocolate ganache, barely sweet.</p>
-          <a class="placard-order wa-flavor" data-flavor="Chocolat Noir" href="https://wa.me/213551401704" target="_blank" rel="noopener">
+          <a class="placard-order wa-flavor" data-flavor="Chocolat Noir" data-price="150" href="https://wa.me/213551401704" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.7 8.7 0 0 1-3.9-.9L3 20l1-4.9a8.4 8.4 0 1 1 17-3.6z"/></svg>
             <span data-i18n="col.order">Order this flavor</span>
           </a>
@@ -694,7 +779,7 @@ html[data-theme="gallery"] .float-ig{background:linear-gradient(135deg,#E8C547,#
           <div class="placard-en" data-i18n="f4.en">Banana chocolate</div>
           <hr class="placard-rule" />
           <p class="placard-desc" data-i18n="f4.d">Ripe banana folded into milk-chocolate cream.</p>
-          <a class="placard-order wa-flavor" data-flavor="Banane Chocolat" href="https://wa.me/213551401704" target="_blank" rel="noopener">
+          <a class="placard-order wa-flavor" data-flavor="Banane Chocolat" data-price="120" href="https://wa.me/213551401704" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.7 8.7 0 0 1-3.9-.9L3 20l1-4.9a8.4 8.4 0 1 1 17-3.6z"/></svg>
             <span data-i18n="col.order">Order this flavor</span>
           </a>
@@ -709,7 +794,7 @@ html[data-theme="gallery"] .float-ig{background:linear-gradient(135deg,#E8C547,#
           <div class="placard-en" data-i18n="f5.en">Strawberry raspberry</div>
           <hr class="placard-rule" />
           <p class="placard-desc" data-i18n="f5.d">Strawberry and raspberry, bright and tangy.</p>
-          <a class="placard-order wa-flavor" data-flavor="Fraise Framboise" href="https://wa.me/213551401704" target="_blank" rel="noopener">
+          <a class="placard-order wa-flavor" data-flavor="Fraise Framboise" data-price="140" href="https://wa.me/213551401704" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.7 8.7 0 0 1-3.9-.9L3 20l1-4.9a8.4 8.4 0 1 1 17-3.6z"/></svg>
             <span data-i18n="col.order">Order this flavor</span>
           </a>
@@ -724,7 +809,7 @@ html[data-theme="gallery"] .float-ig{background:linear-gradient(135deg,#E8C547,#
           <div class="placard-en" data-i18n="f6.en">Lemon</div>
           <hr class="placard-rule" />
           <p class="placard-desc" data-i18n="f6.d">Sun-bright lemon cream, sharp then sweet.</p>
-          <a class="placard-order wa-flavor" data-flavor="Citron" href="https://wa.me/213551401704" target="_blank" rel="noopener">
+          <a class="placard-order wa-flavor" data-flavor="Citron" data-price="120" href="https://wa.me/213551401704" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.7 8.7 0 0 1-3.9-.9L3 20l1-4.9a8.4 8.4 0 1 1 17-3.6z"/></svg>
             <span data-i18n="col.order">Order this flavor</span>
           </a>
@@ -739,7 +824,7 @@ html[data-theme="gallery"] .float-ig{background:linear-gradient(135deg,#E8C547,#
           <div class="placard-en" data-i18n="f7.en">Coconut pineapple</div>
           <hr class="placard-rule" />
           <p class="placard-desc" data-i18n="f7.d">A coconut shell with a pineapple heart.</p>
-          <a class="placard-order wa-flavor" data-flavor="Coco Ananas" href="https://wa.me/213551401704" target="_blank" rel="noopener">
+          <a class="placard-order wa-flavor" data-flavor="Coco Ananas" data-price="120" href="https://wa.me/213551401704" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.7 8.7 0 0 1-3.9-.9L3 20l1-4.9a8.4 8.4 0 1 1 17-3.6z"/></svg>
             <span data-i18n="col.order">Order this flavor</span>
           </a>
@@ -754,7 +839,7 @@ html[data-theme="gallery"] .float-ig{background:linear-gradient(135deg,#E8C547,#
           <div class="placard-en" data-i18n="f8.en">Hazelnut praliné</div>
           <hr class="placard-rule" />
           <p class="placard-desc" data-i18n="f8.d">Toasted hazelnut praliné, warm and buttery.</p>
-          <a class="placard-order wa-flavor" data-flavor="Noisette Praliné" href="https://wa.me/213551401704" target="_blank" rel="noopener">
+          <a class="placard-order wa-flavor" data-flavor="Noisette Praliné" data-price="180" href="https://wa.me/213551401704" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.7 8.7 0 0 1-3.9-.9L3 20l1-4.9a8.4 8.4 0 1 1 17-3.6z"/></svg>
             <span data-i18n="col.order">Order this flavor</span>
           </a>
@@ -769,7 +854,7 @@ html[data-theme="gallery"] .float-ig{background:linear-gradient(135deg,#E8C547,#
           <div class="placard-en" data-i18n="f9.en">Vanilla caramel</div>
           <hr class="placard-rule" />
           <p class="placard-desc" data-i18n="f9.d">Vanilla cream with a soft caramel ribbon.</p>
-          <a class="placard-order wa-flavor" data-flavor="Vanille Caramel" href="https://wa.me/213551401704" target="_blank" rel="noopener">
+          <a class="placard-order wa-flavor" data-flavor="Vanille Caramel" data-price="140" href="https://wa.me/213551401704" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.7 8.7 0 0 1-3.9-.9L3 20l1-4.9a8.4 8.4 0 1 1 17-3.6z"/></svg>
             <span data-i18n="col.order">Order this flavor</span>
           </a>
@@ -784,7 +869,7 @@ html[data-theme="gallery"] .float-ig{background:linear-gradient(135deg,#E8C547,#
           <div class="placard-en" data-i18n="f10.en">Cherry chocolate</div>
           <hr class="placard-rule" />
           <p class="placard-desc" data-i18n="f10.d">Dark cherry over a chocolate cream heart.</p>
-          <a class="placard-order wa-flavor" data-flavor="Cerise Chocolat" href="https://wa.me/213551401704" target="_blank" rel="noopener">
+          <a class="placard-order wa-flavor" data-flavor="Cerise Chocolat" data-price="140" href="https://wa.me/213551401704" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.7 8.7 0 0 1-3.9-.9L3 20l1-4.9a8.4 8.4 0 1 1 17-3.6z"/></svg>
             <span data-i18n="col.order">Order this flavor</span>
           </a>
@@ -799,7 +884,7 @@ html[data-theme="gallery"] .float-ig{background:linear-gradient(135deg,#E8C547,#
           <div class="placard-en" data-i18n="f11.en">Coconut chocolate</div>
           <hr class="placard-rule" />
           <p class="placard-desc" data-i18n="f11.d">Coconut and chocolate, the classic pairing.</p>
-          <a class="placard-order wa-flavor" data-flavor="Coco Chocolat" href="https://wa.me/213551401704" target="_blank" rel="noopener">
+          <a class="placard-order wa-flavor" data-flavor="Coco Chocolat" data-price="120" href="https://wa.me/213551401704" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.7 8.7 0 0 1-3.9-.9L3 20l1-4.9a8.4 8.4 0 1 1 17-3.6z"/></svg>
             <span data-i18n="col.order">Order this flavor</span>
           </a>
@@ -814,7 +899,7 @@ html[data-theme="gallery"] .float-ig{background:linear-gradient(135deg,#E8C547,#
           <div class="placard-en" data-i18n="f12.en">Orange</div>
           <hr class="placard-rule" />
           <p class="placard-desc" data-i18n="f12.d">Candied orange zest, gently bitter.</p>
-          <a class="placard-order wa-flavor" data-flavor="Orange" href="https://wa.me/213551401704" target="_blank" rel="noopener">
+          <a class="placard-order wa-flavor" data-flavor="Orange" data-price="120" href="https://wa.me/213551401704" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.7 8.7 0 0 1-3.9-.9L3 20l1-4.9a8.4 8.4 0 1 1 17-3.6z"/></svg>
             <span data-i18n="col.order">Order this flavor</span>
           </a>
@@ -1090,6 +1175,9 @@ html[data-theme="gallery"] .float-ig{background:linear-gradient(135deg,#E8C547,#
         </a>
         <p class="footer-tag" data-i18n="ft.tag">Homemade and custom macarons, made with love for your sweetest moments — from a home atelier in Algiers.</p>
         <div class="socials">
+          <a href="https://www.facebook.com/share/1BqEueMstJ/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.4 21.9v-7.1h2.4l.45-2.95H13.4V9.93c0-.81.4-1.6 1.67-1.6h1.29V5.82s-1.17-.2-2.29-.2c-2.34 0-3.87 1.42-3.87 3.98v2.25H7.6v2.95h2.6v7.1a10.1 10.1 0 0 0 3.2 0z"/></svg>
+          </a>
           <a href="https://instagram.com/dori_yums" target="_blank" rel="noopener" aria-label="Instagram">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".8" fill="currentColor" stroke="none"/></svg>
           </a>
@@ -1130,8 +1218,67 @@ html[data-theme="gallery"] .float-ig{background:linear-gradient(135deg,#E8C547,#
   </div>
 </footer>
 
+<!-- ═══════════ ORDER MODAL ═══════════ -->
+<div class="modal-backdrop" id="orderModal" role="dialog" aria-modal="true" aria-labelledby="omName">
+  <div class="modal">
+    <div class="modal-inner">
+      <button class="modal-close" id="omClose" type="button" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+      <div class="modal-media">
+        <img id="omImg" src="" alt="" />
+      </div>
+      <div class="modal-body">
+        <h3 class="om-name" id="omName"></h3>
+        <p class="om-desc" id="omDesc"></p>
+
+        <div class="om-label" data-i18n="md.qty">Box size</div>
+        <div class="qty-row" id="omQtyRow">
+          <button class="qty-btn qty-preset" type="button" data-qty="20">20</button>
+          <button class="qty-btn qty-preset" type="button" data-qty="40">40</button>
+          <button class="qty-btn qty-preset" type="button" data-qty="60">60</button>
+          <button class="qty-btn qty-preset" type="button" data-qty="80">80</button>
+          <button class="qty-btn" type="button" id="omMinus" aria-label="Remove 20">−20</button>
+          <button class="qty-btn" type="button" id="omPlus" aria-label="Add 20">+20</button>
+        </div>
+        <div class="qty-current"><b id="omQty">20</b> <span data-i18n="md.pieces">pieces</span></div>
+
+        <div class="om-price-row"><span data-i18n="md.unit">Unit price</span><b id="omUnit"></b></div>
+        <div class="om-price-row om-total"><span data-i18n="md.total">Total</span><b id="omTotal"></b></div>
+        <p class="om-tier" data-i18n="md.tiers">Tiered pricing: −5 DZD per piece from 60, −10 DZD per piece from 120.</p>
+
+        <div class="om-form">
+          <label class="om-field">
+            <span data-i18n="md.name">Full name</span>
+            <input class="om-input" id="omCname" type="text" autocomplete="name" data-i18n-ph="md.namePh" placeholder="Your name" />
+          </label>
+          <label class="om-field">
+            <span data-i18n="md.phone">Phone number</span>
+            <div class="phone-wrap">
+              <span class="cc">+213</span>
+              <input class="om-input" id="omPhone" type="tel" inputmode="numeric" autocomplete="tel-national" maxlength="10" placeholder="551 40 17 04" />
+            </div>
+          </label>
+          <label class="om-field">
+            <span data-i18n="md.wilaya">Wilaya</span>
+            <select class="om-select" id="omWilaya"></select>
+          </label>
+          <p class="om-err" id="omErr" hidden data-i18n="md.fill">Please fill in your name, phone number and wilaya.</p>
+          <button class="btn btn-primary om-confirm" id="omConfirm" type="button">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a9.9 9.9 0 0 0-8.6 14.9L2 22l5.3-1.4A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.6-6.1c-.3-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.3-.6.8-.8 1-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4 0-.5.1-.7l.4-.5c.1-.2.1-.3.2-.5s0-.4 0-.5l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.4 3.9.6.3 1.1.4 1.5.5.6.2 1.2.2 1.6.1.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.6-.3z"/></svg>
+            <span data-i18n="md.confirm">Confirm order via WhatsApp</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ═══════════ FLOATING BUTTONS ═══════════ -->
 <div class="floats">
+  <a class="float-btn float-fb" href="https://www.facebook.com/share/1BqEueMstJ/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook — Dori Yums">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.4 21.9v-7.1h2.4l.45-2.95H13.4V9.93c0-.81.4-1.6 1.67-1.6h1.29V5.82s-1.17-.2-2.29-.2c-2.34 0-3.87 1.42-3.87 3.98v2.25H7.6v2.95h2.6v7.1a10.1 10.1 0 0 0 3.2 0z"/></svg>
+  </a>
   <a class="float-btn float-ig" href="https://instagram.com/dori_yums" target="_blank" rel="noopener" aria-label="Instagram — @dori_yums">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".8" fill="currentColor" stroke="none"/></svg>
   </a>
@@ -1228,6 +1375,12 @@ html[data-theme="gallery"] .float-ig{background:linear-gradient(135deg,#E8C547,#
       'ct.how':'See how ordering works',
       'ft.tag':'Homemade and custom macarons, made with love for your sweetest moments — from a home atelier in Algiers.',
       'ft.quick':'Quick links','ft.contact':'Contact','ft.addr':'Algiers, Algeria','ft.bottom':'homemade in Algiers',
+      'md.qty':'Box size','md.pieces':'pieces','md.unit':'Unit price','md.total':'Total',
+      'md.tiers':'Tiered pricing: −5 DZD per piece from 60, −10 DZD per piece from 120.',
+      'md.name':'Full name','md.namePh':'Your name','md.phone':'Phone number',
+      'md.wilaya':'Wilaya','md.wilayaPick':'Choose your wilaya',
+      'md.fill':'Please fill in your name, phone number and wilaya.',
+      'md.confirm':'Confirm order via WhatsApp',
       'wa.msg':"Hello Dori Yums! I'd like to place an order.",
       'wa.flavor':"Hello Dori Yums! I'd like to order the {f} macarons.",
       'wa.cake':"Hello Dori Yums! I'd like to ask about a custom cake."
@@ -1309,13 +1462,104 @@ html[data-theme="gallery"] .float-ig{background:linear-gradient(135deg,#E8C547,#
       'ct.how':'Voir comment commander',
       'ft.tag':"Macarons artisanaux et personnalisés, faits avec amour pour vos plus doux moments — depuis un atelier familial à Alger.",
       'ft.quick':'Liens rapides','ft.contact':'Contact','ft.addr':'Alger, Algérie','ft.bottom':'fait maison à Alger',
+      'md.qty':'Taille de la boîte','md.pieces':'pièces','md.unit':'Prix unitaire','md.total':'Total',
+      'md.tiers':'Tarif dégressif : −5 DZD par pièce dès 60, −10 DZD par pièce dès 120.',
+      'md.name':'Nom complet','md.namePh':'Votre nom','md.phone':'Numéro de téléphone',
+      'md.wilaya':'Wilaya','md.wilayaPick':'Choisissez votre wilaya',
+      'md.fill':'Veuillez renseigner votre nom, votre téléphone et votre wilaya.',
+      'md.confirm':'Confirmer la commande via WhatsApp',
       'wa.msg':'Bonjour Dori Yums ! Je voudrais passer une commande.',
       'wa.flavor':'Bonjour Dori Yums ! Je voudrais commander des macarons {f}.',
       'wa.cake':'Bonjour Dori Yums ! Je voudrais parler d\'un gâteau personnalisé.'
+    },
+    /* Arabic (MSA). Layout stays LTR; Latin digits kept everywhere. */
+    ar: {
+      'brand.loc':'الجزائر',
+      'nav.story':'قصتنا','nav.collection':'التشكيلة','nav.occasions':'المناسبات','nav.order':'طريقة الطلب','nav.faq':'الأسئلة الشائعة','nav.cta':'اطلب عبر واتساب',
+      'hero.eyebrow':'دار الماكارون — الجزائر العاصمة',
+      'hero.title':'صُنع <em>بحب</em>، لأحلى لحظاتكم.',
+      'hero.sub':'ماكارون منزلي ومخصّص، يُحضَّر عند الطلب في ورشتنا بالجزائر العاصمة — لحفلات استقبال المولود، الأعراس، أعياد الميلاد وكل مناسباتكم.',
+      'hero.cta1':'اطلب عبر واتساب','hero.cta2':'تصفّح التشكيلة',
+      'hero.note1':'صناعة يدوية عند الطلب','hero.note2':'توصيل واستلام في الجزائر العاصمة','hero.note3':'ألوان ونكهات حسب الطلب',
+      'hero.caption':'« Un amour de macaron »','hero.scroll':'مرِّر',
+      'story.eyebrow':'قصتنا','story.title':'ورشة منزلية، دفعة تلو الأخرى',
+      'story.p1':'بدأت Dori Yums في مطبخ منزلي بالجزائر العاصمة، بكيس تزيين وفكرة بسيطة: الحلويات ألذّ حين تُصنع لأجل شخصٍ ما. كل قشرة تُشكَّل يدويًا، وكل حشوة تُحضَّر بكميات صغيرة، ولا يدخل شيء إلى الفرن قبل طلبكم.',
+      'story.p2':'سواء احتجتم دزينة ماكارون لجلسة شاي أو طاولة حلويات كاملة لعرس، تُخطَّط كل طلبية معكم — ألوان ونكهات ولمسات أخيرة على قدر مناسبتكم.',
+      'story.sign':'المؤسِّسة وشيفة الحلويات',
+      'col.title':'اثنتا عشرة نكهة مميزة',
+      'col.sub':'كل قطعة معروضة أدناه تُشكَّل وتُحشى وتُترك لترتاح يدويًا. اسألوا عبر واتساب عن توفر هذا الأسبوع.',
+      'col.order':'اطلب هذه النكهة',
+      'f1.en':'الفراولة','f1.d':'كريمة فراولة رقيقة داخل قشرة وردية.',
+      'f2.en':'الفستق','f2.d':'فستق محمّص على مهل، حلو برقّة وبنكهة المكسّرات.',
+      'f3.en':'الشوكولاتة السوداء','f3.d':'غاناش شوكولاتة داكنة عميقة، بحلاوة خفيفة.',
+      'f4.en':'موز بالشوكولاتة','f4.d':'موز ناضج ممزوج بكريمة شوكولاتة الحليب.',
+      'f5.en':'فراولة بالتوت','f5.d':'فراولة وتوت العليق، نكهة حيوية ومنعشة.',
+      'f6.en':'الليمون','f6.d':'كريمة ليمون مشمسة، حادّة ثم حلوة.',
+      'f7.en':'جوز الهند والأناناس','f7.d':'قشرة جوز هند بقلب أناناس.',
+      'f8.en':'البندق والبرالين','f8.d':'برالين بندق محمّص، دافئ وذائب.',
+      'f9.en':'الفانيليا بالكراميل','f9.d':'كريمة فانيليا مع شريط كراميل ناعم.',
+      'f10.en':'كرز بالشوكولاتة','f10.d':'كرز أسود فوق قلب من كريمة الشوكولاتة.',
+      'f11.en':'جوز الهند بالشوكولاتة','f11.d':'جوز الهند والشوكولاتة، الثنائي الكلاسيكي.',
+      'f12.en':'البرتقال','f12.d':'قشر برتقال مسكّر، بمرارة لطيفة.',
+      'cakes.title':'من الورشة أيضًا: كعكات مخصّصة',
+      'cakes.p':'كعكات طبقات وأبراج حلويات تُصمَّم حول موضوعكم — أرسلوا إلهامكم ونرسمه معًا عبر واتساب.',
+      'cakes.cta':'اسأل عن كعكة',
+      'at.eyebrow':'من طاولات زبائننا','at.title':'مُنسَّقة لطاولتكم',
+      'at.sub':'كل طلبية تغادر الورشة جاهزة — في علبة، بشريط، أو مرتَّبة للمناسبة.',
+      'at.c1':'علب هدايا','at.c1p':'في علب مزيّنة بشريط، جاهزة للإهداء.',
+      'at.c2':'لحظات مرتَّبة','at.c2p':'بألوان تناسب احتفالكم.',
+      'at.c3':'صوانٍ للمناسبات','at.c3p':'جاهزة للتقديم، من الاستقبال إلى السهرة.',
+      'oc.eyebrow':'أحلى لحظاتكم','oc.title':'مصنوعة على قدر المناسبة',
+      'oc.sub':'أخبرونا بالمناسبة — نُطابق القشرات والحشوات والعلب معها.',
+      'oc.1':'استقبال مولود','oc.1p':'أزرق باودر ووردي ناعم وأسماء صغيرة تُكتب يدويًا.',
+      'oc.2':'أعراس','oc.2p':'علب وأبراج بدرجات متناسقة تُطابق ألوانكم.',
+      'oc.3':'أعياد ميلاد','oc.3p':'مبهجة وشخصية، وبالنكهة المفضلة تمامًا.',
+      'oc.4':'كشف جنس المولود','oc.4p':'الإجابة مخبأة في أول قضمة.',
+      'ho.eyebrow':'بسيطة وشخصية، عبر واتساب','ho.title':'طريقة الطلب',
+      'ho.t1':'اختر','ho.t2':'راسلنا','ho.t3':'أكِّد','ho.t4':'استمتع',
+      'ho.h1':'اختاروا نكهاتكم',
+      'ho.p1':'اختاروا من النكهات الاثنتي عشرة المميزة، أو صِفوا موضوعًا — ألوانًا، مناسبة، طعمًا مفضلًا. الصور ولقطات الشاشة مرحَّب بها.',
+      'ho.h2':'أرسلوه عبر واتساب',
+      'ho.p2':'أرسلوا اختياركم والكمية والتاريخ. نردّ شخصيًا — هذه ورشة منزلية، لا مركز اتصالات.',
+      'ho.cta':'ابدأ المحادثة',
+      'ho.h3':'نؤكد معًا',
+      'ho.p3':'السعر والدفع والتوقيت يُتَّفق عليها في المحادثة قبل بدء أي خَبز — لا مفاجآت ولا بنود صغيرة.',
+      'ho.h4':'استلام أو توصيل',
+      'ho.p4':'استلموا طلبيتكم في الجزائر العاصمة أو تُوصَّل إلى بابكم، طازجة من الورشة ومعلَّبة للمناسبة.',
+      'ho.note':'الطلبيات المخصّصة وطلبيات المناسبات تُخبز وفق جدول — راسلونا قبل موعدكم بأيام.',
+      'te.eyebrow':'كلمات حلوة','te.title':'من زبائننا',
+      'te.slot':'محجوز لكلمات زبون — قريبًا هنا.',
+      'te.p':'يشارك زبائننا طاولاتهم معنا كل أسبوع على إنستغرام — شاهدوا أحدث الطلبيات والمقاطع والآراء هناك.',
+      'fq.eyebrow':'جيد أن تعرف','fq.title':'أسئلة شائعة',
+      'fq.q1':'أين توصلون؟',
+      'fq.a1':'مقرّنا الجزائر العاصمة. التوصيل داخل المدينة وحولها والاستلام كلاهما ممكن — أرسلوا حيّكم عبر واتساب ونؤكد الخيارات المتاحة لعنوانكم.',
+      'fq.q2':'قبل كم من الوقت ينبغي أن أطلب؟',
+      'fq.a2':'أيام قليلة مسبقًا مثالية للعلب العادية؛ الطلبيات الكبيرة أو المخصّصة بالكامل تحتاج مهلة أطول. أرسلوا تاريخكم أولًا ونؤكد الممكن.',
+      'fq.q3':'هل يمكن تخصيص الألوان والنكهات؟',
+      'fq.a3':'نعم — القشرات والحشوات تُطابَق مع موضوعكم، والعلب يمكن تخصيصها. أرسلوا صور الإلهام عبر واتساب ونبني الطلبية حولها.',
+      'fq.q4':'كيف يتم الدفع؟',
+      'fq.a4':'كل شيء يُتَّفق عليه في محادثة واتساب — السعر وطريقة الدفع والتوقيت تُؤكَّد معًا قبل بدء الخبز.',
+      'fq.q5':'كيف أحفظ الماكارون؟',
+      'fq.a5':'احفظوه مبرَّدًا في علبته وتمتعوا به خلال أيام قليلة. أخرجوه دقائق قبل التقديم — حينها يكون القوام مثاليًا.',
+      'ct.eyebrow':'نردّ شخصيًا','ct.title':'الطلب والتواصل',
+      'ct.sub':'واتساب أسرع طريقة للطلب؛ رسائل إنستغرام تعمل أيضًا.',
+      'ct.wa':'طلبيات وأسئلة وطلبات مخصّصة.',
+      'ct.ig':'خَبز يومي ومقاطع وطاولات الزبائن.',
+      'ct.loc':'الجزائر العاصمة، الجزائر',
+      'ct.locp':'ورشة منزلية — توصيل حول الجزائر العاصمة واستلام بالاتفاق.',
+      'ct.how':'شاهد طريقة الطلب',
+      'ft.tag':'ماكارون منزلي ومخصّص، صُنع بحب لأحلى لحظاتكم — من ورشة منزلية في الجزائر العاصمة.',
+      'ft.quick':'روابط سريعة','ft.contact':'التواصل','ft.addr':'الجزائر العاصمة، الجزائر','ft.bottom':'صُنع منزليًا في الجزائر',
+      'md.qty':'حجم العلبة','md.pieces':'قطعة','md.unit':'سعر القطعة','md.total':'المجموع',
+      'md.tiers':'تسعير تنازلي: خصم 5 DZD للقطعة ابتداءً من 60 قطعة، و10 DZD ابتداءً من 120 قطعة.',
+      'md.name':'الاسم الكامل','md.namePh':'اسمك','md.phone':'رقم الهاتف',
+      'md.wilaya':'الولاية','md.wilayaPick':'اختر ولايتك',
+      'md.fill':'يرجى إدخال الاسم ورقم الهاتف والولاية.',
+      'md.confirm':'أكّد الطلب عبر واتساب'
     }
   };
 
-  var LANG = document.documentElement.lang === 'fr' ? 'fr' : 'en';
+  var LANG = (document.documentElement.lang === 'fr' || document.documentElement.lang === 'ar') ? document.documentElement.lang : 'en';
 
   function t(key){ return (I18N[LANG] && I18N[LANG][key] != null) ? I18N[LANG][key] : (I18N.en[key] || key); }
 
@@ -1332,12 +1576,16 @@ html[data-theme="gallery"] .float-ig{background:linear-gradient(135deg,#E8C547,#
     document.querySelectorAll('.lang-switch button').forEach(function(b){
       b.setAttribute('aria-pressed', String(b.getAttribute('data-lang') === LANG));
     });
-    /* WhatsApp deep links with localized prefilled messages */
-    document.querySelectorAll('a.wa-link').forEach(function(a){ a.href = waHref(t('wa.msg')); });
-    document.querySelectorAll('a.wa-cakes').forEach(function(a){ a.href = waHref(t('wa.cake')); });
-    document.querySelectorAll('a.wa-flavor').forEach(function(a){
-      a.href = waHref(t('wa.flavor').replace('{f}', a.getAttribute('data-flavor')));
+    document.querySelectorAll('[data-i18n-ph]').forEach(function(el){
+      el.placeholder = t(el.getAttribute('data-i18n-ph'));
     });
+    /* WhatsApp prefills are ALWAYS French, whatever the UI language */
+    document.querySelectorAll('a.wa-link').forEach(function(a){ a.href = waHref(I18N.fr['wa.msg']); });
+    document.querySelectorAll('a.wa-cakes').forEach(function(a){ a.href = waHref(I18N.fr['wa.cake']); });
+    document.querySelectorAll('a.wa-flavor').forEach(function(a){
+      a.href = waHref(I18N.fr['wa.flavor'].replace('{f}', a.getAttribute('data-flavor')));
+    });
+    if(typeof refreshModal === 'function') refreshModal();
     try{ localStorage.setItem('doriyums_lang', LANG); }catch(e){}
   }
 
@@ -1414,6 +1662,139 @@ html[data-theme="gallery"] .float-ig{background:linear-gradient(135deg,#E8C547,#
         a.style.maxHeight = a.scrollHeight + 'px';
       }
     });
+  });
+
+  /* ─── order modal: tiered pricing + form ─── */
+  /* Base unit prices (DZD) carried over from the original Dori Yums v1 catalog. */
+  var WILAYAS = [
+    'Adrar','Chlef','Laghouat','Oum El Bouaghi','Batna','Béjaïa','Biskra','Béchar','Blida','Bouira',
+    'Tamanrasset','Tébessa','Tlemcen','Tiaret','Tizi Ouzou','Alger','Djelfa','Jijel','Sétif','Saïda',
+    'Skikda','Sidi Bel Abbès','Annaba','Guelma','Constantine','Médéa','Mostaganem','M\'Sila','Mascara','Ouargla',
+    'Oran','El Bayadh','Illizi','Bordj Bou Arréridj','Boumerdès','El Tarf','Tindouf','Tissemsilt','El Oued','Khenchela',
+    'Souk Ahras','Tipaza','Mila','Aïn Defla','Naâma','Aïn Témouchent','Ghardaïa','Relizane','Timimoun','Bordj Badji Mokhtar',
+    'Ouled Djellal','Béni Abbès','In Salah','In Guezzam','Touggourt','Djanet','El M\'Ghair','El Meniaa'
+  ];
+
+  var modalEl   = document.getElementById('orderModal');
+  var omImg     = document.getElementById('omImg');
+  var omName    = document.getElementById('omName');
+  var omDesc    = document.getElementById('omDesc');
+  var omQtyEl   = document.getElementById('omQty');
+  var omUnitEl  = document.getElementById('omUnit');
+  var omTotalEl = document.getElementById('omTotal');
+  var omCname   = document.getElementById('omCname');
+  var omPhone   = document.getElementById('omPhone');
+  var omWilaya  = document.getElementById('omWilaya');
+  var omErr     = document.getElementById('omErr');
+  var omCloseBtn = document.getElementById('omClose');
+
+  var currentCard = null, basePrice = 0, qty = 20, lastTrigger = null;
+
+  /* build the 58-wilaya dropdown (French names, Latin digits, all languages) */
+  (function(){
+    var ph = document.createElement('option');
+    ph.value = '';
+    ph.setAttribute('data-i18n','md.wilayaPick');
+    ph.textContent = t('md.wilayaPick');
+    omWilaya.appendChild(ph);
+    WILAYAS.forEach(function(w, i){
+      var o = document.createElement('option');
+      var n = (i + 1 < 10 ? '0' : '') + (i + 1);
+      o.value = (i + 1) + ' - ' + w;
+      o.textContent = n + ' — ' + w;
+      omWilaya.appendChild(o);
+    });
+  })();
+
+  /* < 60 → base · 60–119 → base−5 · ≥ 120 → base−10 (flat, forever) */
+  function unitPrice(base, q){
+    if(q >= 120) return base - 10;
+    if(q >= 60)  return base - 5;
+    return base;
+  }
+  function fmt(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
+
+  function renderQty(){
+    omQtyEl.textContent = qty;
+    var u = unitPrice(basePrice, qty);
+    omUnitEl.textContent = fmt(u) + ' DZD';
+    omTotalEl.textContent = fmt(u * qty) + ' DZD';
+    modalEl.querySelectorAll('.qty-preset').forEach(function(b){
+      b.classList.toggle('active', parseInt(b.getAttribute('data-qty'), 10) === qty);
+    });
+  }
+
+  function refreshModal(){
+    if(currentCard && modalEl.classList.contains('open')){
+      omDesc.textContent = currentCard.querySelector('.placard-desc').textContent;
+    }
+  }
+
+  function openModal(link){
+    currentCard = link.closest('.placard');
+    basePrice = parseInt(link.getAttribute('data-price'), 10);
+    qty = 20;
+    lastTrigger = link;
+    var srcImg = currentCard.querySelector('.placard-mat img');
+    omImg.src = srcImg.getAttribute('src');
+    omImg.alt = srcImg.alt;
+    omName.textContent = currentCard.querySelector('.placard-name').textContent;
+    omDesc.textContent = currentCard.querySelector('.placard-desc').textContent;
+    omErr.hidden = true;
+    renderQty();
+    modalEl.classList.add('open');
+    document.body.classList.add('modal-open');
+    omCloseBtn.focus();
+  }
+
+  function closeModal(){
+    modalEl.classList.remove('open');
+    document.body.classList.remove('modal-open');
+    if(lastTrigger) lastTrigger.focus();
+  }
+
+  document.querySelectorAll('a.wa-flavor').forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      openModal(a);
+    });
+  });
+
+  modalEl.querySelectorAll('.qty-preset').forEach(function(b){
+    b.addEventListener('click', function(){
+      qty = parseInt(b.getAttribute('data-qty'), 10);
+      renderQty();
+    });
+  });
+  document.getElementById('omPlus').addEventListener('click', function(){ qty += 20; renderQty(); });
+  document.getElementById('omMinus').addEventListener('click', function(){ qty = Math.max(20, qty - 20); renderQty(); });
+
+  omCloseBtn.addEventListener('click', closeModal);
+  modalEl.addEventListener('click', function(e){ if(e.target === modalEl) closeModal(); });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && modalEl.classList.contains('open')) closeModal();
+  });
+
+  /* Confirm → WhatsApp. The message is ALWAYS French, whatever the UI language. */
+  document.getElementById('omConfirm').addEventListener('click', function(){
+    var name = omCname.value.trim();
+    var phone = omPhone.value.replace(/\D/g, '').replace(/^0+/, '');
+    var wilaya = omWilaya.value;
+    if(!name || phone.length < 8 || !wilaya){
+      omErr.hidden = false;
+      return;
+    }
+    omErr.hidden = true;
+    var u = unitPrice(basePrice, qty);
+    var msg = 'Bonjour Dori Yums ! Je souhaite passer une commande :\n' +
+      '• Parfum : ' + omName.textContent + '\n' +
+      '• Quantité : ' + qty + ' macarons\n' +
+      '• Prix unitaire : ' + u + ' DZD\n' +
+      '• Total : ' + fmt(u * qty) + ' DZD\n' +
+      '• Nom : ' + name + '\n' +
+      '• Téléphone : +213 ' + phone + '\n' +
+      '• Wilaya : ' + wilaya;
+    window.open(waHref(msg), '_blank', 'noopener');
   });
 
   /* ─── footer year ─── */
