@@ -1,0 +1,35 @@
+{
+  "name": "Dori Yums — Homemade & Custom Macarons",
+  "short_name": "Dori Yums",
+  "description": "Homemade and custom macarons, baked to order in Algiers. Order on WhatsApp.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "background_color": "#FBF4E4",
+  "theme_color": "#FBF4E4",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["food", "shopping", "lifestyle"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/android-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/android-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "Order on WhatsApp",
+      "short_name": "Order",
+      "url": "https://wa.me/213551401704",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Collection",
+      "short_name": "Collection",
+      "url": "/#collection",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

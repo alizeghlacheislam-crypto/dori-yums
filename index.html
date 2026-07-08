@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="maison">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+<title>Dori Yums — Homemade &amp; Custom Macarons · Algiers</title>
+<meta name="description" content="Homemade and custom macarons, baked to order in Algiers. Baby showers, weddings, birthdays and gender reveals — order on WhatsApp." />
+
+<!-- PWA -->
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="Dori Yums" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="theme-color" content="#FBF4E4" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0A0A0A" media="(prefers-color-scheme: dark)" />
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="icon" type="image/png" href="icons/icon-192.png" />
+<link rel="apple-touch-icon" href="icons/apple-touch-icon-180.png" />
+<link rel="apple-touch-icon" sizes="76x76" href="icons/apple-touch-icon-76.png" />
+<link rel="apple-touch-icon" sizes="120x120" href="icons/apple-touch-icon-120.png" />
+<link rel="apple-touch-icon" sizes="152x152" href="icons/apple-touch-icon-152.png" />
+<link rel="apple-touch-icon" sizes="167x167" href="icons/apple-touch-icon-167.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon-180.png" />
+
+<!-- Language & theme boot (before first paint) -->
+<script>
+(function(){
+  try{
+    var l = localStorage.getItem('doriyums_lang');
+    if(l !== 'fr') l = 'en';
+    document.documentElement.lang = l;
+    var t = localStorage.getItem('doriyums_theme');
+    document.documentElement.setAttribute('data-theme', t === 'gallery' ? 'gallery' : 'maison');
+  }catch(e){}
+})();
+</script>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" media="print" onload="this.media='all'" />
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" /></noscript>
+
+<!-- Hero imagery -->
+<link rel="preload" as="image" href="assets/logo.webp" fetchpriority="high" type="image/webp" />
+<link rel="preload" as="image" href="assets/macarons_hero.webp" fetchpriority="high" type="image/webp" />
+
+<!-- Open Graph / Twitter -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Dori Yums — Homemade & Custom Macarons · Algiers" />
+<meta property="og:description" content="Homemade and custom macarons, made with love for your sweetest moments. Order on WhatsApp." />
+<meta property="og:image" content="assets/macarons_hero.webp" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:locale:alternate" content="fr_FR" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Dori Yums — Homemade & Custom Macarons · Algiers" />
+<meta name="twitter:description" content="Homemade and custom macarons, made with love for your sweetest moments. Order on WhatsApp." />
+<meta name="twitter:image" content="assets/macarons_hero.webp" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Bakery",
+  "name": "Dori Yums",
+  "description": "Home-based atelier for handmade and custom macarons in Algiers, Algeria.",
+  "areaServed": "Algiers, Algeria",
+  "telephone": "+213551401704",
+  "sameAs": ["https://instagram.com/dori_yums"]
+}
+</script>
+
+<style>
+/* ══════════════════════════════════════════════════════════
+   Dori Yums — design tokens
+   Maison (light, default): cream · rose · berry, from the logo
+   Gallery (dark): night walls · gold frames
+   ══════════════════════════════════════════════════════════ */
+:root{
+  --bg:#FBF4E4;
+  --bg-2:#F5EBD1;
+  --bg-3:#F0E4C6;
+  --accent:#E0959E;          /* soft rose — logo ring */
+  --accent-soft:#F2C2C9;     /* pale rose */
+  --accent-deep:#9C5666;     /* deep berry */
+  --ink:#3A1F1F;             /* warm brown headings/body */
+  --ink-strong:#1F0E12;
+  --muted:#7A5C5C;
+  --card:#FFFAEC;
+  --line:rgba(224,149,158,.45);
+  --line-soft:rgba(224,149,158,.22);
+  --on-accent:#FFFAEC;
+
+  /* carved molding around placards */
+  --gilt:linear-gradient(135deg,#5d3b2c 0%,#8e6342 12%,#d9b89a 24%,#f1d7c1 31%,#c89479 42%,#7d4e34 55%,#b88762 68%,#ead0b6 80%,#6b3f2a 100%);
+  --gilt-edge:#3e2418;
+  --mat:linear-gradient(135deg,#FFFAEC,#FAEFD2 60%,#EFE0B8);
+
+  --footer-bg:#33191C;
+  --footer-ink:#FAF3E0;
+
+  --page:radial-gradient(circle at 50% 0%, #FFF8E6 0%, #FAF3E0 55%, #F0E4C6 100%);
+  --hero-glow:radial-gradient(120% 90% at 50% 8%, rgba(224,149,158,.10), transparent 50%);
+  --shadow:0 18px 40px rgba(156,86,102,.16);
+  --shadow-lift:0 26px 60px rgba(156,86,102,.24);
+
+  --serif:'Cormorant Garamond', Georgia, serif;
+  --sans:'Inter', system-ui, sans-serif;
+  --ease:cubic-bezier(.4,0,.2,1);
+  --nav-h:76px;
+  --maxw:1180px;
+}
+
+html[data-theme="gallery"]{
+  --bg:#0A0A0A;
+  --bg-2:#141414;
+  --bg-3:#101010;
+  --accent:#D4AF37;
+  --accent-soft:#E8C547;
+  --accent-deep:#E8C547;
+  --ink:#F5F1E8;
+  --ink-strong:#FAF3E0;
+  --muted:#ABABAB;
+  --card:#141414;
+  --line:rgba(212,175,55,.4);
+  --line-soft:rgba(212,175,55,.18);
+  --on-accent:#141414;
+
+  --gilt:linear-gradient(135deg,#7c5e22 0%,#b88f33 12%,#e6cf86 24%,#f7ebc2 31%,#d9b85a 42%,#a07c2c 55%,#caa343 68%,#efdc9a 80%,#9c7a2b 100%);
+  --gilt-edge:#5b441a;
+  --mat:linear-gradient(135deg,#f6efdd,#e9dfc4 60%,#ddd0b1);
+
+  --footer-bg:#080808;
+  --footer-ink:#F5F1E8;
+
+  --page:radial-gradient(circle at 50% 0%, #141210 0%, #0A0A0A 60%);
+  --hero-glow:radial-gradient(120% 90% at 50% 8%, rgba(212,175,55,.08), transparent 50%);
+  --shadow:0 18px 40px rgba(0,0,0,.5);
+  --shadow-lift:0 26px 60px rgba(0,0,0,.65);
+}
+
+/* ── base ── */
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  font-family:var(--sans);
+  font-weight:300;
+  font-size:16.5px;
+  line-height:1.7;
+  color:var(--ink);
+  background:var(--page);
+  background-attachment:fixed;
+  overflow-x:hidden;
+  transition:color .4s var(--ease), background-color .4s var(--ease);
+}
+img{max-width:100%;display:block}
+a{color:var(--accent-deep);text-decoration:none}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:600;color:var(--ink-strong);line-height:1.15;margin:0}
+p{margin:0 0 1em}
+::selection{background:rgba(224,149,158,.3);color:var(--ink-strong)}
+
+.wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:24px}
+section{padding:96px 0;position:relative}
+
+.eyebrow{
+  display:inline-block;font-family:var(--serif);font-style:italic;font-size:1.15rem;
+  color:var(--accent-deep);letter-spacing:.06em;margin-bottom:10px;
+}
+.section-title{font-size:clamp(2rem,4.5vw,3rem);margin-bottom:14px}
+.section-sub{color:var(--muted);max-width:560px;font-size:1.02rem}
+.center{text-align:center}
+.center .section-sub{margin-inline:auto}
+.gold-rule{
+  width:110px;height:1px;border:0;margin:22px auto 0;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent);
+}
+
+/* ── reveal ── */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion: reduce){
+  .reveal{opacity:1;transform:none;transition:none}
+  html{scroll-behavior:auto}
+}
+
+/* ── buttons ── */
+.btn{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:14px 28px;border-radius:999px;border:1px solid transparent;
+  font-family:var(--sans);font-size:.95rem;font-weight:500;letter-spacing:.02em;
+  cursor:pointer;transition:all .35s var(--ease);
+}
+.btn svg{width:18px;height:18px;flex:none}
+.btn-primary{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.btn-primary:hover{background:var(--accent-deep);border-color:var(--accent-deep);color:#FFF;box-shadow:0 8px 30px rgba(224,149,158,.45);transform:translateY(-2px)}
+html[data-theme="gallery"] .btn-primary:hover{color:#141414;background:var(--accent-soft);border-color:var(--accent-soft);box-shadow:0 8px 30px rgba(212,175,55,.35)}
+.btn-ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent-deep);transform:translateY(-2px)}
+
+/* ── nav ── */
+.nav{
+  position:fixed;inset:0 0 auto 0;height:var(--nav-h);z-index:60;
+  display:flex;align-items:center;
+  transition:background .4s var(--ease), box-shadow .4s var(--ease), border-color .4s var(--ease);
+  border-bottom:1px solid transparent;
+}
+.nav.scrolled{
+  background:color-mix(in srgb, var(--bg) 88%, transparent);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  border-bottom-color:var(--line-soft);
+}
+.nav-inner{width:100%;max-width:var(--maxw);margin-inline:auto;padding-inline:24px;display:flex;align-items:center;gap:18px}
+.brand{display:flex;align-items:center;gap:12px;color:inherit}
+.brand img{width:44px;height:44px;border-radius:50%;box-shadow:0 4px 14px rgba(156,86,102,.25)}
+.brand-name{font-family:var(--serif);font-weight:700;font-size:1.35rem;color:var(--accent-deep);letter-spacing:.02em;white-space:nowrap}
+.brand-loc{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);border-left:1px solid var(--line);padding-left:12px;margin-left:2px;white-space:nowrap}
+.nav-links{display:flex;gap:26px;list-style:none;margin:0 auto;padding:0}
+.nav-links a{color:var(--ink);font-size:.9rem;font-weight:400;position:relative}
+.nav-links a::after{content:"";position:absolute;left:0;right:100%;bottom:-6px;height:1px;background:var(--accent);transition:right .3s var(--ease)}
+.nav-links a:hover::after{right:0}
+.nav-tools{display:flex;align-items:center;gap:12px;margin-left:auto}
+.nav-links + .nav-tools{margin-left:0}
+
+.lang-switch{
+  display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;
+  background:color-mix(in srgb, var(--accent) 8%, transparent);
+}
+.lang-switch button{
+  appearance:none;border:0;background:transparent;color:var(--ink);
+  font-family:var(--sans);font-size:.78rem;font-weight:500;letter-spacing:.08em;
+  padding:7px 13px;cursor:pointer;transition:all .3s var(--ease);
+}
+.lang-switch button[aria-pressed="true"]{background:var(--accent);color:var(--on-accent)}
+
+.theme-btn{
+  appearance:none;border:1px solid var(--line);background:transparent;color:var(--ink);
+  width:36px;height:36px;border-radius:50%;cursor:pointer;display:grid;place-items:center;
+  transition:all .3s var(--ease);
+}
+.theme-btn:hover{border-color:var(--accent);color:var(--accent-deep)}
+.theme-btn svg{width:17px;height:17px}
+.theme-btn .moon{display:none}
+html[data-theme="gallery"] .theme-btn .sun{display:none}
+html[data-theme="gallery"] .theme-btn .moon{display:block}
+
+.nav-cta{white-space:nowrap;padding:10px 20px;font-size:.85rem}
+
+.burger{
+  display:none;appearance:none;border:1px solid var(--line);background:transparent;color:var(--ink);
+  width:40px;height:40px;border-radius:10px;cursor:pointer;place-items:center;
+}
+.burger svg{width:20px;height:20px}
+.mobile-menu{
+  display:none;position:fixed;top:var(--nav-h);left:0;right:0;z-index:55;
+  background:color-mix(in srgb, var(--bg) 96%, transparent);
+  -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--line-soft);
+  padding:18px 24px 26px;
+}
+.mobile-menu.open{display:block}
+.mobile-menu a{display:block;padding:13px 4px;font-size:1.05rem;color:var(--ink);border-bottom:1px solid var(--line-soft)}
+.mobile-menu a.btn{display:flex;justify-content:center;margin-top:18px;width:100%;border-bottom:0;color:var(--on-accent);font-size:.95rem;padding:14px 28px}
+
+/* ── hero ── */
+.hero{
+  min-height:100svh;display:flex;align-items:center;
+  padding:calc(var(--nav-h) + 48px) 0 72px;
+  background:var(--hero-glow);
+}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+.hero-badge{width:92px;height:92px;border-radius:50%;box-shadow:0 10px 30px rgba(156,86,102,.28);margin-bottom:26px}
+.hero h1{font-size:clamp(2.6rem,5.5vw,4.1rem);font-weight:600;margin-bottom:20px}
+.hero h1 em{font-style:italic;color:var(--accent-deep)}
+.hero-sub{font-size:1.08rem;color:var(--muted);max-width:520px;margin-bottom:32px}
+.hero-ctas{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:38px}
+.hero-notes{display:flex;gap:26px;flex-wrap:wrap;padding:0;margin:0;list-style:none}
+.hero-notes li{display:flex;align-items:center;gap:9px;font-size:.86rem;color:var(--ink)}
+.hero-notes svg{width:16px;height:16px;color:var(--accent);flex:none}
+
+.frame{
+  background:var(--gilt);
+  padding:12px;
+  border:1px solid var(--gilt-edge);
+  box-shadow:var(--shadow), inset 0 0 0 1px rgba(255,255,255,.28);
+}
+.frame-mat{background:var(--mat);padding:14px}
+.frame-mat img{width:100%;height:100%;object-fit:cover;border:1px solid rgba(62,36,24,.25)}
+.hero-frame{transform:rotate(-1.6deg);transition:transform .6s var(--ease)}
+.hero-frame:hover{transform:rotate(0deg) scale(1.01)}
+.hero-frame .frame-mat img{aspect-ratio:4/3}
+.hero-frame-caption{
+  text-align:center;font-family:var(--serif);font-style:italic;font-size:1.05rem;
+  color:var(--muted);margin-top:16px;
+}
+
+.scroll-hint{
+  position:absolute;left:50%;bottom:26px;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent-deep);
+}
+.scroll-hint .line{width:1px;height:42px;background:linear-gradient(var(--accent),transparent)}
+
+/* ── story ── */
+.story-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:64px;align-items:center}
+.story-frame{transform:rotate(1.4deg)}
+.story-frame .frame-mat img{aspect-ratio:3/4;object-position:center 60%}
+.story-copy p{color:var(--ink);max-width:56ch}
+.story-sign{
+  font-family:var(--serif);font-style:italic;font-size:1.5rem;color:var(--accent-deep);
+  margin-top:26px;
+}
+.story-sign span{display:block;font-family:var(--sans);font-style:normal;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+
+/* ── collection ── */
+.placards{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+  gap:34px;margin-top:54px;
+}
+.placard{
+  background:var(--gilt);
+  border:1px solid var(--gilt-edge);
+  padding:9px;
+  box-shadow:var(--shadow), inset 0 0 0 1px rgba(255,255,255,.28);
+  transition:transform .5s var(--ease), box-shadow .5s var(--ease);
+}
+.placard:hover{transform:translateY(-8px) rotate(-.4deg);box-shadow:var(--shadow-lift), inset 0 0 0 1px rgba(255,255,255,.28)}
+.placard-mat{background:var(--mat);padding:11px 11px 0}
+.placard-mat img{aspect-ratio:1/1;object-fit:cover;width:100%;border:1px solid rgba(62,36,24,.22)}
+.placard-body{background:var(--mat);padding:16px 14px 18px;text-align:center}
+.placard-roman{font-family:var(--serif);font-size:.95rem;letter-spacing:.3em;color:#9C5666;opacity:.75}
+.placard-name{font-family:var(--serif);font-size:1.45rem;font-weight:600;color:#3A1F1F;margin:4px 0 1px}
+.placard-en{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:#9C5666}
+.placard-rule{width:56px;height:1px;border:0;margin:12px auto;background:linear-gradient(90deg,transparent,#9C5666,transparent);opacity:.55}
+.placard-desc{font-size:.85rem;line-height:1.6;color:#6d4a44;min-height:2.6em;margin:0}
+.placard-order{
+  display:inline-flex;align-items:center;gap:7px;margin-top:14px;
+  font-size:.78rem;font-weight:500;letter-spacing:.06em;color:#9C5666;
+  border:1px solid rgba(156,86,102,.45);border-radius:999px;padding:8px 16px;
+  transition:all .3s var(--ease);
+}
+.placard-order svg{width:14px;height:14px}
+.placard-order:hover{background:#E0959E;border-color:#E0959E;color:#FFFAEC}
+
+/* ── custom cakes band ── */
+.cakes-band{
+  margin-top:72px;
+  border-block:1px solid var(--line-soft);
+  padding:44px 0;
+  display:grid;grid-template-columns:auto 1fr auto;gap:34px;align-items:center;
+}
+.cakes-band img{width:104px;height:104px;border-radius:50%;box-shadow:0 8px 26px rgba(156,86,102,.3)}
+.cakes-band h3{font-size:1.7rem;margin-bottom:6px}
+.cakes-band p{color:var(--muted);margin:0;max-width:60ch}
+
+/* ── atelier trio ── */
+.atelier-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:34px;margin-top:54px}
+.atelier-card .frame-mat img{aspect-ratio:4/5;object-fit:cover}
+.atelier-card:nth-child(1){transform:rotate(-1deg)}
+.atelier-card:nth-child(2){transform:rotate(.8deg) translateY(18px)}
+.atelier-card:nth-child(3){transform:rotate(-.6deg)}
+.atelier-caption{background:var(--mat);padding:14px 12px 16px;text-align:center}
+.atelier-caption h3{font-size:1.25rem;color:#3A1F1F;margin-bottom:3px}
+.atelier-caption p{font-size:.84rem;color:#6d4a44;margin:0}
+
+/* ── occasions ── */
+.occasions-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:26px;margin-top:54px}
+.occasion{
+  background:var(--card);border:1px solid var(--line-soft);border-radius:18px;
+  padding:34px 26px;text-align:center;
+  transition:transform .45s var(--ease), box-shadow .45s var(--ease), border-color .45s var(--ease);
+}
+.occasion:hover{transform:translateY(-6px);box-shadow:var(--shadow);border-color:var(--line)}
+.occasion-icon{
+  width:60px;height:60px;margin:0 auto 18px;border-radius:50%;
+  display:grid;place-items:center;color:var(--accent-deep);
+  background:color-mix(in srgb, var(--accent) 14%, transparent);
+}
+.occasion-icon svg{width:28px;height:28px}
+.occasion h3{font-size:1.35rem;margin-bottom:8px}
+.occasion p{font-size:.88rem;color:var(--muted);margin:0}
+
+/* ── how to order ── */
+.order-shell{display:grid;grid-template-columns:340px 1fr;gap:44px;margin-top:54px;align-items:start}
+.order-tabs{display:flex;flex-direction:column;gap:6px}
+.order-tab{
+  appearance:none;background:transparent;border:1px solid transparent;border-radius:14px;
+  display:flex;align-items:center;gap:16px;padding:16px 18px;cursor:pointer;
+  text-align:left;color:var(--ink);font-family:var(--sans);
+  transition:all .35s var(--ease);
+}
+.order-tab .num{
+  font-family:var(--serif);font-size:1.25rem;font-weight:600;color:var(--accent-deep);
+  width:42px;height:42px;border:1px solid var(--line);border-radius:50%;
+  display:grid;place-items:center;flex:none;transition:all .35s var(--ease);
+}
+.order-tab .t{font-size:1rem;font-weight:500}
+.order-tab[aria-selected="true"]{background:var(--card);border-color:var(--line-soft);box-shadow:var(--shadow)}
+.order-tab[aria-selected="true"] .num{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.order-panel{
+  background:var(--card);border:1px solid var(--line-soft);border-radius:20px;
+  padding:40px 42px;min-height:280px;box-shadow:var(--shadow);
+}
+.order-panel h3{font-size:1.9rem;margin-bottom:14px}
+.order-panel p{color:var(--muted);max-width:56ch}
+.order-panel .btn{margin-top:10px}
+.order-note{margin-top:26px;font-size:.85rem;color:var(--muted);font-style:italic}
+
+/* ── testimonials ── */
+.quotes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-top:54px}
+.quote{
+  border:1px dashed var(--line);border-radius:18px;padding:34px 28px;text-align:center;
+  color:var(--muted);
+}
+.quote .mark{font-family:var(--serif);font-size:3rem;line-height:1;color:var(--accent);display:block;margin-bottom:10px}
+.quote p{font-style:italic;font-size:.92rem;margin:0}
+.quotes-cta{text-align:center;margin-top:44px}
+.quotes-cta .btn{margin-top:18px}
+.quotes-cta p{color:var(--muted);max-width:52ch;margin-inline:auto}
+
+/* ── FAQ ── */
+.faq-list{max-width:760px;margin:54px auto 0;display:flex;flex-direction:column;gap:14px}
+.faq-item{
+  background:var(--card);border:1px solid var(--line-soft);border-radius:16px;
+  overflow:hidden;transition:border-color .3s var(--ease);
+}
+.faq-item.open{border-color:var(--line)}
+.faq-q{
+  appearance:none;width:100%;background:transparent;border:0;cursor:pointer;
+  display:flex;align-items:center;justify-content:space-between;gap:18px;
+  padding:20px 24px;text-align:left;color:var(--ink-strong);
+  font-family:var(--serif);font-size:1.22rem;font-weight:600;
+}
+.faq-q .chev{flex:none;width:22px;height:22px;color:var(--accent-deep);transition:transform .35s var(--ease)}
+.faq-item.open .faq-q .chev{transform:rotate(180deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .45s var(--ease)}
+.faq-a p{padding:0 24px 22px;margin:0;color:var(--muted);font-size:.95rem}
+
+/* ── contact / footer ── */
+.contact{padding-bottom:120px}
+.contact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-top:54px}
+.contact-card{
+  background:var(--card);border:1px solid var(--line-soft);border-radius:18px;
+  padding:34px 28px;text-align:center;
+  transition:transform .4s var(--ease), box-shadow .4s var(--ease);
+}
+.contact-card:hover{transform:translateY(-5px);box-shadow:var(--shadow)}
+.contact-card .occasion-icon{margin-bottom:16px}
+.contact-card h3{font-size:1.3rem;margin-bottom:6px}
+.contact-card p{font-size:.9rem;color:var(--muted);margin-bottom:14px}
+.contact-card a.link{font-weight:500;font-size:.95rem}
+
+.footer{background:var(--footer-bg);color:var(--footer-ink);padding:64px 0 0;border-top:1px solid var(--line-soft)}
+.footer-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:44px;padding-bottom:48px}
+.footer .brand-name{color:#F2C2C9}
+html[data-theme="gallery"] .footer .brand-name{color:var(--accent-soft)}
+.footer-tag{color:color-mix(in srgb, var(--footer-ink) 72%, transparent);font-size:.92rem;max-width:38ch;margin-top:14px}
+.footer h4{font-family:var(--serif);font-size:1.15rem;color:var(--footer-ink);margin-bottom:16px}
+.footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+.footer ul a{color:color-mix(in srgb, var(--footer-ink) 72%, transparent);font-size:.9rem;transition:color .3s}
+.footer ul a:hover{color:#F2C2C9}
+.footer-contact{display:flex;flex-direction:column;gap:12px;font-size:.9rem;color:color-mix(in srgb, var(--footer-ink) 72%, transparent)}
+.footer-contact .row{display:flex;align-items:center;gap:10px}
+.footer-contact svg{width:17px;height:17px;color:#F2C2C9;flex:none}
+.socials{display:flex;gap:12px;margin-top:20px}
+.socials a{
+  width:38px;height:38px;border:1px solid rgba(242,194,201,.4);border-radius:50%;
+  display:grid;place-items:center;color:#F2C2C9;transition:all .3s var(--ease);
+}
+.socials a:hover{background:#F2C2C9;color:#3A1F1F;border-color:#F2C2C9}
+.socials svg{width:17px;height:17px}
+.footer-bottom{
+  border-top:1px solid rgba(242,194,201,.18);padding:20px 0;text-align:center;
+  font-size:.8rem;color:color-mix(in srgb, var(--footer-ink) 52%, transparent);
+}
+
+/* ── floating buttons ── */
+.floats{position:fixed;right:22px;bottom:22px;z-index:70;display:flex;flex-direction:column;gap:12px}
+.float-btn{
+  width:54px;height:54px;border-radius:50%;display:grid;place-items:center;color:#FFF;
+  box-shadow:0 10px 26px rgba(0,0,0,.22);transition:transform .3s var(--ease), box-shadow .3s var(--ease);
+}
+.float-btn:hover{transform:translateY(-4px) scale(1.05);box-shadow:0 14px 32px rgba(0,0,0,.3)}
+.float-btn svg{width:26px;height:26px}
+.float-wa{background:#25D366}
+.float-ig{background:linear-gradient(135deg,#F2C2C9,#E0959E 50%,#C97889)}
+html[data-theme="gallery"] .float-ig{background:linear-gradient(135deg,#E8C547,#D4AF37 50%,#9A7B26)}
+
+/* ── responsive ── */
+@media (max-width: 1020px){
+  .nav-links{display:none}
+  .burger{display:grid}
+  .hero-grid{grid-template-columns:1fr;gap:48px}
+  .hero-frame{max-width:520px;margin-inline:auto}
+  .story-grid{grid-template-columns:1fr;gap:48px}
+  .story-frame{max-width:440px;margin-inline:auto}
+  .occasions-grid{grid-template-columns:repeat(2,1fr)}
+  .order-shell{grid-template-columns:1fr;gap:28px}
+  .order-tabs{flex-direction:row;flex-wrap:wrap}
+  .order-tab{flex:1 1 40%}
+  .atelier-grid{grid-template-columns:1fr;max-width:460px;margin-inline:auto}
+  .atelier-card:nth-child(2){transform:rotate(.8deg)}
+  .quotes-grid{grid-template-columns:1fr;max-width:520px;margin-inline:auto}
+  .contact-grid{grid-template-columns:1fr;max-width:520px;margin-inline:auto}
+  .footer-grid{grid-template-columns:1fr;gap:36px}
+  .cakes-band{grid-template-columns:1fr;text-align:center;justify-items:center;gap:22px}
+}
+@media (max-width: 640px){
+  section{padding:72px 0}
+  .brand-loc{display:none}
+  .nav-tools .nav-cta{display:none}
+  .nav-tools .lang-switch{display:none}
+  .hero{padding-top:calc(var(--nav-h) + 28px)}
+  .hero-badge{width:74px;height:74px}
+  .hero-ctas .btn{width:100%;justify-content:center}
+  .placards{grid-template-columns:1fr;max-width:340px;margin-inline:auto;margin-top:44px}
+  .occasions-grid{grid-template-columns:1fr}
+  .order-tab{flex:1 1 100%}
+  .order-panel{padding:30px 24px}
+  .floats{right:16px;bottom:16px}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ NAV ═══════════ -->
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#top" aria-label="Dori Yums — home">
+      <img src="assets/logo.webp" alt="Dori Yums logo" width="44" height="44" />
+      <span class="brand-name">Dori Yums</span>
+      <span class="brand-loc" data-i18n="brand.loc">Algiers</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#story" data-i18n="nav.story">Our story</a></li>
+      <li><a href="#collection" data-i18n="nav.collection">Collection</a></li>
+      <li><a href="#occasions" data-i18n="nav.occasions">Occasions</a></li>
+      <li><a href="#order" data-i18n="nav.order">How to order</a></li>
+      <li><a href="#faq" data-i18n="nav.faq">FAQ</a></li>
+    </ul>
+    <div class="nav-tools">
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button type="button" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-lang="fr" aria-pressed="false">FR</button>
+      </div>
+      <button class="theme-btn" id="themeBtn" type="button" aria-label="Switch theme">
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M4.9 19.1l1.7-1.7M17.4 6.6l1.7-1.7"/></svg>
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20.4 14.2A8.5 8.5 0 0 1 9.8 3.6a8.5 8.5 0 1 0 10.6 10.6z"/></svg>
+      </button>
+      <a class="btn btn-primary nav-cta wa-link" href="https://wa.me/213551401704" target="_blank" rel="noopener" data-i18n="nav.cta">Order on WhatsApp</a>
+      <button class="burger" id="burger" type="button" aria-label="Menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<nav class="mobile-menu" id="mobileMenu" aria-label="Mobile">
+  <a href="#story" data-i18n="nav.story">Our story</a>
+  <a href="#collection" data-i18n="nav.collection">Collection</a>
+  <a href="#occasions" data-i18n="nav.occasions">Occasions</a>
+  <a href="#order" data-i18n="nav.order">How to order</a>
+  <a href="#faq" data-i18n="nav.faq">FAQ</a>
+  <div class="lang-switch" role="group" aria-label="Language" style="margin-top:18px;width:max-content">
+    <button type="button" data-lang="en" aria-pressed="true">EN</button>
+    <button type="button" data-lang="fr" aria-pressed="false">FR</button>
+  </div>
+  <a class="btn btn-primary wa-link" href="https://wa.me/213551401704" target="_blank" rel="noopener" data-i18n="nav.cta">Order on WhatsApp</a>
+</nav>
+
+<main id="top">
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="hero" id="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <img class="hero-badge" src="assets/logo.webp" alt="Dori Yums — pastry chef badge" width="92" height="92" />
+      <span class="eyebrow" data-i18n="hero.eyebrow">Maison de macarons — Algiers</span>
+      <h1 data-i18n-html="hero.title">Made with <em>love</em>, for your sweetest moments.</h1>
+      <p class="hero-sub" data-i18n="hero.sub">Homemade and custom macarons, baked to order in our Algiers atelier — for baby showers, weddings, birthdays and every celebration in between.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary wa-link" href="https://wa.me/213551401704" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a9.9 9.9 0 0 0-8.6 14.9L2 22l5.3-1.4A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.6-6.1c-.3-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.3-.6.8-.8 1-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4 0-.5.1-.7l.4-.5c.1-.2.1-.3.2-.5s0-.4 0-.5l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.4 3.9.6.3 1.1.4 1.5.5.6.2 1.2.2 1.6.1.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.6-.3z"/></svg>
+          <span data-i18n="hero.cta1">Order on WhatsApp</span>
+        </a>
+        <a class="btn btn-ghost" href="#collection" data-i18n="hero.cta2">Browse the collection</a>
+      </div>
+      <ul class="hero-notes">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span data-i18n="hero.note1">Handmade to order</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span data-i18n="hero.note2">Delivery &amp; pickup in Algiers</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span data-i18n="hero.note3">Custom colors &amp; flavors</span></li>
+      </ul>
+    </div>
+    <div>
+      <figure class="frame hero-frame" style="margin:0">
+        <div class="frame-mat">
+          <img src="assets/macarons_hero.webp" alt="A Dori Yums coffret of assorted macarons on a marble table" fetchpriority="high" />
+        </div>
+      </figure>
+      <p class="hero-frame-caption" data-i18n="hero.caption">« Un amour de macaron »</p>
+    </div>
+  </div>
+  <div class="scroll-hint" aria-hidden="true">
+    <span data-i18n="hero.scroll">Scroll</span>
+    <span class="line"></span>
+  </div>
+</section>
+
+<!-- ═══════════ STORY ═══════════ -->
+<section id="story">
+  <div class="wrap story-grid">
+    <figure class="frame story-frame reveal" style="margin:0">
+      <div class="frame-mat">
+        <img src="assets/atelier-0.webp" alt="Two ribboned Dori Yums gift boxes of pink and berry macarons" loading="lazy" />
+      </div>
+    </figure>
+    <div class="story-copy reveal">
+      <span class="eyebrow" data-i18n="story.eyebrow">Our story</span>
+      <h2 class="section-title" data-i18n="story.title">A home atelier, one batch at a time</h2>
+      <p data-i18n="story.p1">Dori Yums began in a home kitchen in Algiers, with a piping bag and a simple idea: desserts taste better when they are made for someone. Every shell is piped by hand, every filling is folded in small batches, and nothing goes into the oven until you order it.</p>
+      <p data-i18n="story.p2">Whether you need a dozen macarons for tea or a full dessert table for a wedding, each order is planned with you — colors, flavors and finishing touches matched to your moment.</p>
+      <div class="story-sign">
+        Dori
+        <span data-i18n="story.sign">Founder &amp; pastry chef</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ COLLECTION ═══════════ -->
+<section id="collection">
+  <div class="wrap">
+    <div class="center reveal">
+      <span class="eyebrow">La Collection</span>
+      <h2 class="section-title" data-i18n="col.title">Twelve signature flavors</h2>
+      <p class="section-sub" data-i18n="col.sub">Each placard below is piped, filled and rested by hand. Ask on WhatsApp for this week's availability.</p>
+      <hr class="gold-rule" />
+    </div>
+
+    <div class="placards">
+      <!-- 1 -->
+      <article class="placard reveal">
+        <div class="placard-mat"><img src="assets/m-rose.webp" alt="Strawberry macarons" loading="lazy" /></div>
+        <div class="placard-body">
+          <div class="placard-roman">Ⅰ</div>
+          <h3 class="placard-name">Fraise</h3>
+          <div class="placard-en" data-i18n="f1.en">Strawberry</div>
+          <hr class="placard-rule" />
+          <p class="placard-desc" data-i18n="f1.d">Delicate strawberry cream in a blush-pink shell.</p>
+          <a class="placard-order wa-flavor" data-flavor="Fraise" href="https://wa.me/213551401704" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.7 8.7 0 0 1-3.9-.9L3 20l1-4.9a8.4 8.4 0 1 1 17-3.6z"/></svg>
+            <span data-i18n="col.order">Order this flavor</span>
+          </a>
+        </div>
+      </article>
+      <!-- 2 -->
+      <article class="placard reveal">
+        <div class="placard-mat"><img src="assets/m-pistachio.webp" alt="Pistachio macarons" loading="lazy" /></div>
+        <div class="placard-body">
+          <div class="placard-roman">Ⅱ</div>
+          <h3 class="placard-name">Pistache</h3>
+          <div class="placard-en" data-i18n="f2.en">Pistachio</div>
+          <hr class="placard-rule" />
+          <p class="placard-desc" data-i18n="f2.d">Slow-roasted pistachio, gently sweet and nutty.</p>
+          <a class="placard-order wa-flavor" data-flavor="Pistache" href="https://wa.me/213551401704" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.7 8.7 0 0 1-3.9-.9L3 20l1-4.9a8.4 8.4 0 1 1 17-3.6z"/></svg>
+            <span data-i18n="col.order">Order this flavor</span>
+          </a>
+        </div>
+      </article>
+      <!-- 3 -->
+      <article class="placard reveal">
+        <div class="placard-mat"><img src="assets/m-chocolate.webp" alt="Dark chocolate macarons" loading="lazy" /></div>
+        <div class="placard-body">
+          <div class="placard-roman">Ⅲ</div>
+          <h3 class="placard-name">Chocolat Noir</h3>
+          <div class="placard-en" data-i18n="f3.en">Dark chocolate</div>
+          <hr class="placard-rule" />
+          <p class="placard-desc" data-i18n="f3.d">Deep dark-chocolate ganache, barely sweet.</p>
+          <a class="placard-order wa-flavor" data-flavor="Chocolat Noir" href="https://wa.me/213551401704" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.7 8.7 0 0 1-3.9-.9L3 20l1-4.9a8.4 8.4 0 1 1 17-3.6z"/></svg>
+            <span data-i18n="col.order">Order this flavor</span>
+          </a>
+        </div>
+      </article>
+      <!-- 4 -->
+      <article class="placard reveal">
+        <div class="placard-mat"><img src="assets/m-banana.webp" alt="Banana chocolate macarons" loading="lazy" /></div>
+        <div class="placard-body">
+          <div class="placard-roman">Ⅳ</div>
+          <h3 class="placard-name">Banane Chocolat</h3>
+          <div class="placard-en" data-i18n="f4.en">Banana chocolate</div>
+          <hr class="placard-rule" />
+          <p class="placard-desc" data-i18n="f4.d">Ripe banana folded into milk-chocolate cream.</p>
+          <a class="placard-order wa-flavor" data-flavor="Banane Chocolat" href="https://wa.me/213551401704" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.7 8.7 0 0 1-3.9-.9L3 20l1-4.9a8.4 8.4 0 1 1 17-3.6z"/></svg>
+            <span data-i18n="col.order">Order this flavor</span>
+          </a>
+        </div>
+      </article>
+      <!-- 5 -->
+      <article class="placard reveal">
+        <div class="placard-mat"><img src="assets/m-strawberry.webp" alt="Strawberry raspberry macarons" loading="lazy" /></div>
+        <div class="placard-body">
+          <div class="placard-roman">Ⅴ</div>
+          <h3 class="placard-name">Fraise Framboise</h3>
+          <div class="placard-en" data-i18n="f5.en">Strawberry raspberry</div>
+          <hr class="placard-rule" />
+          <p class="placard-desc" data-i18n="f5.d">Strawberry and raspberry, bright and tangy.</p>
+          <a class="placard-order wa-flavor" data-flavor="Fraise Framboise" href="https://wa.me/213551401704" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.7 8.7 0 0 1-3.9-.9L3 20l1-4.9a8.4 8.4 0 1 1 17-3.6z"/></svg>
+            <span data-i18n="col.order">Order this flavor</span>
+          </a>
+        </div>
+      </article>
+      <!-- 6 -->
+      <article class="placard reveal">
+        <div class="placard-mat"><img src="assets/m-lemon.webp" alt="Lemon macarons" loading="lazy" /></div>
+        <div class="placard-body">
+          <div class="placard-roman">Ⅵ</div>
+          <h3 class="placard-name">Citron</h3>
+          <div class="placard-en" data-i18n="f6.en">Lemon</div>
+          <hr class="placard-rule" />
+          <p class="placard-desc" data-i18n="f6.d">Sun-bright lemon cream, sharp then sweet.</p>
+          <a class="placard-order wa-flavor" data-flavor="Citron" href="https://wa.me/213551401704" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.7 8.7 0 0 1-3.9-.9L3 20l1-4.9a8.4 8.4 0 1 1 17-3.6z"/></svg>
+            <span data-i18n="col.order">Order this flavor</span>
+          </a>
+        </div>
+      </article>
+      <!-- 7 -->
+      <article class="placard reveal">
+        <div class="placard-mat"><img src="assets/m-coconut.webp" alt="Coconut pineapple macarons" loading="lazy" /></div>
+        <div class="placard-body">
+          <div class="placard-roman">Ⅶ</div>
+          <h3 class="placard-name">Coco Ananas</h3>
+          <div class="placard-en" data-i18n="f7.en">Coconut pineapple</div>
+          <hr class="placard-rule" />
+          <p class="placard-desc" data-i18n="f7.d">A coconut shell with a pineapple heart.</p>
+          <a class="placard-order wa-flavor" data-flavor="Coco Ananas" href="https://wa.me/213551401704" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.7 8.7 0 0 1-3.9-.9L3 20l1-4.9a8.4 8.4 0 1 1 17-3.6z"/></svg>
+            <span data-i18n="col.order">Order this flavor</span>
+          </a>
+        </div>
+      </article>
+      <!-- 8 -->
+      <article class="placard reveal">
+        <div class="placard-mat"><img src="assets/m-pecan.webp" alt="Hazelnut praliné macarons" loading="lazy" /></div>
+        <div class="placard-body">
+          <div class="placard-roman">Ⅷ</div>
+          <h3 class="placard-name">Noisette Praliné</h3>
+          <div class="placard-en" data-i18n="f8.en">Hazelnut praliné</div>
+          <hr class="placard-rule" />
+          <p class="placard-desc" data-i18n="f8.d">Toasted hazelnut praliné, warm and buttery.</p>
+          <a class="placard-order wa-flavor" data-flavor="Noisette Praliné" href="https://wa.me/213551401704" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.7 8.7 0 0 1-3.9-.9L3 20l1-4.9a8.4 8.4 0 1 1 17-3.6z"/></svg>
+            <span data-i18n="col.order">Order this flavor</span>
+          </a>
+        </div>
+      </article>
+      <!-- 9 -->
+      <article class="placard reveal">
+        <div class="placard-mat"><img src="assets/m-vanilla.webp" alt="Vanilla caramel macarons" loading="lazy" /></div>
+        <div class="placard-body">
+          <div class="placard-roman">Ⅸ</div>
+          <h3 class="placard-name">Vanille Caramel</h3>
+          <div class="placard-en" data-i18n="f9.en">Vanilla caramel</div>
+          <hr class="placard-rule" />
+          <p class="placard-desc" data-i18n="f9.d">Vanilla cream with a soft caramel ribbon.</p>
+          <a class="placard-order wa-flavor" data-flavor="Vanille Caramel" href="https://wa.me/213551401704" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.7 8.7 0 0 1-3.9-.9L3 20l1-4.9a8.4 8.4 0 1 1 17-3.6z"/></svg>
+            <span data-i18n="col.order">Order this flavor</span>
+          </a>
+        </div>
+      </article>
+      <!-- 10 -->
+      <article class="placard reveal">
+        <div class="placard-mat"><img src="assets/m-cherry.webp" alt="Cherry chocolate macarons" loading="lazy" /></div>
+        <div class="placard-body">
+          <div class="placard-roman">Ⅹ</div>
+          <h3 class="placard-name">Cerise Chocolat</h3>
+          <div class="placard-en" data-i18n="f10.en">Cherry chocolate</div>
+          <hr class="placard-rule" />
+          <p class="placard-desc" data-i18n="f10.d">Dark cherry over a chocolate cream heart.</p>
+          <a class="placard-order wa-flavor" data-flavor="Cerise Chocolat" href="https://wa.me/213551401704" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.7 8.7 0 0 1-3.9-.9L3 20l1-4.9a8.4 8.4 0 1 1 17-3.6z"/></svg>
+            <span data-i18n="col.order">Order this flavor</span>
+          </a>
+        </div>
+      </article>
+      <!-- 11 -->
+      <article class="placard reveal">
+        <div class="placard-mat"><img src="assets/m-coconut-choc.webp" alt="Coconut chocolate macarons" loading="lazy" /></div>
+        <div class="placard-body">
+          <div class="placard-roman">Ⅺ</div>
+          <h3 class="placard-name">Coco Chocolat</h3>
+          <div class="placard-en" data-i18n="f11.en">Coconut chocolate</div>
+          <hr class="placard-rule" />
+          <p class="placard-desc" data-i18n="f11.d">Coconut and chocolate, the classic pairing.</p>
+          <a class="placard-order wa-flavor" data-flavor="Coco Chocolat" href="https://wa.me/213551401704" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.7 8.7 0 0 1-3.9-.9L3 20l1-4.9a8.4 8.4 0 1 1 17-3.6z"/></svg>
+            <span data-i18n="col.order">Order this flavor</span>
+          </a>
+        </div>
+      </article>
+      <!-- 12 -->
+      <article class="placard reveal">
+        <div class="placard-mat"><img src="assets/m-orange.webp" alt="Orange macarons" loading="lazy" /></div>
+        <div class="placard-body">
+          <div class="placard-roman">Ⅻ</div>
+          <h3 class="placard-name">Orange</h3>
+          <div class="placard-en" data-i18n="f12.en">Orange</div>
+          <hr class="placard-rule" />
+          <p class="placard-desc" data-i18n="f12.d">Candied orange zest, gently bitter.</p>
+          <a class="placard-order wa-flavor" data-flavor="Orange" href="https://wa.me/213551401704" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.7 8.7 0 0 1-3.9-.9L3 20l1-4.9a8.4 8.4 0 1 1 17-3.6z"/></svg>
+            <span data-i18n="col.order">Order this flavor</span>
+          </a>
+        </div>
+      </article>
+    </div>
+
+    <!-- custom cakes band -->
+    <div class="cakes-band reveal">
+      <img src="assets/logo.webp" alt="" aria-hidden="true" loading="lazy" />
+      <div>
+        <h3 data-i18n="cakes.title">Also from the atelier: custom cakes</h3>
+        <p data-i18n="cakes.p">Layer cakes and dessert towers, designed around your theme — send us your inspiration and we will sketch it together on WhatsApp.</p>
+      </div>
+      <a class="btn btn-ghost wa-cakes" href="https://wa.me/213551401704" target="_blank" rel="noopener" data-i18n="cakes.cta">Ask about a cake</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ ATELIER / STYLED ═══════════ -->
+<section id="atelier">
+  <div class="wrap">
+    <div class="center reveal">
+      <span class="eyebrow" data-i18n="at.eyebrow">From our clients' tables</span>
+      <h2 class="section-title" data-i18n="at.title">Styled for your table</h2>
+      <p class="section-sub" data-i18n="at.sub">Every order leaves the atelier finished — boxed, ribboned or plated for the occasion.</p>
+      <hr class="gold-rule" />
+    </div>
+    <div class="atelier-grid">
+      <figure class="frame atelier-card reveal" style="margin:0">
+        <div class="frame-mat"><img src="assets/atelier-0.webp" alt="Ribboned Dori Yums gift boxes of assorted macarons" loading="lazy" /></div>
+        <figcaption class="atelier-caption">
+          <h3 data-i18n="at.c1">Gift coffrets</h3>
+          <p data-i18n="at.c1p">Boxed and ribboned, ready to offer.</p>
+        </figcaption>
+      </figure>
+      <figure class="frame atelier-card reveal" style="margin:0">
+        <div class="frame-mat"><img src="assets/atelier-2.webp" alt="Blue and chocolate macarons plated with rosebuds for a baby shower" loading="lazy" /></div>
+        <figcaption class="atelier-caption">
+          <h3 data-i18n="at.c2">Plated moments</h3>
+          <p data-i18n="at.c2p">Color-matched to your celebration.</p>
+        </figcaption>
+      </figure>
+      <figure class="frame atelier-card reveal" style="margin:0">
+        <div class="frame-mat"><img src="assets/atelier-3.webp" alt="A party tray of blue, vanilla, chocolate and pink macarons" loading="lazy" /></div>
+        <figcaption class="atelier-caption">
+          <h3 data-i18n="at.c3">Event trays</h3>
+          <p data-i18n="at.c3p">Ready to serve, from shower to soirée.</p>
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ OCCASIONS ═══════════ -->
+<section id="occasions">
+  <div class="wrap">
+    <div class="center reveal">
+      <span class="eyebrow" data-i18n="oc.eyebrow">Your sweetest moments</span>
+      <h2 class="section-title" data-i18n="oc.title">Made for the occasion</h2>
+      <p class="section-sub" data-i18n="oc.sub">Tell us the event — we match shells, fillings and boxes to it.</p>
+      <hr class="gold-rule" />
+    </div>
+    <div class="occasions-grid">
+      <div class="occasion reveal">
+        <div class="occasion-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3.5c2.8 0 5 2.2 5 5v1H4v-1c0-2.8 2.2-5 5-5z"/><path d="M9 3.5V2M4.5 9.5 3 20.5M13.5 9.5 15 20.5M3 20.5h12"/><circle cx="19" cy="17" r="2.6"/></svg>
+        </div>
+        <h3 data-i18n="oc.1">Baby showers</h3>
+        <p data-i18n="oc.1p">Powder blues, blush pinks and little names piped by hand.</p>
+      </div>
+      <div class="occasion reveal">
+        <div class="occasion-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="14" r="5.5"/><circle cx="15" cy="14" r="5.5"/><path d="m9 8.5 1.6-3h2.8L15 8.5"/></svg>
+        </div>
+        <h3 data-i18n="oc.2">Weddings</h3>
+        <p data-i18n="oc.2p">Tone-on-tone coffrets and towers that match your palette.</p>
+      </div>
+      <div class="occasion reveal">
+        <div class="occasion-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21h16M5 21v-7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v7"/><path d="M12 12V9"/><path d="M12 6.5c-.9-.6-1.4-1.5-1.1-2.4.2-.7.8-1.3 1.1-2.1.3.8.9 1.4 1.1 2.1.3.9-.2 1.8-1.1 2.4z"/></svg>
+        </div>
+        <h3 data-i18n="oc.3">Birthdays</h3>
+        <p data-i18n="oc.3p">Bright, personal, and exactly their favorite flavor.</p>
+      </div>
+      <div class="occasion reveal">
+        <div class="occasion-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6.5 6.5 0 0 1 6.5 6.5c0 3.6-2.9 6.5-6.5 6.5S5.5 13.1 5.5 9.5A6.5 6.5 0 0 1 12 3z"/><path d="m12 16 -1.5 2 1.5 1.5L10.5 21"/><path d="M10.2 8.6c.3-.9 1-1.4 1.8-1.4.9 0 1.7.7 1.7 1.6 0 1.2-1.7 1.5-1.7 2.7"/><circle cx="12" cy="13" r=".2"/></svg>
+        </div>
+        <h3 data-i18n="oc.4">Gender reveals</h3>
+        <p data-i18n="oc.4p">The answer, hidden in the very first bite.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ HOW TO ORDER ═══════════ -->
+<section id="order">
+  <div class="wrap">
+    <div class="center reveal">
+      <span class="eyebrow" data-i18n="ho.eyebrow">Simple, personal, on WhatsApp</span>
+      <h2 class="section-title" data-i18n="ho.title">How to order</h2>
+      <hr class="gold-rule" />
+    </div>
+    <div class="order-shell reveal">
+      <div class="order-tabs" role="tablist" aria-label="Order steps">
+        <button class="order-tab" role="tab" aria-selected="true" data-step="1" id="tab-1" aria-controls="panel-1">
+          <span class="num">1</span><span class="t" data-i18n="ho.t1">Choose</span>
+        </button>
+        <button class="order-tab" role="tab" aria-selected="false" data-step="2" id="tab-2" aria-controls="panel-2">
+          <span class="num">2</span><span class="t" data-i18n="ho.t2">Message us</span>
+        </button>
+        <button class="order-tab" role="tab" aria-selected="false" data-step="3" id="tab-3" aria-controls="panel-3">
+          <span class="num">3</span><span class="t" data-i18n="ho.t3">Confirm</span>
+        </button>
+        <button class="order-tab" role="tab" aria-selected="false" data-step="4" id="tab-4" aria-controls="panel-4">
+          <span class="num">4</span><span class="t" data-i18n="ho.t4">Enjoy</span>
+        </button>
+      </div>
+      <div class="order-panel">
+        <div class="order-step" id="panel-1" role="tabpanel" aria-labelledby="tab-1">
+          <h3 data-i18n="ho.h1">Choose your flavors</h3>
+          <p data-i18n="ho.p1">Pick from the twelve signature flavors, or describe a theme — colors, an occasion, a favorite taste. Screenshots and inspiration photos are welcome.</p>
+        </div>
+        <div class="order-step" id="panel-2" role="tabpanel" aria-labelledby="tab-2" hidden>
+          <h3 data-i18n="ho.h2">Send it on WhatsApp</h3>
+          <p data-i18n="ho.p2">Message us your selection, quantity and date. We reply personally — this is a home atelier, not a call center.</p>
+          <a class="btn btn-primary wa-link" href="https://wa.me/213551401704" target="_blank" rel="noopener" data-i18n="ho.cta">Start the conversation</a>
+        </div>
+        <div class="order-step" id="panel-3" role="tabpanel" aria-labelledby="tab-3" hidden>
+          <h3 data-i18n="ho.h3">We confirm together</h3>
+          <p data-i18n="ho.p3">Price, payment and timing are agreed in the chat before any baking starts — no surprises, no fine print.</p>
+        </div>
+        <div class="order-step" id="panel-4" role="tabpanel" aria-labelledby="tab-4" hidden>
+          <h3 data-i18n="ho.h4">Pickup or delivery</h3>
+          <p data-i18n="ho.p4">Collect your order in Algiers or have it delivered to your door, fresh from the atelier and boxed for the occasion.</p>
+        </div>
+        <p class="order-note" data-i18n="ho.note">Custom and event orders are baked to schedule — message us a few days ahead of your date.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ TESTIMONIALS ═══════════ -->
+<section id="testimonials">
+  <div class="wrap">
+    <div class="center reveal">
+      <span class="eyebrow" data-i18n="te.eyebrow">Sweet words</span>
+      <h2 class="section-title" data-i18n="te.title">From our clients</h2>
+      <hr class="gold-rule" />
+    </div>
+    <!-- Placeholder structure: replace each .quote with a real client review when supplied. -->
+    <div class="quotes-grid">
+      <div class="quote reveal">
+        <span class="mark">“</span>
+        <p data-i18n="te.slot">Reserved for a client's words — coming soon.</p>
+      </div>
+      <div class="quote reveal">
+        <span class="mark">“</span>
+        <p data-i18n="te.slot">Reserved for a client's words — coming soon.</p>
+      </div>
+      <div class="quote reveal">
+        <span class="mark">“</span>
+        <p data-i18n="te.slot">Reserved for a client's words — coming soon.</p>
+      </div>
+    </div>
+    <div class="quotes-cta reveal">
+      <p data-i18n="te.p">Our clients share their tables with us every week on Instagram — see the latest orders, reels and reviews there.</p>
+      <a class="btn btn-ghost" href="https://instagram.com/dori_yums" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".8" fill="currentColor" stroke="none"/></svg>
+        <span>@dori_yums</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FAQ ═══════════ -->
+<section id="faq">
+  <div class="wrap">
+    <div class="center reveal">
+      <span class="eyebrow" data-i18n="fq.eyebrow">Good to know</span>
+      <h2 class="section-title" data-i18n="fq.title">Frequently asked</h2>
+      <hr class="gold-rule" />
+    </div>
+    <div class="faq-list reveal">
+      <div class="faq-item">
+        <button class="faq-q" type="button" aria-expanded="false">
+          <span data-i18n="fq.q1">Where do you deliver?</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="faq-a"><p data-i18n="fq.a1">We are based in Algiers. Both delivery around the city and pickup are possible — send us your neighborhood on WhatsApp and we will confirm the options for your address.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" type="button" aria-expanded="false">
+          <span data-i18n="fq.q2">How far in advance should I order?</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="faq-a"><p data-i18n="fq.a2">A few days ahead is ideal for standard boxes; large or fully custom event orders need more notice. Message us your date first and we will confirm what is possible.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" type="button" aria-expanded="false">
+          <span data-i18n="fq.q3">Can I customize colors and flavors?</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="faq-a"><p data-i18n="fq.a3">Yes — shells and fillings can be matched to your theme, and boxes can be personalized. Send inspiration photos on WhatsApp and we will build the order around them.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" type="button" aria-expanded="false">
+          <span data-i18n="fq.q4">How does payment work?</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="faq-a"><p data-i18n="fq.a4">Everything is agreed in the WhatsApp conversation — price, payment method and timing are confirmed together before baking starts.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" type="button" aria-expanded="false">
+          <span data-i18n="fq.q5">How should I store macarons?</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="faq-a"><p data-i18n="fq.a5">Keep them refrigerated in their box and enjoy them within a few days. Let them rest a few minutes at room temperature before serving — that is when the texture is perfect.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ CONTACT ═══════════ -->
+<section id="contact" class="contact">
+  <div class="wrap">
+    <div class="center reveal">
+      <span class="eyebrow" data-i18n="ct.eyebrow">We answer personally</span>
+      <h2 class="section-title" data-i18n="ct.title">Order &amp; contact</h2>
+      <p class="section-sub" data-i18n="ct.sub">WhatsApp is the fastest way to order; Instagram DMs work too.</p>
+      <hr class="gold-rule" />
+    </div>
+    <div class="contact-grid">
+      <div class="contact-card reveal">
+        <div class="occasion-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a9.9 9.9 0 0 0-8.6 14.9L2 22l5.3-1.4A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.6-6.1c-.3-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.3-.6.8-.8 1-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4 0-.5.1-.7l.4-.5c.1-.2.1-.3.2-.5s0-.4 0-.5l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.4 3.9.6.3 1.1.4 1.5.5.6.2 1.2.2 1.6.1.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.6-.3z"/></svg>
+        </div>
+        <h3>WhatsApp</h3>
+        <p data-i18n="ct.wa">Orders, questions and custom requests.</p>
+        <a class="link wa-link" href="https://wa.me/213551401704" target="_blank" rel="noopener">+213 551 401 704</a>
+      </div>
+      <div class="contact-card reveal">
+        <div class="occasion-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".8" fill="currentColor" stroke="none"/></svg>
+        </div>
+        <h3>Instagram</h3>
+        <p data-i18n="ct.ig">Daily bakes, reels and client tables.</p>
+        <a class="link" href="https://instagram.com/dori_yums" target="_blank" rel="noopener">@dori_yums</a>
+      </div>
+      <div class="contact-card reveal">
+        <div class="occasion-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <h3 data-i18n="ct.loc">Algiers, Algeria</h3>
+        <p data-i18n="ct.locp">Home atelier — delivery around Algiers and pickup by arrangement.</p>
+        <a class="link" href="#order" data-i18n="ct.how">See how ordering works</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="#top">
+          <img src="assets/logo.webp" alt="" width="44" height="44" loading="lazy" />
+          <span class="brand-name">Dori Yums</span>
+        </a>
+        <p class="footer-tag" data-i18n="ft.tag">Homemade and custom macarons, made with love for your sweetest moments — from a home atelier in Algiers.</p>
+        <div class="socials">
+          <a href="https://instagram.com/dori_yums" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".8" fill="currentColor" stroke="none"/></svg>
+          </a>
+          <a class="wa-link" href="https://wa.me/213551401704" target="_blank" rel="noopener" aria-label="WhatsApp">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a9.9 9.9 0 0 0-8.6 14.9L2 22l5.3-1.4A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.6-6.1c-.3-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.3-.6.8-.8 1-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4 0-.5.1-.7l.4-.5c.1-.2.1-.3.2-.5s0-.4 0-.5l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.4 3.9.6.3 1.1.4 1.5.5.6.2 1.2.2 1.6.1.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.6-.3z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <h4 data-i18n="ft.quick">Quick links</h4>
+        <ul>
+          <li><a href="#story" data-i18n="nav.story">Our story</a></li>
+          <li><a href="#collection" data-i18n="nav.collection">Collection</a></li>
+          <li><a href="#occasions" data-i18n="nav.occasions">Occasions</a></li>
+          <li><a href="#order" data-i18n="nav.order">How to order</a></li>
+          <li><a href="#faq" data-i18n="nav.faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 data-i18n="ft.contact">Contact</h4>
+        <div class="footer-contact">
+          <div class="row">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a9.9 9.9 0 0 0-8.6 14.9L2 22l5.3-1.4A10 10 0 1 0 12 2z"/></svg>
+            <a class="wa-link" href="https://wa.me/213551401704" target="_blank" rel="noopener" style="color:inherit">+213 551 401 704</a>
+          </div>
+          <div class="row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/></svg>
+            <a href="https://instagram.com/dori_yums" target="_blank" rel="noopener" style="color:inherit">instagram.com/dori_yums</a>
+          </div>
+          <div class="row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span data-i18n="ft.addr">Algiers, Algeria</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">© <span id="year">2026</span> Dori Yums — <span data-i18n="ft.bottom">homemade in Algiers</span></div>
+  </div>
+</footer>
+
+<!-- ═══════════ FLOATING BUTTONS ═══════════ -->
+<div class="floats">
+  <a class="float-btn float-ig" href="https://instagram.com/dori_yums" target="_blank" rel="noopener" aria-label="Instagram — @dori_yums">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".8" fill="currentColor" stroke="none"/></svg>
+  </a>
+  <a class="float-btn float-wa wa-link" href="https://wa.me/213551401704" target="_blank" rel="noopener" aria-label="Order on WhatsApp">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a9.9 9.9 0 0 0-8.6 14.9L2 22l5.3-1.4A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.6-6.1c-.3-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.3-.6.8-.8 1-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4 0-.5.1-.7l.4-.5c.1-.2.1-.3.2-.5s0-.4 0-.5l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.4 3.9.6.3 1.1.4 1.5.5.6.2 1.2.2 1.6.1.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.6-.3z"/></svg>
+  </a>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   Dori Yums — interactions
+   ══════════════════════════════════════════════════════════ */
+(function(){
+  'use strict';
+
+  var WA_NUMBER = '213551401704';
+
+  /* ─── i18n ─── */
+  var I18N = {
+    en: {
+      'brand.loc':'Algiers',
+      'nav.story':'Our story','nav.collection':'Collection','nav.occasions':'Occasions','nav.order':'How to order','nav.faq':'FAQ','nav.cta':'Order on WhatsApp',
+      'hero.eyebrow':'Maison de macarons — Algiers',
+      'hero.title':'Made with <em>love</em>, for your sweetest moments.',
+      'hero.sub':'Homemade and custom macarons, baked to order in our Algiers atelier — for baby showers, weddings, birthdays and every celebration in between.',
+      'hero.cta1':'Order on WhatsApp','hero.cta2':'Browse the collection',
+      'hero.note1':'Handmade to order','hero.note2':'Delivery & pickup in Algiers','hero.note3':'Custom colors & flavors',
+      'hero.caption':'« Un amour de macaron »','hero.scroll':'Scroll',
+      'story.eyebrow':'Our story','story.title':'A home atelier, one batch at a time',
+      'story.p1':'Dori Yums began in a home kitchen in Algiers, with a piping bag and a simple idea: desserts taste better when they are made for someone. Every shell is piped by hand, every filling is folded in small batches, and nothing goes into the oven until you order it.',
+      'story.p2':'Whether you need a dozen macarons for tea or a full dessert table for a wedding, each order is planned with you — colors, flavors and finishing touches matched to your moment.',
+      'story.sign':'Founder & pastry chef',
+      'col.title':'Twelve signature flavors',
+      'col.sub':"Each placard below is piped, filled and rested by hand. Ask on WhatsApp for this week's availability.",
+      'col.order':'Order this flavor',
+      'f1.en':'Strawberry','f1.d':'Delicate strawberry cream in a blush-pink shell.',
+      'f2.en':'Pistachio','f2.d':'Slow-roasted pistachio, gently sweet and nutty.',
+      'f3.en':'Dark chocolate','f3.d':'Deep dark-chocolate ganache, barely sweet.',
+      'f4.en':'Banana chocolate','f4.d':'Ripe banana folded into milk-chocolate cream.',
+      'f5.en':'Strawberry raspberry','f5.d':'Strawberry and raspberry, bright and tangy.',
+      'f6.en':'Lemon','f6.d':'Sun-bright lemon cream, sharp then sweet.',
+      'f7.en':'Coconut pineapple','f7.d':'A coconut shell with a pineapple heart.',
+      'f8.en':'Hazelnut praliné','f8.d':'Toasted hazelnut praliné, warm and buttery.',
+      'f9.en':'Vanilla caramel','f9.d':'Vanilla cream with a soft caramel ribbon.',
+      'f10.en':'Cherry chocolate','f10.d':'Dark cherry over a chocolate cream heart.',
+      'f11.en':'Coconut chocolate','f11.d':'Coconut and chocolate, the classic pairing.',
+      'f12.en':'Orange','f12.d':'Candied orange zest, gently bitter.',
+      'cakes.title':'Also from the atelier: custom cakes',
+      'cakes.p':'Layer cakes and dessert towers, designed around your theme — send us your inspiration and we will sketch it together on WhatsApp.',
+      'cakes.cta':'Ask about a cake',
+      'at.eyebrow':"From our clients' tables",'at.title':'Styled for your table',
+      'at.sub':'Every order leaves the atelier finished — boxed, ribboned or plated for the occasion.',
+      'at.c1':'Gift coffrets','at.c1p':'Boxed and ribboned, ready to offer.',
+      'at.c2':'Plated moments','at.c2p':'Color-matched to your celebration.',
+      'at.c3':'Event trays','at.c3p':'Ready to serve, from shower to soirée.',
+      'oc.eyebrow':'Your sweetest moments','oc.title':'Made for the occasion',
+      'oc.sub':'Tell us the event — we match shells, fillings and boxes to it.',
+      'oc.1':'Baby showers','oc.1p':'Powder blues, blush pinks and little names piped by hand.',
+      'oc.2':'Weddings','oc.2p':'Tone-on-tone coffrets and towers that match your palette.',
+      'oc.3':'Birthdays','oc.3p':'Bright, personal, and exactly their favorite flavor.',
+      'oc.4':'Gender reveals','oc.4p':'The answer, hidden in the very first bite.',
+      'ho.eyebrow':'Simple, personal, on WhatsApp','ho.title':'How to order',
+      'ho.t1':'Choose','ho.t2':'Message us','ho.t3':'Confirm','ho.t4':'Enjoy',
+      'ho.h1':'Choose your flavors',
+      'ho.p1':'Pick from the twelve signature flavors, or describe a theme — colors, an occasion, a favorite taste. Screenshots and inspiration photos are welcome.',
+      'ho.h2':'Send it on WhatsApp',
+      'ho.p2':'Message us your selection, quantity and date. We reply personally — this is a home atelier, not a call center.',
+      'ho.cta':'Start the conversation',
+      'ho.h3':'We confirm together',
+      'ho.p3':'Price, payment and timing are agreed in the chat before any baking starts — no surprises, no fine print.',
+      'ho.h4':'Pickup or delivery',
+      'ho.p4':'Collect your order in Algiers or have it delivered to your door, fresh from the atelier and boxed for the occasion.',
+      'ho.note':'Custom and event orders are baked to schedule — message us a few days ahead of your date.',
+      'te.eyebrow':'Sweet words','te.title':'From our clients',
+      'te.slot':"Reserved for a client's words — coming soon.",
+      'te.p':'Our clients share their tables with us every week on Instagram — see the latest orders, reels and reviews there.',
+      'fq.eyebrow':'Good to know','fq.title':'Frequently asked',
+      'fq.q1':'Where do you deliver?',
+      'fq.a1':'We are based in Algiers. Both delivery around the city and pickup are possible — send us your neighborhood on WhatsApp and we will confirm the options for your address.',
+      'fq.q2':'How far in advance should I order?',
+      'fq.a2':'A few days ahead is ideal for standard boxes; large or fully custom event orders need more notice. Message us your date first and we will confirm what is possible.',
+      'fq.q3':'Can I customize colors and flavors?',
+      'fq.a3':'Yes — shells and fillings can be matched to your theme, and boxes can be personalized. Send inspiration photos on WhatsApp and we will build the order around them.',
+      'fq.q4':'How does payment work?',
+      'fq.a4':'Everything is agreed in the WhatsApp conversation — price, payment method and timing are confirmed together before baking starts.',
+      'fq.q5':'How should I store macarons?',
+      'fq.a5':'Keep them refrigerated in their box and enjoy them within a few days. Let them rest a few minutes at room temperature before serving — that is when the texture is perfect.',
+      'ct.eyebrow':'We answer personally','ct.title':'Order & contact',
+      'ct.sub':'WhatsApp is the fastest way to order; Instagram DMs work too.',
+      'ct.wa':'Orders, questions and custom requests.',
+      'ct.ig':'Daily bakes, reels and client tables.',
+      'ct.loc':'Algiers, Algeria',
+      'ct.locp':'Home atelier — delivery around Algiers and pickup by arrangement.',
+      'ct.how':'See how ordering works',
+      'ft.tag':'Homemade and custom macarons, made with love for your sweetest moments — from a home atelier in Algiers.',
+      'ft.quick':'Quick links','ft.contact':'Contact','ft.addr':'Algiers, Algeria','ft.bottom':'homemade in Algiers',
+      'wa.msg':"Hello Dori Yums! I'd like to place an order.",
+      'wa.flavor':"Hello Dori Yums! I'd like to order the {f} macarons.",
+      'wa.cake':"Hello Dori Yums! I'd like to ask about a custom cake."
+    },
+    fr: {
+      'brand.loc':'Alger',
+      'nav.story':'Notre histoire','nav.collection':'Collection','nav.occasions':'Occasions','nav.order':'Commander','nav.faq':'FAQ','nav.cta':'Commander sur WhatsApp',
+      'hero.eyebrow':'Maison de macarons — Alger',
+      'hero.title':'Faits avec <em>amour</em>, pour vos plus doux moments.',
+      'hero.sub':"Macarons artisanaux et personnalisés, préparés à la commande dans notre atelier d'Alger — baby showers, mariages, anniversaires et toutes vos célébrations.",
+      'hero.cta1':'Commander sur WhatsApp','hero.cta2':'Découvrir la collection',
+      'hero.note1':'Fait main, à la commande','hero.note2':'Livraison & retrait à Alger','hero.note3':'Couleurs & parfums personnalisés',
+      'hero.caption':'« Un amour de macaron »','hero.scroll':'Défiler',
+      'story.eyebrow':'Notre histoire','story.title':'Un atelier à la maison, une fournée à la fois',
+      'story.p1':"Dori Yums est né dans une cuisine familiale à Alger, avec une poche à douille et une idée simple : les desserts sont meilleurs quand ils sont faits pour quelqu'un. Chaque coque est pochée à la main, chaque garniture préparée en petites quantités, et rien ne passe au four avant votre commande.",
+      'story.p2':"Une douzaine de macarons pour le thé ou une table de desserts complète pour un mariage : chaque commande se construit avec vous — couleurs, parfums et finitions accordés à votre moment.",
+      'story.sign':'Fondatrice & cheffe pâtissière',
+      'col.title':'Douze parfums signature',
+      'col.sub':"Chaque pièce ci-dessous est pochée, garnie et reposée à la main. Demandez les disponibilités de la semaine sur WhatsApp.",
+      'col.order':'Commander ce parfum',
+      'f1.en':'Fraise','f1.d':'Crème délicate à la fraise dans une coque rose poudré.',
+      'f2.en':'Pistache','f2.d':'Pistache torréfiée, douce et délicatement parfumée.',
+      'f3.en':'Chocolat noir','f3.d':'Ganache intense au chocolat noir, à peine sucrée.',
+      'f4.en':'Banane chocolat','f4.d':'Banane mûre mariée à une crème au chocolat au lait.',
+      'f5.en':'Fraise framboise','f5.d':'Fraise et framboise, vives et acidulées.',
+      'f6.en':'Citron','f6.d':'Crème au citron ensoleillée, vive puis douce.',
+      'f7.en':'Coco ananas','f7.d':"Une coque coco au cœur d'ananas.",
+      'f8.en':'Noisette praliné','f8.d':'Praliné noisette torréfié, chaleureux et fondant.',
+      'f9.en':'Vanille caramel','f9.d':'Crème vanille et ruban de caramel fondant.',
+      'f10.en':'Cerise chocolat','f10.d':'Cerise noire sur un cœur de crème au chocolat.',
+      'f11.en':'Coco chocolat','f11.d':"Coco et chocolat, l'accord classique.",
+      'f12.en':'Orange','f12.d':"Zeste d'orange confite, légèrement amer.",
+      'cakes.title':"Aussi de l'atelier : gâteaux personnalisés",
+      'cakes.p':'Layer cakes et pièces montées, dessinés autour de votre thème — envoyez votre inspiration et nous la dessinerons ensemble sur WhatsApp.',
+      'cakes.cta':'Parler d\'un gâteau',
+      'at.eyebrow':'Des tables de nos clients','at.title':'Stylisés pour votre table',
+      'at.sub':"Chaque commande quitte l'atelier finie — en coffret, rubannée ou dressée pour l'occasion.",
+      'at.c1':'Coffrets cadeaux','at.c1p':'En boîte, rubannés, prêts à offrir.',
+      'at.c2':'Instants dressés','at.c2p':'Accordés aux couleurs de votre fête.',
+      'at.c3':'Plateaux d\'événement','at.c3p':'Prêts à servir, du shower à la soirée.',
+      'oc.eyebrow':'Vos plus doux moments','oc.title':"Pensés pour l'occasion",
+      'oc.sub':"Dites-nous l'événement — coques, garnitures et coffrets s'y accordent.",
+      'oc.1':'Baby showers','oc.1p':'Bleus poudrés, roses tendres et petits prénoms écrits à la main.',
+      'oc.2':'Mariages','oc.2p':'Coffrets et pièces montées ton sur ton, accordés à votre palette.',
+      'oc.3':'Anniversaires','oc.3p':'Colorés, personnels, et exactement leur parfum préféré.',
+      'oc.4':'Gender reveals','oc.4p':'La réponse, cachée dans la toute première bouchée.',
+      'ho.eyebrow':'Simple, personnel, sur WhatsApp','ho.title':'Comment commander',
+      'ho.t1':'Choisir','ho.t2':'Écrire','ho.t3':'Confirmer','ho.t4':'Savourer',
+      'ho.h1':'Choisissez vos parfums',
+      'ho.p1':"Choisissez parmi les douze parfums signature, ou décrivez un thème — des couleurs, une occasion, un goût préféré. Captures d'écran et photos d'inspiration bienvenues.",
+      'ho.h2':'Envoyez-le sur WhatsApp',
+      'ho.p2':'Envoyez votre sélection, la quantité et la date. Nous répondons personnellement — ici, c\'est un atelier, pas un centre d\'appels.',
+      'ho.cta':'Commencer la conversation',
+      'ho.h3':'Nous confirmons ensemble',
+      'ho.p3':"Prix, paiement et délais sont convenus dans la conversation avant toute cuisson — sans surprise, sans petites lignes.",
+      'ho.h4':'Retrait ou livraison',
+      'ho.p4':"Récupérez votre commande à Alger ou faites-vous livrer, fraîche de l'atelier et emballée pour l'occasion.",
+      'ho.note':"Les commandes personnalisées et d'événement se préparent sur planning — écrivez-nous quelques jours avant votre date.",
+      'te.eyebrow':'Mots doux','te.title':'De nos clients',
+      'te.slot':"Réservé aux mots d'un client — bientôt ici.",
+      'te.p':'Nos clients partagent leurs tables chaque semaine sur Instagram — retrouvez-y les dernières commandes, reels et avis.',
+      'fq.eyebrow':'Bon à savoir','fq.title':'Questions fréquentes',
+      'fq.q1':'Où livrez-vous ?',
+      'fq.a1':"Nous sommes basés à Alger. Livraison dans les environs et retrait sont possibles — envoyez votre quartier sur WhatsApp et nous confirmerons les options pour votre adresse.",
+      'fq.q2':"Combien de temps à l'avance faut-il commander ?",
+      'fq.a2':"Quelques jours d'avance suffisent pour les coffrets classiques ; les grandes commandes ou les créations sur mesure demandent plus de délai. Envoyez d'abord votre date, nous confirmerons ce qui est possible.",
+      'fq.q3':'Puis-je personnaliser couleurs et parfums ?',
+      'fq.a3':"Oui — coques et garnitures s'accordent à votre thème, et les coffrets peuvent être personnalisés. Envoyez vos photos d'inspiration sur WhatsApp et nous construirons la commande autour.",
+      'fq.q4':'Comment se passe le paiement ?',
+      'fq.a4':"Tout se décide dans la conversation WhatsApp — prix, mode de paiement et délais sont confirmés ensemble avant la cuisson.",
+      'fq.q5':'Comment conserver les macarons ?',
+      'fq.a5':"Gardez-les au réfrigérateur dans leur boîte et dégustez-les sous quelques jours. Sortez-les quelques minutes avant de servir — c'est là que la texture est parfaite.",
+      'ct.eyebrow':'Nous répondons personnellement','ct.title':'Commander & contact',
+      'ct.sub':"WhatsApp est le moyen le plus rapide de commander ; les DM Instagram fonctionnent aussi.",
+      'ct.wa':'Commandes, questions et demandes sur mesure.',
+      'ct.ig':'Fournées du jour, reels et tables de clients.',
+      'ct.loc':'Alger, Algérie',
+      'ct.locp':"Atelier à domicile — livraison autour d'Alger et retrait sur rendez-vous.",
+      'ct.how':'Voir comment commander',
+      'ft.tag':"Macarons artisanaux et personnalisés, faits avec amour pour vos plus doux moments — depuis un atelier familial à Alger.",
+      'ft.quick':'Liens rapides','ft.contact':'Contact','ft.addr':'Alger, Algérie','ft.bottom':'fait maison à Alger',
+      'wa.msg':'Bonjour Dori Yums ! Je voudrais passer une commande.',
+      'wa.flavor':'Bonjour Dori Yums ! Je voudrais commander des macarons {f}.',
+      'wa.cake':'Bonjour Dori Yums ! Je voudrais parler d\'un gâteau personnalisé.'
+    }
+  };
+
+  var LANG = document.documentElement.lang === 'fr' ? 'fr' : 'en';
+
+  function t(key){ return (I18N[LANG] && I18N[LANG][key] != null) ? I18N[LANG][key] : (I18N.en[key] || key); }
+
+  function waHref(msg){ return 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(msg); }
+
+  function applyLang(){
+    document.documentElement.lang = LANG;
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      el.textContent = t(el.getAttribute('data-i18n'));
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach(function(el){
+      el.innerHTML = t(el.getAttribute('data-i18n-html'));
+    });
+    document.querySelectorAll('.lang-switch button').forEach(function(b){
+      b.setAttribute('aria-pressed', String(b.getAttribute('data-lang') === LANG));
+    });
+    /* WhatsApp deep links with localized prefilled messages */
+    document.querySelectorAll('a.wa-link').forEach(function(a){ a.href = waHref(t('wa.msg')); });
+    document.querySelectorAll('a.wa-cakes').forEach(function(a){ a.href = waHref(t('wa.cake')); });
+    document.querySelectorAll('a.wa-flavor').forEach(function(a){
+      a.href = waHref(t('wa.flavor').replace('{f}', a.getAttribute('data-flavor')));
+    });
+    try{ localStorage.setItem('doriyums_lang', LANG); }catch(e){}
+  }
+
+  document.querySelectorAll('.lang-switch button').forEach(function(b){
+    b.addEventListener('click', function(){
+      var next = b.getAttribute('data-lang');
+      if(next !== LANG){ LANG = next; applyLang(); }
+    });
+  });
+  applyLang();
+
+  /* ─── theme ─── */
+  var themeBtn = document.getElementById('themeBtn');
+  themeBtn.addEventListener('click', function(){
+    var next = document.documentElement.getAttribute('data-theme') === 'gallery' ? 'maison' : 'gallery';
+    document.documentElement.setAttribute('data-theme', next);
+    try{ localStorage.setItem('doriyums_theme', next); }catch(e){}
+  });
+
+  /* ─── nav scroll state ─── */
+  var nav = document.getElementById('nav');
+  function onScroll(){ nav.classList.toggle('scrolled', window.scrollY > 24); }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  /* ─── mobile menu ─── */
+  var burger = document.getElementById('burger');
+  var mobileMenu = document.getElementById('mobileMenu');
+  burger.addEventListener('click', function(){
+    var open = mobileMenu.classList.toggle('open');
+    burger.setAttribute('aria-expanded', String(open));
+  });
+  mobileMenu.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){
+      mobileMenu.classList.remove('open');
+      burger.setAttribute('aria-expanded','false');
+    });
+  });
+
+  /* ─── scroll reveal ─── */
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, {threshold:.14, rootMargin:'0px 0px -40px'});
+  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+
+  /* ─── order steps tabs ─── */
+  var tabs = document.querySelectorAll('.order-tab');
+  var panels = document.querySelectorAll('.order-step');
+  tabs.forEach(function(tab){
+    tab.addEventListener('click', function(){
+      tabs.forEach(function(x){ x.setAttribute('aria-selected','false'); });
+      tab.setAttribute('aria-selected','true');
+      var step = tab.getAttribute('data-step');
+      panels.forEach(function(p){ p.hidden = p.id !== 'panel-' + step; });
+    });
+  });
+
+  /* ─── FAQ accordion ─── */
+  document.querySelectorAll('.faq-item').forEach(function(item){
+    var q = item.querySelector('.faq-q');
+    var a = item.querySelector('.faq-a');
+    q.addEventListener('click', function(){
+      var open = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(function(o){
+        o.classList.remove('open');
+        o.querySelector('.faq-q').setAttribute('aria-expanded','false');
+        o.querySelector('.faq-a').style.maxHeight = '0px';
+      });
+      if(!open){
+        item.classList.add('open');
+        q.setAttribute('aria-expanded','true');
+        a.style.maxHeight = a.scrollHeight + 'px';
+      }
+    });
+  });
+
+  /* ─── footer year ─── */
+  document.getElementById('year').textContent = new Date().getFullYear();
+})();
+</script>
+</body>
+</html>

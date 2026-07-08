@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "dori-yums",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "4173", "--directory", "C:\\Users\\islam\\Desktop\\dori-yums"],
+      "port": 4173
+    }
+  ]
+}
