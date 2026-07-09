@@ -652,7 +652,18 @@ html[lang="ar"] .om-tier{font-style:normal}
   .hero{padding-top:calc(var(--nav-h) + 28px)}
   .hero-badge{width:74px;height:74px}
   .hero-ctas .btn{width:100%;justify-content:center}
-  .placards{grid-template-columns:1fr;max-width:340px;margin-inline:auto;margin-top:44px}
+  /* 2-up compact placards: half-width cards, scaled type, full-width tap target */
+  .placards{grid-template-columns:repeat(2,1fr);gap:14px;margin-top:44px}
+  .placard{padding:6px}
+  .placard:hover{transform:none}
+  .placard-mat{padding:7px 7px 0}
+  .placard-body{padding:10px 8px 12px}
+  .placard-roman{font-size:.72rem;letter-spacing:.22em}
+  .placard-name{font-size:1.08rem;line-height:1.2}
+  .placard-en{font-size:.56rem;letter-spacing:.12em}
+  .placard-rule{margin:8px auto;width:44px}
+  .placard-desc{font-size:.72rem;line-height:1.5;min-height:4.4em}
+  .placard-order{width:100%;justify-content:center;gap:5px;font-size:.68rem;padding:10px 8px;margin-top:10px}
   .occasions-grid{grid-template-columns:1fr}
   .order-tab{flex:1 1 100%}
   .order-panel{padding:30px 24px}
