@@ -534,8 +534,13 @@ html.splash .splash-overlay img{
 }
 @keyframes splash-in{from{opacity:0;transform:scale(.82)}to{opacity:1;transform:scale(1)}}
 @keyframes splash-out{to{opacity:0;visibility:hidden}}
+/* reduced motion: same ~1s splash, but static — logo shown immediately,
+   overlay cut away at .9s with no movement (display:none here would
+   suppress the splash for every Windows user with animation effects off) */
 @media (prefers-reduced-motion: reduce){
-  html.splash .splash-overlay{display:none}
+  html.splash .splash-overlay{animation-duration:.01s;animation-delay:.9s}
+  html.splash .splash-overlay img,
+  html.splash .splash-overlay::before{animation:none}
 }
 
 /* ── Arabic (LTR layout kept; only glyphs/typography adapt) ── */
