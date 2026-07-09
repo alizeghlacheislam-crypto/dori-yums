@@ -33,6 +33,11 @@
     document.documentElement.lang = l;
     var t = localStorage.getItem('doriyums_theme');
     document.documentElement.setAttribute('data-theme', t === 'gallery' ? 'gallery' : 'maison');
+    /* cinematic logo splash — once per browser session */
+    if(!sessionStorage.getItem('doriyums_splash')){
+      document.documentElement.classList.add('splash');
+      sessionStorage.setItem('doriyums_splash', '1');
+    }
   }catch(e){}
 })();
 </script>
@@ -507,6 +512,32 @@ html[data-theme="gallery"] .footer .brand-name{color:var(--accent-soft)}
 html[data-theme="gallery"] .float-ig{background:linear-gradient(135deg,#E8C547,#D4AF37 50%,#9A7B26)}
 .float-fb{background:#1877F2}
 
+/* ── splash intro (≈1s, purely visual overlay, shown once per session) ── */
+.splash-overlay{display:none}
+html.splash .splash-overlay{
+  display:grid;place-items:center;
+  position:fixed;inset:0;z-index:120;
+  background:var(--bg);
+  pointer-events:none;
+  animation:splash-out .35s var(--ease) .68s forwards;
+}
+html.splash .splash-overlay::before{
+  content:"";position:absolute;width:min(70vw,420px);aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(closest-side, color-mix(in srgb, var(--accent) 22%, transparent), transparent 72%);
+  animation:splash-in .5s var(--ease) both;
+}
+html.splash .splash-overlay img{
+  position:relative;width:118px;height:118px;border-radius:50%;
+  box-shadow:0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent),
+             0 22px 55px color-mix(in srgb, var(--accent) 35%, transparent);
+  animation:splash-in .42s var(--ease) both;
+}
+@keyframes splash-in{from{opacity:0;transform:scale(.82)}to{opacity:1;transform:scale(1)}}
+@keyframes splash-out{to{opacity:0;visibility:hidden}}
+@media (prefers-reduced-motion: reduce){
+  html.splash .splash-overlay{display:none}
+}
+
 /* ── Arabic (LTR layout kept; only glyphs/typography adapt) ── */
 html[lang="ar"]{--serif:'Amiri','Cormorant Garamond',serif;--sans:'Tajawal','Inter',sans-serif}
 html[lang="ar"] body{font-weight:400}
@@ -625,6 +656,11 @@ html[lang="ar"] .om-tier{font-style:normal}
 </style>
 </head>
 <body>
+
+<!-- ═══════════ SPLASH INTRO (visual overlay only; site loads underneath) ═══════════ -->
+<div class="splash-overlay" id="splash" aria-hidden="true">
+  <img src="assets/logo.webp" alt="" width="118" height="118" fetchpriority="high" />
+</div>
 
 <!-- ═══════════ NAV ═══════════ -->
 <header class="nav" id="nav">
@@ -1331,6 +1367,20 @@ html[lang="ar"] .om-tier{font-style:normal}
   'use strict';
 
   var WA_NUMBER = '213551401704';
+
+  /* ─── splash cleanup (animation is pure CSS; this only removes the node) ─── */
+  (function(){
+    var splash = document.getElementById('splash');
+    if(!splash) return;
+    if(document.documentElement.classList.contains('splash')){
+      setTimeout(function(){
+        splash.remove();
+        document.documentElement.classList.remove('splash');
+      }, 1150);
+    }else{
+      splash.remove();
+    }
+  })();
 
   /* ─── i18n ─── */
   var I18N = {
