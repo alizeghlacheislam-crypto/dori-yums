@@ -409,13 +409,31 @@ html[data-theme="gallery"] .theme-btn .moon{display:block}
 .order-note{margin-top:26px;font-size:.85rem;color:var(--muted);font-style:italic}
 
 /* ── testimonials ── */
-.quotes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-top:54px}
+/* wraps to extra rows automatically if more screenshots are added later */
+.quotes-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:26px;margin-top:54px}
 .quote{
-  border:1px dashed var(--line);border-radius:18px;padding:34px 28px;text-align:center;
-  color:var(--muted);
+  border:1px dashed var(--line);border-radius:18px;padding:26px 22px 20px;text-align:center;
+  color:var(--muted);margin:0;
 }
 .quote .mark{font-family:var(--serif);font-size:3rem;line-height:1;color:var(--accent);display:block;margin-bottom:10px}
-.quote p{font-style:italic;font-size:.92rem;margin:0}
+/* cream mat around the white capture, echoing the placard molding */
+.quote-shot{
+  background:linear-gradient(135deg,#FFFAEC,#FAEFD2 60%,#EFE0B8);
+  padding:9px;border-radius:14px;
+  border:1px solid rgba(156,86,102,.3);
+  box-shadow:0 14px 30px rgba(58,31,31,.16);
+}
+html[data-theme="gallery"] .quote-shot{border-color:rgba(212,175,55,.35);box-shadow:0 14px 30px rgba(0,0,0,.5)}
+.quote-shot img{
+  display:block;width:100%;
+  aspect-ratio:5.5/1;object-fit:contain;background:#FFFFFF;
+  border-radius:8px;border:1px solid rgba(62,36,24,.12);
+}
+.quote-src{
+  display:flex;align-items:center;justify-content:center;gap:7px;margin-top:14px;
+  font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
+}
+.quote-src svg{width:14px;height:14px;color:var(--accent-deep);flex:none}
 .quotes-cta{text-align:center;margin-top:44px}
 .quotes-cta .btn{margin-top:18px}
 .quotes-cta p{color:var(--muted);max-width:52ch;margin-inline:auto}
@@ -1051,20 +1069,38 @@ html[lang="ar"] .om-tier{font-style:normal}
       <h2 class="section-title" data-i18n="te.title">From our clients</h2>
       <hr class="gold-rule" />
     </div>
-    <!-- Placeholder structure: replace each .quote with a real client review when supplied. -->
+    <!-- Real client comments captured from Instagram (cropped originals in assets/testimonial-*.jpg) -->
     <div class="quotes-grid">
-      <div class="quote reveal">
+      <figure class="quote reveal">
         <span class="mark">“</span>
-        <p data-i18n="te.slot">Reserved for a client's words — coming soon.</p>
-      </div>
-      <div class="quote reveal">
+        <div class="quote-shot">
+          <img src="assets/testimonial-1.jpg" alt="Instagram comment by perrie_chapier: “masterpiece” with four heart-eyes emojis" loading="lazy" />
+        </div>
+        <figcaption class="quote-src">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".8" fill="currentColor" stroke="none"/></svg>
+          <span data-i18n="te.via">via Instagram</span>
+        </figcaption>
+      </figure>
+      <figure class="quote reveal">
         <span class="mark">“</span>
-        <p data-i18n="te.slot">Reserved for a client's words — coming soon.</p>
-      </div>
-      <div class="quote reveal">
+        <div class="quote-shot">
+          <img src="assets/testimonial-2.jpg" alt="Instagram comment by _meriem_mer._: “Je valide a 100% les meilleurs, mais vraiment la variété des goûts parfait”" loading="lazy" />
+        </div>
+        <figcaption class="quote-src">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".8" fill="currentColor" stroke="none"/></svg>
+          <span data-i18n="te.via">via Instagram</span>
+        </figcaption>
+      </figure>
+      <figure class="quote reveal">
         <span class="mark">“</span>
-        <p data-i18n="te.slot">Reserved for a client's words — coming soon.</p>
-      </div>
+        <div class="quote-shot">
+          <img src="assets/testimonial-3.jpg" alt="Instagram comment by sabrinahalouane: “Je confirme c'est un délice au palais et un plaisir à déguster”" loading="lazy" />
+        </div>
+        <figcaption class="quote-src">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".8" fill="currentColor" stroke="none"/></svg>
+          <span data-i18n="te.via">via Instagram</span>
+        </figcaption>
+      </figure>
     </div>
     <div class="quotes-cta reveal">
       <p data-i18n="te.p">Our clients share their tables with us every week on Instagram — see the latest orders, reels and reviews there.</p>
@@ -1353,7 +1389,7 @@ html[lang="ar"] .om-tier{font-style:normal}
       'ho.p4':'Collect your order in Algiers or have it delivered to your door, fresh from the atelier and boxed for the occasion.',
       'ho.note':'Custom and event orders are baked to schedule — message us a few days ahead of your date.',
       'te.eyebrow':'Sweet words','te.title':'From our clients',
-      'te.slot':"Reserved for a client's words — coming soon.",
+      'te.via':'via Instagram',
       'te.p':'Our clients share their tables with us every week on Instagram — see the latest orders, reels and reviews there.',
       'fq.eyebrow':'Good to know','fq.title':'Frequently asked',
       'fq.q1':'Where do you deliver?',
@@ -1440,7 +1476,7 @@ html[lang="ar"] .om-tier{font-style:normal}
       'ho.p4':"Récupérez votre commande à Alger ou faites-vous livrer, fraîche de l'atelier et emballée pour l'occasion.",
       'ho.note':"Les commandes personnalisées et d'événement se préparent sur planning — écrivez-nous quelques jours avant votre date.",
       'te.eyebrow':'Mots doux','te.title':'De nos clients',
-      'te.slot':"Réservé aux mots d'un client — bientôt ici.",
+      'te.via':'via Instagram',
       'te.p':'Nos clients partagent leurs tables chaque semaine sur Instagram — retrouvez-y les dernières commandes, reels et avis.',
       'fq.eyebrow':'Bon à savoir','fq.title':'Questions fréquentes',
       'fq.q1':'Où livrez-vous ?',
@@ -1528,7 +1564,7 @@ html[lang="ar"] .om-tier{font-style:normal}
       'ho.p4':'استلموا طلبيتكم في الجزائر العاصمة أو تُوصَّل إلى بابكم، طازجة من الورشة ومعلَّبة للمناسبة.',
       'ho.note':'الطلبيات المخصّصة وطلبيات المناسبات تُخبز وفق جدول — راسلونا قبل موعدكم بأيام.',
       'te.eyebrow':'كلمات حلوة','te.title':'من زبائننا',
-      'te.slot':'محجوز لكلمات زبون — قريبًا هنا.',
+      'te.via':'عبر إنستغرام',
       'te.p':'يشارك زبائننا طاولاتهم معنا كل أسبوع على إنستغرام — شاهدوا أحدث الطلبيات والمقاطع والآراء هناك.',
       'fq.eyebrow':'جيد أن تعرف','fq.title':'أسئلة شائعة',
       'fq.q1':'أين توصلون؟',

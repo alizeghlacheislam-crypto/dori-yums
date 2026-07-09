@@ -19,7 +19,7 @@ Single-page site for **Dori Yums**, a home-based atelier for handmade and custom
 ## Content notes for the client
 
 - **Prices** appear only inside the order modal. Base unit prices (DZD) were carried over from the v1 catalog (`data-price` on each card's order link): adjust them there if they change. Tiers: base under 60 pcs, −5 DZD/pc from 60, −10 DZD/pc from 120 (flat).
-- **Testimonials** section contains clearly-marked reserved slots; replace each `.quote` block with real client reviews when available.
+- **Testimonials** show real Instagram comment screenshots (`assets/testimonial-*.jpg`, cropped to avatar + username + comment). To add more, drop another cropped capture in `assets/` and duplicate a `.quote` figure — the grid wraps to extra rows automatically.
 - **FAQ answers** avoid concrete lead times / payment methods until confirmed; tighten them once policies are fixed.
 
 ## Deploy
