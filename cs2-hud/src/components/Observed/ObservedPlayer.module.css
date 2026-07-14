@@ -1,0 +1,155 @@
+.root {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 620px;
+  display: flex;
+  align-items: stretch;
+  gap: 14px;
+  padding: 12px 16px;
+}
+
+.identity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.names {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.nickRow {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.nick {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.realName {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.roleTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  padding: 1.5px 5px;
+  text-transform: uppercase;
+}
+
+.vitals {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 14px;
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+}
+
+.vital {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.vitalHp {
+  color: var(--hp-high);
+}
+
+.vitalArmor {
+  color: var(--text);
+}
+
+.weaponBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-width: 130px;
+}
+
+.weaponName {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+.weaponAmmo {
+  font-family: var(--font-timer);
+  font-size: 16px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.weaponAmmo span {
+  color: var(--text-dim);
+  font-size: 12px;
+}
+
+.statGrid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3px 10px;
+  align-content: center;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.statValue {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+
+.statLabel {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--text-dim);
+}
+
+.ratingGood {
+  color: var(--secondary);
+}
+
+.ratingBad {
+  color: var(--primary);
+}

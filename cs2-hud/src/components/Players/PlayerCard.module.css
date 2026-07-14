@@ -1,0 +1,323 @@
+.card {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  overflow: hidden;
+  transition: opacity var(--dur-med) var(--ease-out);
+}
+
+.right {
+  flex-direction: row-reverse;
+}
+
+.dead {
+  opacity: 0.62;
+}
+
+.observed {
+  outline: 1px solid var(--accent);
+  outline-offset: -1px;
+}
+
+/* flash / damage / fire overlays --------------------------------- */
+
+.flashOverlay {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  pointer-events: none;
+  transition: opacity 120ms linear;
+}
+
+.damageOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(230, 57, 70, 0.28), transparent 65%);
+  pointer-events: none;
+}
+
+.right .damageOverlay {
+  background: linear-gradient(270deg, rgba(230, 57, 70, 0.28), transparent 65%);
+}
+
+.burnOverlay {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 3px;
+  background: linear-gradient(90deg, #ff7b39, #ffd166);
+  pointer-events: none;
+}
+
+.smokeOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(160, 167, 180, 0.16);
+  backdrop-filter: blur(1px);
+  pointer-events: none;
+}
+
+/* main info -------------------------------------------------------- */
+
+.info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.nameRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.right .nameRow {
+  flex-direction: row-reverse;
+}
+
+.name {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.roleBadge {
+  display: inline-flex;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+
+.mvpStars {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.streakBadge {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #0b0d11;
+  background: var(--accent);
+  border-radius: 3px;
+  padding: 1px 4px;
+  flex-shrink: 0;
+}
+
+.money {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--secondary);
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+.right .money {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.moneyPulse {
+  animation: moneyPulse 380ms var(--ease-out);
+}
+
+@keyframes moneyPulse {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+
+/* hp row ----------------------------------------------------------- */
+
+.hpRow {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 8px;
+}
+
+.right .hpRow {
+  flex-direction: row-reverse;
+}
+
+.hpValue {
+  font-size: 12px;
+  font-weight: 800;
+  min-width: 22px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.right .hpValue {
+  text-align: left;
+}
+
+.hpBar {
+  flex: 1;
+  height: 5px;
+}
+
+.gearIcons {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+
+.gearActive {
+  color: var(--text);
+}
+
+/* stats row --------------------------------------------------------- */
+
+.statsRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.right .statsRow {
+  flex-direction: row-reverse;
+}
+
+.statItem b {
+  color: var(--text);
+  font-weight: 700;
+}
+
+/* weapons column ----------------------------------------------------- */
+
+.weapons {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 3px;
+  width: 96px;
+  flex-shrink: 0;
+}
+
+.right .weapons {
+  align-items: flex-start;
+}
+
+.activeWeapon {
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.right .activeWeapon {
+  flex-direction: row-reverse;
+}
+
+.ammo {
+  font-size: 11px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+.ammoReserve {
+  color: var(--text-dim);
+  font-weight: 600;
+}
+
+.holstered {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: rgba(255, 255, 255, 0.38);
+}
+
+.right .holstered {
+  flex-direction: row-reverse;
+}
+
+.nades {
+  display: flex;
+  gap: 3px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.bombCarrier {
+  color: var(--primary);
+}
+
+.kitIcon {
+  color: var(--secondary);
+}
+
+/* action strip (plant / defuse / reload) ------------------------------ */
+
+.actionStrip {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8.5px;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  color: #0b0d11;
+  overflow: hidden;
+}
+
+.actionFill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--accent);
+}
+
+.actionDefuse .actionFill {
+  background: var(--secondary);
+}
+
+.actionLabel {
+  position: relative;
+  z-index: 1;
+  mix-blend-mode: normal;
+  color: #0b0d11;
+}
+
+/* dead state ----------------------------------------------------------- */
+
+.deadCenter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-dim);
+}
+
+.deadStats {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}

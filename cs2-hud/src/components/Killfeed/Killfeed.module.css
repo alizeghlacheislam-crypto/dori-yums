@@ -1,0 +1,78 @@
+.root {
+  position: absolute;
+  top: 130px;
+  right: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+  width: 460px;
+  pointer-events: none;
+}
+
+.entry {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  font-family: var(--font-body);
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.highlight {
+  outline: 1px solid var(--primary);
+  outline-offset: -1px;
+}
+
+.nameCT {
+  color: var(--ct);
+}
+
+.nameT {
+  color: var(--t);
+}
+
+.assist {
+  color: var(--text-dim);
+  font-weight: 600;
+}
+
+.plus {
+  color: var(--text-dim);
+  font-weight: 600;
+  margin: 0 -2px;
+}
+
+.icons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text);
+}
+
+.flagIcon {
+  color: var(--accent);
+}
+
+.multiBadge {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #0b0d11;
+  background: var(--primary);
+  border-radius: 3px;
+  padding: 1px 4px;
+}
+
+.tradeTag {
+  font-size: 8.5px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: var(--secondary);
+  border: 1px solid var(--secondary);
+  border-radius: 3px;
+  padding: 0.5px 3px;
+}
