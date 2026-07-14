@@ -1,0 +1,86 @@
+.row {
+  overflow: hidden;
+}
+
+.rowInner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  border-radius: 4px;
+  background: rgba(11, 13, 17, 0.82);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(var(--panel-blur));
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.row[data-highlight='true'] .rowInner {
+  border-color: var(--primary);
+  box-shadow: 0 0 14px rgba(230, 57, 70, 0.28);
+}
+
+.name[data-side='CT'] {
+  color: var(--ct);
+}
+
+.name[data-side='T'] {
+  color: var(--t);
+}
+
+.name[data-teamkill='true'] {
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+}
+
+.plus {
+  color: var(--text-dim);
+  font-weight: 400;
+}
+
+.weapon {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text);
+  padding: 0 4px;
+}
+
+.badge {
+  color: var(--text-dim);
+}
+
+.badgeHS {
+  color: var(--primary);
+}
+
+.tags {
+  display: inline-flex;
+  gap: 5px;
+  margin-left: 2px;
+}
+
+.tag {
+  font-style: normal;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 1px 5px;
+  align-self: center;
+}
+
+.tag[data-danger='true'] {
+  color: var(--primary);
+}
+
+.tag[data-multi='true'] {
+  color: #0b0d11;
+  background: var(--accent);
+  border-color: var(--accent);
+}

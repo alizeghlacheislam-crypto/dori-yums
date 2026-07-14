@@ -1,0 +1,143 @@
+.pointsRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.otTag,
+.pointTag {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  padding: 3px 12px;
+  border-radius: 999px;
+  background: rgba(11, 13, 17, 0.82);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(var(--panel-blur));
+}
+
+.otTag {
+  color: var(--accent);
+  border-color: rgba(255, 209, 102, 0.4);
+}
+
+.pointTag[data-side='CT'] {
+  color: var(--ct);
+}
+
+.pointTag[data-side='T'] {
+  color: var(--t);
+}
+
+.defuseBox {
+  width: 340px;
+  padding: 8px 14px 10px;
+  border-radius: var(--panel-radius);
+  background: rgba(11, 13, 17, 0.85);
+  border: 1px solid rgba(46, 196, 182, 0.4);
+  backdrop-filter: blur(var(--panel-blur));
+}
+
+.defuseHead {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--secondary);
+  margin-bottom: 6px;
+}
+
+.tooLate {
+  font-style: normal;
+  margin-left: auto;
+  color: var(--primary);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+}
+
+.defuseTrack {
+  position: relative;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.defuseFill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--secondary);
+  transition: width 120ms linear;
+}
+
+.boomMark {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--primary);
+  transition: left 120ms linear;
+}
+
+.clutchBox {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 18px;
+  border-radius: var(--panel-radius);
+  background: rgba(11, 13, 17, 0.85);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(var(--panel-blur));
+  font-family: var(--font-display);
+}
+
+.clutchBox[data-side='CT'] {
+  border-left: 3px solid var(--ct);
+}
+
+.clutchBox[data-side='T'] {
+  border-left: 3px solid var(--t);
+}
+
+.clutchName {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.clutchVs {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: var(--primary);
+}
+
+.banner {
+  padding: 8px 26px;
+  border-radius: var(--panel-radius);
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  background: rgba(11, 13, 17, 0.88);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(var(--panel-blur));
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.45);
+}
+
+.banner[data-kind='ace'] {
+  color: var(--accent);
+  border-color: rgba(255, 209, 102, 0.5);
+}
+
+.banner[data-kind='plant'],
+.banner[data-kind='exploded'] {
+  color: var(--primary);
+  border-color: rgba(230, 57, 70, 0.5);
+}
+
+.banner[data-kind='defused'] {
+  color: var(--secondary);
+  border-color: rgba(46, 196, 182, 0.5);
+}

@@ -1,0 +1,354 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  opacity: var(--panel-opacity);
+}
+
+/* ------------------------------ brand row ------------------------------ */
+.brandRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 4px 18px;
+  border-radius: 999px;
+  background: var(--glass);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(var(--panel-blur));
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+.brandLogo {
+  height: 20px;
+  max-width: 120px;
+  object-fit: contain;
+}
+
+.brandName {
+  color: var(--text);
+}
+
+.matchTitle {
+  color: var(--accent);
+}
+
+.mapTag {
+  font-variant-numeric: tabular-nums;
+}
+
+/* -------------------------------- bar ---------------------------------- */
+.bar {
+  display: flex;
+  align-items: stretch;
+  height: 72px;
+  border-radius: var(--panel-radius);
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(var(--panel-blur));
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+}
+
+.teamBlock {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 16px;
+  width: 500px;
+  padding: 0 18px;
+}
+
+.teamBlock[data-align='left'] {
+  grid-template-columns: 1fr auto auto;
+}
+
+.teamBlock[data-align='right'] {
+  grid-template-columns: auto auto 1fr;
+}
+
+.teamBlock[data-align='right'] .teamIdentity {
+  order: 3;
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+.teamBlock[data-align='right'] .scoreCluster {
+  order: 2;
+}
+
+.teamBlock[data-align='right'] .teamEco {
+  order: 1;
+  align-items: flex-start;
+}
+
+.teamIdentity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.teamText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.teamName {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.teamMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.teamBlock[data-align='right'] .teamMeta {
+  justify-content: flex-end;
+}
+
+.sideTag {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+
+.sideTag[data-side='CT'] {
+  color: var(--ct);
+  background: var(--ct-soft);
+}
+
+.sideTag[data-side='T'] {
+  color: var(--t);
+  background: var(--t-soft);
+}
+
+.coachTag {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+}
+
+.timeouts {
+  display: flex;
+  gap: 3px;
+}
+
+.timeoutPip {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.timeoutPip[data-used='true'] {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.scoreCluster {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.score {
+  font-family: var(--font-display);
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.score[data-side='CT'] {
+  color: var(--ct);
+}
+
+.score[data-side='T'] {
+  color: var(--t);
+}
+
+.seriesDots {
+  display: flex;
+  gap: 4px;
+}
+
+.seriesDot {
+  width: 14px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.seriesDot[data-filled='true'] {
+  background: var(--accent);
+}
+
+.teamEco {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.aliveBar {
+  display: flex;
+  gap: 3px;
+}
+
+.aliveSegment {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  transform-origin: bottom;
+}
+
+.aliveSegment[data-side='CT'] {
+  background: var(--ct);
+}
+
+.aliveSegment[data-side='T'] {
+  background: var(--t);
+}
+
+.ecoRow {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.ecoDivider {
+  width: 1px;
+  height: 10px;
+  background: var(--border);
+}
+
+/* ------------------------------ center --------------------------------- */
+.centerClock {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: 148px;
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.roundInfo {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--text-dim);
+}
+
+.clockFace {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+}
+
+.roundTime {
+  font-family: var(--font-timer);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.clockFace[data-low='true'] .roundTime {
+  color: var(--primary);
+}
+
+.bombClock {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-timer);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.pauseClock {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-timer);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.siteTag {
+  position: absolute;
+  bottom: 4px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  color: var(--primary);
+}
+
+/* ---------------------------- win probability --------------------------- */
+.winProb {
+  position: relative;
+  width: 1148px;
+  height: 14px;
+  border-radius: 999px;
+  background: var(--glass);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  backdrop-filter: blur(var(--panel-blur));
+}
+
+.winProbFill {
+  height: 100%;
+  border-radius: 999px;
+}
+
+.winProbFill[data-side='CT'] {
+  background: linear-gradient(90deg, var(--ct), rgba(46, 196, 182, 0.35));
+}
+
+.winProbFill[data-side='T'] {
+  background: linear-gradient(90deg, var(--t), rgba(255, 209, 102, 0.35));
+}
+
+.winProbLabel {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 9px;
+  font-weight: 800;
+  color: var(--text);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}

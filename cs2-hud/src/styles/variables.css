@@ -1,0 +1,44 @@
+:root {
+  /* ----- Palette (overridable at runtime through the HUD config) ----- */
+  --bg: #0b0d11;
+  --card: #151a22;
+  --glass: rgba(255, 255, 255, 0.06);
+  --glass-strong: rgba(255, 255, 255, 0.1);
+  --primary: #e63946;
+  --secondary: #2ec4b6;
+  --accent: #ffd166;
+  --text: #ffffff;
+  --text-dim: #a0a7b4;
+  --border: rgba(255, 255, 255, 0.08);
+
+  /* ----- Side colors ----- */
+  --ct: #2ec4b6;
+  --ct-soft: rgba(46, 196, 182, 0.16);
+  --t: #ffd166;
+  --t-soft: rgba(255, 209, 102, 0.16);
+
+  /* ----- Semantic ----- */
+  --hp-high: #ffffff;
+  --hp-mid: #ffd166;
+  --hp-low: #e63946;
+  --danger: #e63946;
+  --success: #2ec4b6;
+
+  /* ----- Surfaces ----- */
+  --panel-bg: linear-gradient(180deg, rgba(21, 26, 34, 0.92), rgba(11, 13, 17, 0.88));
+  --panel-blur: 14px;
+  --panel-radius: 6px;
+  --panel-opacity: 1;
+
+  /* ----- Typography ----- */
+  --font-ui: 'Inter', system-ui, sans-serif;
+  --font-display: 'Rajdhani', 'Inter', sans-serif;
+  --font-timer: 'Orbitron', 'Rajdhani', monospace;
+
+  /* ----- Motion (never longer than 400ms) ----- */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-snap: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 160ms;
+  --dur: 280ms;
+  --dur-max: 400ms;
+}

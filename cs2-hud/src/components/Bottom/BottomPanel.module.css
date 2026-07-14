@@ -1,0 +1,150 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: var(--panel-radius);
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(var(--panel-blur));
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  opacity: var(--panel-opacity);
+}
+
+.ecoRow {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.ecoBlock {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 280px;
+}
+
+.ecoBlock[data-align='right'] {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+.ecoDetail {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ecoBuy {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.ecoBuy[data-tier='FULL BUY'] {
+  color: var(--success);
+}
+
+.ecoBuy[data-tier='FORCE BUY'],
+.ecoBuy[data-tier='SEMI BUY'] {
+  color: var(--accent);
+}
+
+.ecoBuy[data-tier='SEMI ECO'],
+.ecoBuy[data-tier='FULL ECO'] {
+  color: var(--primary);
+}
+
+.ecoNumbers {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ------------------------------- graph --------------------------------- */
+.graph {
+  display: flex;
+  align-items: stretch;
+  gap: 3px;
+  height: 44px;
+}
+
+.graphCol {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 10px;
+  gap: 1px;
+}
+
+.graphBarTop,
+.graphBarBottom {
+  width: 100%;
+  border-radius: 1px;
+  max-height: 50%;
+  min-height: 2px;
+  transition: height var(--dur-max) var(--ease);
+}
+
+.graphBarTop {
+  align-self: flex-end;
+}
+
+.graphBarTop[data-side='CT'],
+.graphBarBottom[data-side='CT'] {
+  background: var(--ct);
+}
+
+.graphBarTop[data-side='T'],
+.graphBarBottom[data-side='T'] {
+  background: var(--t);
+}
+
+.graphBarBottom {
+  opacity: 0.7;
+}
+
+/* ---------------------------- round history ----------------------------- */
+.history {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.roundPip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: 24px;
+  padding: 3px 0 2px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.pipIcon {
+  display: grid;
+  place-items: center;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  color: #0b0d11;
+}
+
+.roundPip[data-winner='CT'] .pipIcon {
+  background: var(--ct);
+}
+
+.roundPip[data-winner='T'] .pipIcon {
+  background: var(--t);
+}
+
+.pipRound {
+  font-size: 8px;
+  font-weight: 700;
+  color: var(--text-dim);
+}

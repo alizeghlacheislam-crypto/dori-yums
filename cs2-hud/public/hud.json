@@ -1,0 +1,68 @@
+{
+  "name": "AURORA",
+  "version": "1.0.0",
+  "author": "Dori Yums Esports",
+  "legacy": false,
+  "isDev": false,
+  "url": "https://github.com/alizeghlacheislam-crypto/dori-yums",
+  "game": "csgo",
+  "killfeed": true,
+  "radar": true,
+  "keybinds": [
+    { "bind": "Alt+L", "action": "toggleLineups" },
+    { "bind": "Alt+V", "action": "toggleVeto" },
+    { "bind": "Alt+S", "action": "toggleStats" },
+    { "bind": "Alt+C", "action": "toggleComparison" },
+    { "bind": "Alt+R", "action": "toggleReplay" },
+    { "bind": "Alt+O", "action": "toggleObserver" },
+    { "bind": "Alt+D", "action": "toggleRadar" },
+    { "bind": "Alt+B", "action": "toggleBottom" },
+    { "bind": "Alt+K", "action": "toggleKillfeed" },
+    { "bind": "Alt+W", "action": "toggleWinner" }
+  ],
+  "panel": [
+    {
+      "label": "Branding",
+      "name": "branding",
+      "inputs": [
+        { "type": "image", "name": "tournament_logo", "label": "Tournament logo" },
+        { "type": "image", "name": "sponsor_logo", "label": "Sponsor logo" },
+        { "type": "text", "name": "match_title", "label": "Match title (e.g. GRAND FINAL)" },
+        { "type": "text", "name": "tournament_name", "label": "Tournament name" }
+      ]
+    },
+    {
+      "label": "Theme",
+      "name": "theme",
+      "inputs": [
+        { "type": "color", "name": "color_primary", "label": "Primary color" },
+        { "type": "color", "name": "color_secondary", "label": "Secondary / CT color" },
+        { "type": "color", "name": "color_accent", "label": "Accent / T color" },
+        { "type": "text", "name": "panel_opacity", "label": "Panel opacity (0-1)" },
+        { "type": "checkbox", "name": "reduced_motion", "label": "Reduce animations" }
+      ]
+    },
+    {
+      "label": "Modules",
+      "name": "modules",
+      "inputs": [
+        { "type": "checkbox", "name": "show_radar", "label": "Show radar" },
+        { "type": "checkbox", "name": "show_killfeed", "label": "Show killfeed" },
+        { "type": "checkbox", "name": "show_bottom", "label": "Show bottom economy panel" },
+        { "type": "checkbox", "name": "show_round_history", "label": "Show round history" },
+        { "type": "checkbox", "name": "show_win_probability", "label": "Show win probability" },
+        { "type": "checkbox", "name": "show_observer", "label": "Show observer panel" },
+        { "type": "checkbox", "name": "show_player_roles", "label": "Show player role icons" }
+      ]
+    },
+    {
+      "label": "Display",
+      "name": "display",
+      "inputs": [
+        { "type": "text", "name": "series_type", "label": "Series type override (bo1/bo3/bo5)" },
+        { "type": "text", "name": "radar_size", "label": "Radar size in px (default 320)" },
+        { "type": "text", "name": "killfeed_limit", "label": "Max killfeed rows (default 5)" }
+      ]
+    }
+  ]
+}

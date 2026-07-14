@@ -1,0 +1,24 @@
+{
+  "tournament_name": "AURORA CHAMPIONSHIP",
+  "match_title": "",
+  "tournament_logo": null,
+  "sponsor_logo": null,
+
+  "color_primary": "#E63946",
+  "color_secondary": "#2EC4B6",
+  "color_accent": "#FFD166",
+  "panel_opacity": "1",
+  "reduced_motion": false,
+
+  "show_radar": true,
+  "show_killfeed": true,
+  "show_bottom": true,
+  "show_round_history": true,
+  "show_win_probability": true,
+  "show_observer": false,
+  "show_player_roles": true,
+
+  "series_type": "auto",
+  "radar_size": "320",
+  "killfeed_limit": "5"
+}
