@@ -1,0 +1,98 @@
+.root {
+  position: absolute;
+  bottom: 18px;
+  right: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 10px 14px;
+  width: 250px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+.mode {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.modeIcon {
+  color: var(--accent);
+}
+
+.target {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-dim);
+}
+
+.slots {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+}
+
+.slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 4px 0 3px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--glass);
+}
+
+.slotActive {
+  border-color: var(--accent);
+  background: rgba(255, 209, 102, 0.12);
+}
+
+.slotDead {
+  opacity: 0.4;
+}
+
+.slotKey {
+  font-family: var(--font-timer);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--side-color, var(--text));
+}
+
+.slotName {
+  font-size: 7.5px;
+  font-weight: 700;
+  color: var(--text-dim);
+  max-width: 40px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.xray {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--text-dim);
+}
+
+.xrayOn {
+  color: var(--secondary);
+}

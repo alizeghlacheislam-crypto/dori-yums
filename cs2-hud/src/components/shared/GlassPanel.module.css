@@ -1,0 +1,26 @@
+.panel {
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  backdrop-filter: blur(var(--panel-blur));
+  -webkit-backdrop-filter: blur(var(--panel-blur));
+  box-shadow:
+    0 8px 28px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.card {
+  background: var(--panel-card);
+}
+
+.accentTop {
+  border-top: 2px solid var(--edge-color, var(--primary));
+}
+
+.accentLeft {
+  border-left: 3px solid var(--edge-color, var(--primary));
+}
+
+.accentRight {
+  border-right: 3px solid var(--edge-color, var(--primary));
+}

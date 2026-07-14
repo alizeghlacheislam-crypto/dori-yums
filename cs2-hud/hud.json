@@ -1,0 +1,85 @@
+{
+  "name": "Aurora",
+  "version": "1.0.0",
+  "author": "Aurora Broadcast Design",
+  "legacy": false,
+  "radar": true,
+  "killfeed": true,
+  "boltobserv": {
+    "css": false,
+    "maps": false
+  },
+  "keybinds": [
+    { "bind": "Alt+S", "action": "toggleStats" },
+    { "bind": "Alt+V", "action": "toggleVeto" },
+    { "bind": "Alt+I", "action": "toggleTeamsIntro" },
+    { "bind": "Alt+H", "action": "toggleHeadToHead" },
+    { "bind": "Alt+B", "action": "toggleBottomPanel" },
+    { "bind": "Alt+R", "action": "toggleReplay" },
+    { "bind": "Alt+O", "action": "toggleObserverPanel" },
+    { "bind": "Alt+C", "action": "toggleCams" }
+  ],
+  "panel": [
+    {
+      "label": "Branding",
+      "name": "branding",
+      "inputs": [
+        { "type": "image", "name": "tournament_logo", "label": "Tournament logo" },
+        { "type": "image", "name": "sponsor_logo", "label": "Sponsor logo" },
+        { "type": "text", "name": "match_title", "label": "Match title (e.g. Grand Final)" },
+        { "type": "text", "name": "tournament_name", "label": "Tournament name" }
+      ]
+    },
+    {
+      "label": "Theme",
+      "name": "theme",
+      "inputs": [
+        { "type": "color", "name": "primary_color", "label": "Primary accent color" },
+        { "type": "color", "name": "secondary_color", "label": "Secondary accent color" },
+        { "type": "color", "name": "highlight_color", "label": "Highlight color (timers, MVP)" },
+        {
+          "type": "select",
+          "name": "panel_opacity",
+          "label": "Panel opacity",
+          "values": [
+            { "label": "Low (65%)", "value": "low" },
+            { "label": "Default (82%)", "value": "default" },
+            { "label": "High (95%)", "value": "high" }
+          ]
+        },
+        {
+          "type": "select",
+          "name": "corner_style",
+          "label": "Corner style",
+          "values": [
+            { "label": "Rounded", "value": "rounded" },
+            { "label": "Sharp", "value": "sharp" }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Modules",
+      "name": "modules",
+      "inputs": [
+        { "type": "checkbox", "name": "show_radar", "label": "Show radar" },
+        { "type": "checkbox", "name": "show_killfeed", "label": "Show killfeed" },
+        { "type": "checkbox", "name": "show_round_history", "label": "Show round history strip" },
+        { "type": "checkbox", "name": "show_economy_graph", "label": "Show economy graph" },
+        { "type": "checkbox", "name": "show_win_probability", "label": "Show win probability" },
+        { "type": "checkbox", "name": "show_player_roles", "label": "Show player role icons" },
+        { "type": "checkbox", "name": "show_observer_panel", "label": "Show observer panel" },
+        { "type": "checkbox", "name": "reduced_motion", "label": "Reduce animations" }
+      ]
+    },
+    {
+      "label": "Match data",
+      "name": "match_data",
+      "inputs": [
+        { "type": "match", "name": "current_match", "label": "Current match" },
+        { "type": "player", "name": "star_player_left", "label": "Star player — left team" },
+        { "type": "player", "name": "star_player_right", "label": "Star player — right team" }
+      ]
+    }
+  ]
+}

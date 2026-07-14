@@ -1,0 +1,44 @@
+.wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 520px;
+}
+
+.label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+  width: 34px;
+}
+
+.labelRight {
+  text-align: right;
+}
+
+.track {
+  position: relative;
+  flex: 1;
+  height: 5px;
+  border-radius: 3px;
+  overflow: hidden;
+  background: var(--right-color, var(--t));
+}
+
+.fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--left-color, var(--ct));
+  border-radius: 3px 0 0 3px;
+}
+
+.notch {
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  left: 50%;
+  width: 2px;
+  background: rgba(11, 13, 17, 0.85);
+}
