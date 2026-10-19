@@ -7,7 +7,8 @@
 
 **CURRENT MILESTONE:** none — M1–M4 built; next is go-live (see ROADMAP.md checklist).
 **LAST COMPLETED STEP:** M4 — owner atelier PWA at /admin (2026-10-19).
-**NEXT STEP:** go-live with a real Supabase project (needs the owner's account), then a real end-to-end test order; nothing is pushed or deployed yet.
+**NEXT STEP:** go-live with a real Supabase project (needs the owner's account), then a real end-to-end test order. M1–M4 pushed to GitHub (a950dc8) and live on Vercel since 2026-10-19 in no-keys mode (WhatsApp ordering; /admin shows the setup screen).
+**DEPLOY NOTES:** pushes go through the GitHub account ragnarfloki414-source (collaborator on alizeghlacheislam-crypto/dori-yums); the network to github.com from this machine is flaky — retry the push a few times.
 **BLOCKERS:** none. Real Supabase keys are not needed until go-live (mock: `python tools/mock_supabase.py`).
 
 ## Decisions
