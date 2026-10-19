@@ -1818,7 +1818,7 @@ html[lang="ar"] .om-center{text-align:center}
 </div>
 
 <!-- data layer: Supabase when configured, local catalog otherwise (bump ?v= when the file changes) -->
-<script src="js/dy-data.js?v=1"></script>
+<script src="js/dy-data.js?v=3"></script>
 <script>
 /* ══════════════════════════════════════════════════════════
    Dori Yums — interactions
@@ -2471,7 +2471,8 @@ html[lang="ar"] .om-center{text-align:center}
       return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c];
     });
   }
-  function safeUrl(u){ u = String(u || ''); return /^(https:\/\/|assets\/)/.test(u) ? u : ''; }
+  /* https (Supabase storage), the site's own assets, or a local dev server */
+  function safeUrl(u){ u = String(u || ''); return /^(https:\/\/|assets\/|http:\/\/(localhost|127\.0\.0\.1)(:\d+)?\/)/.test(u) ? u : ''; }
 
   /* tier with the highest min_qty reached wins — the same rule as place_order() in the database */
   function tierDiscount(q){
@@ -3119,7 +3120,8 @@ html[lang="ar"] .om-center{text-align:center}
     var file = co.photo.files && co.photo.files[0];
     co.photo.value = '';
     if(!file) return;
-    if(!IMAGE_RE.test(file.type) || file.size > 5 * 1024 * 1024){ showCoErr(t('err.image')); return; }
+    /* large phone photos are fine: they are downscaled before upload (DY.prepareImage) */
+    if(!IMAGE_RE.test(file.type) || file.size > 25 * 1024 * 1024){ showCoErr(t('err.image')); return; }
     hideCoErr(); clearPhoto();
     photo.file = file;
     var previewable = !/heic|heif/.test(file.type);

@@ -16,7 +16,7 @@
   var SUPABASE_JS     = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js';
   var SUPABASE_JS_SRI = 'sha256-WdOUh8NYmEO0EDItij1WLOAiq6HlzLFomO8/sqDaLs0=';
   var CONFIG_URL      = '/api/config';
-  var CONFIG_TIMEOUT  = 3000;
+  var CONFIG_TIMEOUT  = 5000;
   var QUERY_TIMEOUT   = 6000;
 
   /* ─── local fallback — mirrors the seed rows in supabase_schema.sql ─── */
@@ -108,20 +108,26 @@
   }
 
   /* ─── configuration ─── */
-  var configPromise = null;
+  /* null = not configured. A failed attempt (offline, timeout, server error) also resolves null
+     but sets configFailed and is NOT memoized, so the next call asks again. */
+  var configPromise = null, configFailed = false;
   function getConfig(){
     if(configPromise) return configPromise;
+    configFailed = false;
     configPromise = (function(){
       var preset = window.DY_CONFIG;
       if(preset && preset.supabaseUrl && preset.supabaseAnonKey) return Promise.resolve(preset);
       if(typeof fetch !== 'function') return Promise.resolve(null);
       return withTimeout(fetch(CONFIG_URL, { headers:{ 'Accept':'application/json' } }), CONFIG_TIMEOUT)
-        .then(function(r){ return r.ok ? r.json() : null; });
+        .then(function(r){
+          if(r.status >= 500) throw new Error('config ' + r.status);
+          return r.ok ? r.json() : null;      /* 404 = plain static server: no backend */
+        });
     })().then(function(c){
       if(!c || typeof c.supabaseUrl !== 'string' || typeof c.supabaseAnonKey !== 'string') return null;
       if(!/^https?:\/\/[^\s/]+/.test(c.supabaseUrl) || c.supabaseAnonKey.length < 20) return null;
       return { supabaseUrl: c.supabaseUrl.replace(/\/+$/, ''), supabaseAnonKey: c.supabaseAnonKey };
-    }).catch(function(){ return null; });
+    }).catch(function(){ configFailed = true; configPromise = null; return null; });
     return configPromise;
   }
 
@@ -152,7 +158,7 @@
   function getClient(){
     if(clientPromise) return clientPromise;
     clientPromise = getConfig().then(function(cfg){
-      if(!cfg) return null;
+      if(!cfg){ if(configFailed) clientPromise = null; return null; }   /* retry later after a failed attempt */
       return loadLibrary().then(function(lib){
         return lib.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey, {
           auth: { persistSession:false, autoRefreshToken:false, detectSessionInUrl:false }
@@ -278,18 +284,45 @@
   var IMAGE_TYPES = { 'image/jpeg':'jpg', 'image/png':'png', 'image/webp':'webp', 'image/heic':'heic', 'image/heif':'heif' };
   var IMAGE_MAX_BYTES = 5 * 1024 * 1024;
 
+  /* Phone photos are often 3–12 MB: downscale to ≤ maxSide px (WebP, JPEG fallback) before upload.
+     Formats the browser cannot decode (e.g. HEIC outside Safari) come back unchanged. */
+  function prepareImage(file, maxSide, quality){
+    maxSide = maxSide || 1600; quality = quality || 0.85;
+    if(!file || !/^image\//.test(file.type) || typeof createImageBitmap !== 'function') return Promise.resolve(file);
+    return createImageBitmap(file).then(function(bmp){
+      var scale = Math.min(1, maxSide / Math.max(bmp.width, bmp.height));
+      /* small JPEG/PNG/WebP are kept as they are; anything else decodable (GIF, BMP…) is re-encoded */
+      if(scale === 1 && file.size <= 1.5 * 1024 * 1024 && /^image\/(jpeg|png|webp)$/.test(file.type)){ if(bmp.close) bmp.close(); return file; }
+      var c = document.createElement('canvas');
+      c.width = Math.round(bmp.width * scale); c.height = Math.round(bmp.height * scale);
+      c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
+      if(bmp.close) bmp.close();
+      function encode(type){ return new Promise(function(res){ c.toBlob(function(b){ res(b); }, type, quality); }); }
+      return encode('image/webp').then(function(b){ return b && b.type === 'image/webp' ? b : encode('image/jpeg'); })
+        .then(function(b){
+          if(!b) return file;
+          var ext = b.type === 'image/webp' ? 'webp' : 'jpg';
+          try{ return new File([b], String(file.name || 'photo').replace(/\.[^.]+$/, '') + '.' + ext, { type:b.type }); }
+          catch(e){ return b; }
+        });
+    }).catch(function(){ return file; });
+  }
+
   /* → { ok:true, path:'inspirations/<uuid>.<ext>' } — pass path as inspiration_image_url */
   function uploadInspiration(file){
     if(!file || !IMAGE_TYPES[file.type]) return Promise.resolve({ ok:false, error:'invalid_image' });
-    if(file.size > IMAGE_MAX_BYTES) return Promise.resolve({ ok:false, error:'image_too_large' });
-    return getClient().then(function(client){
-      if(!client) return { ok:false, error:'not_configured' };
-      var name = uuid() + '.' + IMAGE_TYPES[file.type];
-      return withTimeout(client.storage.from('inspirations').upload(name, file, { contentType:file.type, upsert:false }), 60000)
-        .then(function(res){
-          if(res.error) return { ok:false, error:errorKey(res.error) };
-          return { ok:true, path:'inspirations/' + name };
-        });
+    return prepareImage(file).then(function(img){
+      if(!IMAGE_TYPES[img.type]) return { ok:false, error:'invalid_image' };
+      if(img.size > IMAGE_MAX_BYTES) return { ok:false, error:'image_too_large' };
+      return getClient().then(function(client){
+        if(!client) return { ok:false, error:'not_configured' };
+        var name = uuid() + '.' + IMAGE_TYPES[img.type];
+        return withTimeout(client.storage.from('inspirations').upload(name, img, { contentType:img.type, upsert:false }), 60000)
+          .then(function(res){
+            if(res.error) return { ok:false, error:errorKey(res.error) };
+            return { ok:true, path:'inspirations/' + name };
+          });
+      });
     }).catch(function(e){ return { ok:false, error:errorKey(e) }; });
   }
 
@@ -299,7 +332,9 @@
     trackOrder: trackOrder,
     validatePromo: validatePromo,
     uploadInspiration: uploadInspiration,
+    prepareImage: prepareImage,
     getConfig: getConfig,
+    configFailed: function(){ return configFailed; },
     loadLibrary: loadLibrary,
     isConfigured: function(){ return getClient().then(function(c){ return !!c; }); },
     local: function(){ return clone(LOCAL); },

@@ -1,36 +1,46 @@
 """
-Local stand-in for Supabase, to test the site's "live catalog" mode without real keys.
+Local stand-in for Supabase — a tiny in-memory backend to test the site and the
+owner atelier (admin) without real keys. Dev tool only, excluded from Vercel.
 
-  python tools/mock_supabase.py            -> http://localhost:4175
+  python tools/mock_supabase.py   ->  site: http://localhost:4175   atelier: http://localhost:4175/admin.html
 
-Serves the site itself, plus:
-  GET  /api/config                 -> points the site at this server
-  GET  /rest/v1/flavors            -> fixture flavors (deliberately different from the static page)
-  GET  /rest/v1/gallery_posts      -> fixture gallery
-  GET  /rest/v1/site_settings      -> fixture settings (changed price tiers)
-  POST /rest/v1/rpc/place_order    -> simplified pricing, stores the order in memory (DY-1043, DY-1044…)
-  POST /rest/v1/rpc/track_order    -> stored orders, plus fixture DY-1042 / 0551401704 (status "baking")
-  POST /rest/v1/rpc/validate_promo -> TEST10 = 10 %
-  POST /storage/v1/object/inspirations/<name> -> accepts uploads
-  GET  /mock/set?holiday=1         -> switch holiday mode on (holiday=0 off)
-  Customer names "paused" / "spam" / "slow" trigger orders_paused / too_many_orders / a 2 s delay.
+What it imitates (same permissions as supabase_schema.sql, in spirit):
+  * Data API: GET/POST/PATCH/DELETE /rest/v1/<table> with eq/in/gte/lte filters, order, limit, upsert
+    - flavors, gallery_posts, site_settings: readable by everyone; writes need the admin account
+    - orders, promo_codes, order_status_log: admin only (anon -> 401, signed-in stranger -> no rows)
+  * RPC: place_order, track_order, validate_promo, is_admin
+  * Auth: password sign-in, refresh, user, logout
+  * Storage: uploads (multipart), public URLs (flavor-images, gallery), signed URLs (inspirations), removal
+  * No realtime websocket: the atelier falls back to polling here.
 
-Fixture differences you should see on the page:
-  * Pistache costs 200 DZD and its EN/FR/AR descriptions start with "[DB]"
-  * a 13th flavor "Rose Litchi" (unavailable)
-  * 2 atelier cards instead of 3, testimonials unchanged
-  * tiers: -5 DZD from 40 pieces, -15 DZD from 100 pieces
-Dev tool only — excluded from the Vercel deployment (.vercelignore).
+Test accounts — local mock only, not real credentials:
+  owner@example.test / dori-test-2026      -> admin
+  stranger@example.test / dori-test-2026   -> signed in but not an admin
+
+Test switches:
+  GET /mock/set?holiday=1 (holiday=0)  -> holiday mode on / off
+  GET /mock/new-order                   -> a customer order arrives (to test the atelier alert)
+  Customer names "paused" / "spam" / "slow" -> orders_paused / too_many_orders / a 2 s delay
+
+Fixture differences visible on the site: Pistache 200 DZD with "[DB]" descriptions, a 13th
+flavor "Rose Litchi" (sold out), 2 atelier cards, tiers -5 DZD from 40 / -15 DZD from 100.
 """
+import base64
+import datetime
 import json
 import os
+import re
 import sys
 import time
+import uuid
+from email import policy as email_policy
+from email.parser import BytesParser
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
-from urllib.parse import urlparse
+from urllib.parse import parse_qsl, unquote, urlparse
 
 PORT = int(os.environ.get("PORT", "4175"))
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ANON_KEY = "mock-anon-key-0123456789abcdef"
 
 F = lambda i, r, fr, en, ar, dfr, den, dar, img, price, ok=True: {
     "id": i, "roman_numeral": r, "name_fr": fr, "name_en": en, "name_ar": ar,
@@ -79,143 +89,572 @@ SETTINGS = [
                                       "text_en": "[DB] Eid boxes available", "text_ar": "[DB] علب العيد متوفرة"}},
     {"key": "holiday_mode", "value": {"enabled": False, "message_fr": "", "message_en": "", "message_ar": ""}},
 ]
-RECEIPT = {
-    "tracking_code": "DY-1042", "status": "baking", "customer_name": "Amina B.", "delivery_type": "delivery",
-    "wilaya": "16 - Alger", "commune": "Hydra", "event_date": "2026-10-25", "box_size": 40,
-    "items": [{"flavor_id": 1, "name_fr": "Fraise", "name_en": "Strawberry", "name_ar": "الفراولة", "qty": 20, "unit_price": 125, "line_total": 2500},
-              {"flavor_id": 2, "name_fr": "Pistache", "name_en": "Pistachio", "name_ar": "الفستق", "qty": 20, "unit_price": 195, "line_total": 3900}],
-    "promo_code": None, "subtotal": 6400, "delivery_fee": 500, "discount_amount": 0, "total_price": 6900,
-    "created_at": "2026-10-19T09:00:00Z",
-    "history": [{"status": "pending", "at": "2026-10-19T09:00:00Z"}, {"status": "confirmed", "at": "2026-10-19T10:00:00Z"},
-                {"status": "baking", "at": "2026-10-20T08:00:00Z"}],
+PROMOS = [
+    {"id": 1, "code": "TEST10", "discount_type": "percentage", "discount_value": 10, "is_active": True, "expires_at": None,
+     "created_at": "2026-10-01T09:00:00Z"},
+    {"id": 2, "code": "BIENVENUE10", "discount_type": "percentage", "discount_value": 10, "is_active": False, "expires_at": None,
+     "created_at": "2026-09-01T09:00:00Z"},
+]
+
+# ── accounts (local mock only) ──────────────────────────────────────────────
+PASSWORD = "dori-test-2026"
+USERS = {
+    "owner@example.test": {"id": "11111111-1111-4111-8111-111111111111", "admin": True},
+    "stranger@example.test": {"id": "22222222-2222-4222-8222-222222222222", "admin": False},
 }
-
-
-ORDERS = {}          # tracking_code -> receipt (+ phone, request_id)
-NEXT_CODE = [1043]
+TOKENS = {}      # access or refresh token -> email
 STATE = {"holiday": False}
 
+# ── in-memory database ──────────────────────────────────────────────────────
+DB = {"flavors": FLAVORS, "gallery_posts": GALLERY, "site_settings": SETTINGS, "promo_codes": PROMOS,
+      "orders": [], "order_status_log": []}
+PUBLIC_READ = {"flavors", "gallery_posts", "site_settings"}
+NO_DELETE = {"orders", "order_status_log"}
+STORAGE = {}     # (bucket, path) -> (bytes, content_type)
+SIGNED = {}      # token -> (bucket, path)
+PUBLIC_BUCKETS = {"flavor-images", "gallery"}
+NEXT_CODE = [1038]
 
-def compute_receipt(body):
-    """Simplified place_order(): same pricing rule as the database (tier on the whole box)."""
-    pricing = SETTINGS[0]["value"]
-    delivery = SETTINGS[2]["value"]
-    items = body.get("p_items") or []
-    total_qty = sum(int(i.get("qty", 0)) for i in items)
+
+def now_iso():
+    return datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
+def algiers_today():
+    return (datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=1)).date()
+
+
+def day(n):
+    return (algiers_today() + datetime.timedelta(days=n)).isoformat()
+
+
+def next_id(table):
+    return max([r.get("id", 0) for r in DB[table]] + [0]) + 1
+
+
+def setting(key):
+    for r in DB["site_settings"]:
+        if r["key"] == key:
+            return r["value"]
+    return {}
+
+
+def price_lines(items, total_qty):
+    pricing = setting("pricing")
     tier = 0
-    for t in sorted(pricing["tiers"], key=lambda t: t["min_qty"]):
+    for t in sorted(pricing.get("tiers", []), key=lambda t: t["min_qty"]):
         if total_qty >= t["min_qty"]:
             tier = t["discount_per_piece"]
-    by_id = {f["id"]: f for f in FLAVORS}
+    by_id = {f["id"]: f for f in DB["flavors"]}
     lines, sub = [], 0
     for i in items:
         f = by_id.get(int(i["flavor_id"]))
         if not f:
-            return None, "invalid_items"
+            return None, 0, "invalid_items"
         if not f["is_available"]:
-            return None, "flavor_unavailable"
-        unit = max((f["price"] if f["price"] is not None else pricing["base_unit_price"]) - tier, 0)
+            return None, 0, "flavor_unavailable"
+        base = f["price"] if f["price"] is not None else pricing.get("base_unit_price", 120)
+        unit = max(base - tier, 0)
+        q = int(i["qty"])
         lines.append({"flavor_id": f["id"], "name_fr": f["name_fr"], "name_en": f["name_en"], "name_ar": f["name_ar"],
-                      "qty": int(i["qty"]), "unit_price": unit, "line_total": unit * int(i["qty"])})
-        sub += unit * int(i["qty"])
-    if total_qty != int(body.get("p_box_size") or 0):
-        return None, "invalid_box_size"
-    if body.get("p_delivery_type") == "pickup":
-        fee = delivery["pickup_fee"]
-    else:
-        code = str(int(str(body.get("p_wilaya", "0")).split(" ")[0] or 0))
-        fee = delivery["wilaya_fees"].get(code, delivery["default_fee"])
-    disc = round(sub * 0.1) if str(body.get("p_promo_code") or "").upper() == "TEST10" else 0
-    return {
-        "status": "pending", "customer_name": body.get("p_customer_name"), "delivery_type": body.get("p_delivery_type"),
-        "wilaya": body.get("p_wilaya"), "commune": body.get("p_commune"), "event_date": body.get("p_event_date"),
-        "box_size": total_qty, "items": lines, "promo_code": (body.get("p_promo_code") or None) and body["p_promo_code"].upper(),
-        "subtotal": sub, "delivery_fee": fee, "discount_amount": disc, "total_price": sub - disc + fee,
-        "created_at": "2026-10-19T10:30:00Z",
-    }, None
+                      "qty": q, "unit_price": unit, "line_total": unit * q})
+        sub += unit * q
+    return lines, sub, None
+
+
+def delivery_fee(delivery_type, wilaya):
+    d = setting("delivery")
+    if delivery_type == "pickup":
+        return d.get("pickup_fee", 0)
+    code = str(int(str(wilaya or "0").split(" ")[0] or 0))
+    fee = d.get("wilaya_fees", {}).get(code, d.get("default_fee"))
+    return fee if isinstance(fee, int) else None
+
+
+def log_status(order, status, by=None):
+    DB["order_status_log"].append({"id": next_id("order_status_log"), "order_id": order["id"],
+                                   "from_status": order.get("_prev"), "to_status": status,
+                                   "changed_by": by, "changed_at": now_iso()})
+
+
+def receipt(o):
+    keys = ["tracking_code", "status", "customer_name", "delivery_type", "wilaya", "commune", "event_date", "box_size",
+            "items", "promo_code", "subtotal", "delivery_fee", "discount_amount", "total_price", "created_at"]
+    return {k: o.get(k) for k in keys}
+
+
+def insert_order(name, phone, wilaya, commune, dtype, event_date, items, notes="", image=None, promo=None, req=None,
+                 status="pending", path=()):
+    total_qty = sum(int(i["qty"]) for i in items)
+    lines, sub, err = price_lines(items, total_qty)
+    if err:
+        return None, err
+    fee = delivery_fee(dtype, wilaya)
+    if fee is None:
+        return None, "delivery_unavailable"
+    disc = 0
+    if promo:
+        p = next((p for p in DB["promo_codes"] if p["code"] == promo.upper() and p["is_active"]), None)
+        if not p:
+            return None, "invalid_promo"
+        disc = min(round(sub * p["discount_value"] / 100), sub) if p["discount_type"] == "percentage" else min(p["discount_value"], sub)
+    o = {"id": next_id("orders"), "tracking_code": "DY-%d" % NEXT_CODE[0], "request_id": req, "customer_name": name,
+         "phone": phone, "wilaya": wilaya, "commune": commune or "", "delivery_type": dtype, "event_date": event_date,
+         "box_size": total_qty, "items": lines, "custom_notes": notes or "", "inspiration_image_url": image,
+         "promo_code": promo.upper() if promo else None, "subtotal": sub, "delivery_fee": fee, "discount_amount": disc,
+         "total_price": sub - disc + fee, "status": "pending", "created_at": now_iso(), "updated_at": now_iso()}
+    NEXT_CODE[0] += 1
+    DB["orders"].append(o)
+    log_status(o, "pending")
+    for st in path:
+        o["_prev"] = o["status"]
+        o["status"] = st
+        log_status(o, st, USERS["owner@example.test"]["id"])
+    o.pop("_prev", None)
+    return o, None
+
+
+def seed_orders():
+    img = None
+    try:
+        with open(os.path.join(ROOT, "assets", "atelier-3.webp"), "rb") as fh:
+            name = "0f8fad5b-d9cb-469f-a165-70867728950e.webp"
+            STORAGE[("inspirations", name)] = (fh.read(), "image/webp")
+            img = "inspirations/" + name
+    except OSError:
+        pass
+    insert_order("Nadia R.", "+213661000111", "16 - Alger", "Kouba", "delivery", day(-2),
+                 [{"flavor_id": 1, "qty": 40}, {"flavor_id": 9, "qty": 20}], path=("confirmed", "baking", "completed"))
+    insert_order("Karim T.", "+213770000222", "16 - Alger", "", "pickup", day(4),
+                 [{"flavor_id": 3, "qty": 20}], path=("cancelled",))
+    insert_order("Lina M.", "+213550000333", "9 - Blida", "Boufarik", "delivery", day(-1),
+                 [{"flavor_id": 6, "qty": 20}, {"flavor_id": 7, "qty": 20}], path=("confirmed",))
+    insert_order("Sofia B.", "+213660000444", "16 - Alger", "Hydra", "delivery", day(1),
+                 [{"flavor_id": 1, "qty": 30}, {"flavor_id": 2, "qty": 30}],
+                 notes="Baby shower — bleu poudré, prénom « Adam »", image=img)
+    insert_order("Amina B.", "+213551401704", "16 - Alger", "Hydra", "delivery", day(6),
+                 [{"flavor_id": 1, "qty": 20}, {"flavor_id": 2, "qty": 20}], path=("confirmed", "baking"))
+    insert_order("Yasmine D.", "+213790000555", "31 - Oran", "Bir El Djir", "delivery", day(3),
+                 [{"flavor_id": 8, "qty": 40}, {"flavor_id": 3, "qty": 40}], path=("confirmed",))
+
+
+# ── tiny PostgREST: filters, order, limit ───────────────────────────────────
+def as_str(v):
+    if v is True:
+        return "true"
+    if v is False:
+        return "false"
+    if v is None:
+        return "null"
+    return str(v)
+
+
+def cmp_vals(a, b):
+    try:
+        return (float(a) > float(b)) - (float(a) < float(b))
+    except (TypeError, ValueError):
+        a, b = as_str(a), str(b)
+        return (a > b) - (a < b)
+
+
+def parse_query(raw):
+    filters, order, limit, conflict = [], None, None, None
+    for k, v in parse_qsl(raw, keep_blank_values=True):
+        if k in ("select", "columns", "offset"):
+            continue
+        if k == "order":
+            order = v
+        elif k == "limit":
+            limit = int(v)
+        elif k == "on_conflict":
+            conflict = v
+        else:
+            op, _, val = v.partition(".")
+            filters.append((k, op, val))
+    return filters, order, limit, conflict
+
+
+def match(row, filters):
+    for col, op, val in filters:
+        rv = row.get(col)
+        if op == "eq" and as_str(rv) != val:
+            return False
+        if op == "neq" and as_str(rv) == val:
+            return False
+        if op == "in":
+            vals = [x.strip().strip('"') for x in val.strip("()").split(",")]
+            if as_str(rv) not in vals:
+                return False
+        if op == "is" and as_str(rv) != val:
+            return False
+        if op in ("gt", "gte", "lt", "lte"):
+            if rv is None:
+                return False
+            c = cmp_vals(rv, val)
+            if (op == "gt" and c <= 0) or (op == "gte" and c < 0) or (op == "lt" and c >= 0) or (op == "lte" and c > 0):
+                return False
+    return True
+
+
+def apply_order(rows, order):
+    rows = list(rows)
+    if not order:
+        return rows
+    for part in reversed(order.split(",")):
+        bits = part.split(".")
+        col, desc = bits[0], "desc" in bits[1:]
+        rows.sort(key=lambda r: (r.get(col) is None, r.get(col) if not isinstance(r.get(col), str) else r.get(col)),
+                  reverse=desc)
+    return rows
+
+
+def public_row(table, row):
+    return {k: v for k, v in row.items() if not k.startswith("_")}
+
+
+def b64url(obj):
+    return base64.urlsafe_b64encode(json.dumps(obj).encode()).rstrip(b"=").decode()
+
+
+def make_session(email):
+    u = USERS[email]
+    now = int(time.time())
+    access = b64url({"alg": "HS256", "typ": "JWT"}) + "." + b64url(
+        {"sub": u["id"], "email": email, "role": "authenticated", "aud": "authenticated",
+         "iat": now, "exp": now + 3600, "session_id": str(uuid.uuid4())}) + ".mock"
+    refresh = "r-" + uuid.uuid4().hex
+    TOKENS[access] = email
+    TOKENS[refresh] = email
+    return {"access_token": access, "token_type": "bearer", "expires_in": 3600, "expires_at": now + 3600,
+            "refresh_token": refresh, "user": user_json(email)}
+
+
+def user_json(email):
+    u = USERS[email]
+    return {"id": u["id"], "aud": "authenticated", "role": "authenticated", "email": email,
+            "email_confirmed_at": "2026-10-01T09:00:00Z", "phone": "", "confirmed_at": "2026-10-01T09:00:00Z",
+            "app_metadata": {"provider": "email", "providers": ["email"]}, "user_metadata": {}, "identities": [],
+            "created_at": "2026-10-01T09:00:00Z", "updated_at": now_iso(), "is_anonymous": False}
+
+
+def multipart_file(ctype, body):
+    """storage-js sends files as multipart/form-data: return (bytes, content type) of the file part."""
+    if not ctype.startswith("multipart/"):
+        return body, ctype or "application/octet-stream"
+    msg = BytesParser(policy=email_policy.HTTP).parsebytes(b"Content-Type: " + ctype.encode() + b"\r\n\r\n" + body)
+    for part in msg.iter_parts():
+        if part.get_content_type() not in ("text/plain",) or part.get_filename():
+            return part.get_payload(decode=True) or b"", part.get_content_type()
+    return b"", "application/octet-stream"
 
 
 class Handler(SimpleHTTPRequestHandler):
     def __init__(self, *a, **kw):
         super().__init__(*a, directory=ROOT, **kw)
 
-    def _json(self, status, body):
-        data = json.dumps(body, ensure_ascii=False).encode("utf-8")
+    # ── helpers ──
+    def _send(self, status, data=b"", ctype="application/json; charset=utf-8", headers=None):
         self.send_response(status)
-        self.send_header("Content-Type", "application/json; charset=utf-8")
-        self.send_header("Content-Length", str(len(data)))
+        if data is not None:
+            self.send_header("Content-Type", ctype)
+            self.send_header("Content-Length", str(len(data)))
+        for k, v in (headers or {}).items():
+            self.send_header(k, v)
         self.end_headers()
-        self.wfile.write(data)
+        if data:
+            self.wfile.write(data)
 
+    def _json(self, status, body):
+        self._send(status, json.dumps(body, ensure_ascii=False).encode("utf-8"))
+
+    def _deny(self, table):
+        self._json(401, {"code": "42501", "message": "permission denied for table %s" % table, "details": None, "hint": None})
+
+    def _raw_body(self):
+        n = int(self.headers.get("Content-Length") or 0)
+        return self.rfile.read(n) if n else b""
+
+    def _body(self):
+        try:
+            return json.loads(self._raw_body() or b"{}")
+        except ValueError:
+            return {}
+
+    def _who(self):
+        h = self.headers.get("Authorization", "")
+        tok = h[7:] if h.startswith("Bearer ") else ""
+        email = TOKENS.get(tok)
+        return (email, USERS[email]) if email else (None, None)
+
+    def _admin(self):
+        _, u = self._who()
+        return bool(u and u["admin"])
+
+    def _prefer(self, word):
+        return word in (self.headers.get("Prefer") or "")
+
+    # ── verbs ──
     def do_GET(self):
-        path = urlparse(self.path).path
+        url = urlparse(self.path)
+        path = url.path
         if path == "/api/config":
-            return self._json(200, {"supabaseUrl": f"http://localhost:{PORT}",
-                                    "supabaseAnonKey": "mock-anon-key-0123456789abcdef"})
-        if path == "/rest/v1/flavors":
-            return self._json(200, FLAVORS)
-        if path == "/rest/v1/gallery_posts":
-            return self._json(200, GALLERY)
-        if path == "/rest/v1/site_settings":
-            rows = json.loads(json.dumps(SETTINGS))
-            rows[4]["value"]["enabled"] = STATE["holiday"]
-            return self._json(200, rows)
-        if path == "/mock/set":   # /mock/set?holiday=1  (test switch)
-            q = urlparse(self.path).query
-            STATE["holiday"] = "holiday=1" in q
+            return self._json(200, {"supabaseUrl": "http://localhost:%d" % PORT, "supabaseAnonKey": ANON_KEY})
+        if path == "/mock/set":
+            STATE["holiday"] = "holiday=1" in url.query
+            for r in DB["site_settings"]:
+                if r["key"] == "holiday_mode":
+                    r["value"]["enabled"] = STATE["holiday"]
             return self._json(200, STATE)
+        if path == "/mock/new-order":   # simulate a customer order arriving
+            o, _ = insert_order("Client test", "+213661234567", "16 - Alger", "El Biar", "delivery", day(3),
+                                [{"flavor_id": 4, "qty": 20}])
+            return self._json(200, receipt(o))
+        if path == "/auth/v1/user":
+            email, _ = self._who()
+            if not email:
+                return self._json(401, {"code": 401, "error_code": "bad_jwt", "msg": "invalid JWT"})
+            return self._json(200, user_json(email))
+        if path.startswith("/rest/v1/"):
+            return self._rest_get(path[len("/rest/v1/"):], url.query)
+        if path.startswith("/storage/v1/object/public/"):
+            bucket, _, obj = unquote(path[len("/storage/v1/object/public/"):]).partition("/")
+            hit = STORAGE.get((bucket, obj)) if bucket in PUBLIC_BUCKETS else None
+            return self._send(200, hit[0], hit[1]) if hit else self._json(404, {"statusCode": "404", "error": "not_found", "message": "Object not found"})
+        if path.startswith("/storage/v1/object/sign/"):
+            tok = dict(parse_qsl(url.query)).get("token", "")
+            hit = SIGNED.get(tok)
+            data = STORAGE.get(hit) if hit else None
+            return self._send(200, data[0], data[1]) if data else self._json(400, {"statusCode": "400", "error": "InvalidJWT", "message": "invalid signature"})
         return super().do_GET()
 
     def do_POST(self):
-        path = urlparse(self.path).path
-        length = int(self.headers.get("Content-Length") or 0)
-        raw = self.rfile.read(length) if length else b""
-        try:
-            body = json.loads(raw or b"{}")
-        except ValueError:
-            body = {}
-        if path == "/rest/v1/rpc/track_order":
+        url = urlparse(self.path)
+        path = url.path
+        if path == "/auth/v1/token":
+            body = self._body()
+            grant = dict(parse_qsl(url.query)).get("grant_type")
+            if grant == "password":
+                email = str(body.get("email", "")).strip().lower()
+                if email in USERS and body.get("password") == PASSWORD:
+                    return self._json(200, make_session(email))
+                return self._json(400, {"code": 400, "error_code": "invalid_credentials", "msg": "Invalid login credentials"})
+            if grant == "refresh_token":
+                email = TOKENS.get(body.get("refresh_token"))
+                if email:
+                    return self._json(200, make_session(email))
+                return self._json(400, {"code": 400, "error_code": "refresh_token_not_found", "msg": "Invalid Refresh Token"})
+            return self._json(400, {"code": 400, "msg": "unsupported grant"})
+        if path == "/auth/v1/logout":
+            h = self.headers.get("Authorization", "")
+            TOKENS.pop(h[7:], None)
+            return self._send(204, None)
+        if path.startswith("/rest/v1/rpc/"):
+            return self._rpc(path[len("/rest/v1/rpc/"):], self._body())
+        if path.startswith("/rest/v1/"):
+            return self._rest_insert(path[len("/rest/v1/"):], url.query)
+        if path.startswith("/storage/v1/object/sign/"):
+            bucket, _, obj = unquote(path[len("/storage/v1/object/sign/"):]).partition("/")
+            if not self._admin():
+                return self._json(400, {"statusCode": "403", "error": "Unauthorized", "message": "new row violates row-level security policy"})
+            if (bucket, obj) not in STORAGE:
+                return self._json(400, {"statusCode": "404", "error": "not_found", "message": "Object not found"})
+            tok = "t-" + uuid.uuid4().hex
+            SIGNED[tok] = (bucket, obj)
+            return self._json(200, {"signedURL": "/object/sign/%s/%s?token=%s" % (bucket, obj, tok)})
+        if path.startswith("/storage/v1/object/"):
+            bucket, _, obj = unquote(path[len("/storage/v1/object/"):]).partition("/")
+            ok = (bucket == "inspirations" and re.match(r"^[0-9a-f-]{36}\.(jpg|jpeg|png|webp|heic|heif)$", obj)) or \
+                 (bucket in PUBLIC_BUCKETS and self._admin())
+            if not ok:
+                return self._json(400, {"statusCode": "403", "error": "Unauthorized", "message": "new row violates row-level security policy"})
+            data, ctype = multipart_file(self.headers.get("Content-Type", ""), self._raw_body())
+            STORAGE[(bucket, obj)] = (data, ctype)
+            print("UPLOAD", bucket, obj, len(data), "bytes", ctype, flush=True)
+            return self._json(200, {"Key": "%s/%s" % (bucket, obj), "Id": str(uuid.uuid4())})
+        return self._json(404, {"message": "not found"})
+
+    def do_PATCH(self):
+        url = urlparse(self.path)
+        if url.path.startswith("/rest/v1/"):
+            return self._rest_update(url.path[len("/rest/v1/"):], url.query)
+        return self._json(404, {"message": "not found"})
+
+    def do_DELETE(self):
+        url = urlparse(self.path)
+        path = url.path
+        if path.startswith("/rest/v1/"):
+            return self._rest_delete(path[len("/rest/v1/"):], url.query)
+        if path.startswith("/storage/v1/object/"):
+            bucket = unquote(path[len("/storage/v1/object/"):]).strip("/")
+            if not self._admin():
+                return self._json(400, {"statusCode": "403", "error": "Unauthorized", "message": "row-level security"})
+            removed = []
+            for name in self._body().get("prefixes", []):
+                if STORAGE.pop((bucket, name), None) is not None:
+                    removed.append({"name": name, "bucket_id": bucket})
+            return self._json(200, removed)
+        return self._json(404, {"message": "not found"})
+
+    # ── REST ──
+    def _rest_get(self, table, query):
+        if table not in DB:
+            return self._json(404, {"code": "42P01", "message": "relation %s does not exist" % table})
+        email, _ = self._who()
+        if table not in PUBLIC_READ:
+            if not email:
+                return self._deny(table)
+            if not self._admin():
+                return self._json(200, [])
+        filters, order, limit, _ = parse_query(query)
+        rows = [public_row(table, r) for r in DB[table] if match(r, filters)]
+        rows = apply_order(rows, order)
+        if limit:
+            rows = rows[:limit]
+        return self._json(200, rows)
+
+    def _rest_insert(self, table, query):
+        if table not in DB:
+            return self._json(404, {"code": "42P01", "message": "relation does not exist"})
+        email, _ = self._who()
+        if not email:
+            return self._deny(table)
+        if not self._admin():
+            return self._json(403, {"code": "42501", "message": 'new row violates row-level security policy for table "%s"' % table})
+        body = self._body()
+        rows = body if isinstance(body, list) else [body]
+        _, _, _, conflict = parse_query(query)
+        out = []
+        for r in rows:
+            r = dict(r)
+            if conflict and self._prefer("merge-duplicates"):
+                hit = next((x for x in DB[table] if x.get(conflict) == r.get(conflict)), None)
+                if hit:
+                    hit.update(r)
+                    out.append(hit)
+                    continue
+            if table == "promo_codes":
+                if not re.match(r"^[A-Z0-9_-]{3,32}$", str(r.get("code", ""))):
+                    return self._json(400, {"code": "23514", "message": 'new row violates check constraint "promo_codes_code_check"'})
+                if any(p["code"] == r["code"] for p in DB[table]):
+                    return self._json(409, {"code": "23505", "message": 'duplicate key value violates unique constraint "promo_codes_code_key"'})
+                r.setdefault("is_active", True)
+                r.setdefault("expires_at", None)
+            if table == "flavors":
+                if not str(r.get("name_fr", "")).strip():
+                    return self._json(400, {"code": "23514", "message": 'new row violates check constraint "flavors_name_fr_check"'})
+                for k in ("roman_numeral", "name_en", "name_ar", "desc_fr", "desc_en", "desc_ar", "image_url"):
+                    r.setdefault(k, "")
+                r.setdefault("price", None)
+                r.setdefault("is_available", True)
+                r.setdefault("sort_order", 0)
+            if table == "gallery_posts":
+                for k in ("title_fr", "title_en", "title_ar", "caption_fr", "caption_en", "caption_ar"):
+                    r.setdefault(k, "")
+                r.setdefault("sort_order", 0)
+            if table != "site_settings" and "id" not in r:
+                r["id"] = next_id(table)
+            r.setdefault("created_at", now_iso())
+            DB[table].append(r)
+            out.append(r)
+        if self._prefer("return=representation"):
+            return self._json(201, [public_row(table, r) for r in out])
+        return self._send(201, None)
+
+    def _rest_update(self, table, query):
+        if table not in DB:
+            return self._json(404, {"code": "42P01", "message": "relation does not exist"})
+        email, u = self._who()
+        if not email:
+            return self._deny(table)
+        filters, _, _, _ = parse_query(query)
+        patch = self._body()
+        out = []
+        if self._admin():
+            for r in DB[table]:
+                if match(r, filters):
+                    prev = r.get("status")
+                    r.update(patch)
+                    if table in ("orders", "flavors", "site_settings"):
+                        r["updated_at"] = now_iso()
+                    if table == "orders" and "status" in patch and patch["status"] != prev:
+                        r["_prev"] = prev
+                        log_status(r, patch["status"], u["id"])
+                        r.pop("_prev", None)
+                    out.append(r)
+        if self._prefer("return=representation"):
+            return self._json(200, [public_row(table, r) for r in out])
+        return self._send(204, None)
+
+    def _rest_delete(self, table, query):
+        if table not in DB:
+            return self._json(404, {"code": "42P01", "message": "relation does not exist"})
+        email, _ = self._who()
+        if not email or table in NO_DELETE:
+            return self._deny(table)
+        filters, _, _, _ = parse_query(query)
+        out = []
+        if self._admin():
+            keep = []
+            for r in DB[table]:
+                (out if match(r, filters) else keep).append(r)
+            DB[table][:] = keep
+        if self._prefer("return=representation"):
+            return self._json(200, [public_row(table, r) for r in out])
+        return self._send(204, None)
+
+    # ── RPC ──
+    def _rpc(self, fn, body):
+        email, u = self._who()
+        if fn == "is_admin":
+            if not email:
+                return self._json(401, {"code": "42501", "message": "permission denied for function is_admin"})
+            return self._json(200, bool(u["admin"]))
+        if fn == "validate_promo":
+            code = str(body.get("p_code", "")).strip().upper()
+            sub = int(body.get("p_subtotal") or 0)
+            p = next((p for p in DB["promo_codes"] if p["code"] == code and p["is_active"]
+                      and (not p.get("expires_at") or p["expires_at"] > now_iso())), None)
+            if not p:
+                return self._json(200, {"valid": False})
+            amount = min(round(sub * p["discount_value"] / 100), sub) if p["discount_type"] == "percentage" else min(p["discount_value"], sub)
+            return self._json(200, {"valid": True, "code": p["code"], "discount_type": p["discount_type"],
+                                    "discount_value": p["discount_value"], "discount_amount": amount})
+        if fn == "track_order":
             code = str(body.get("p_tracking_code", "")).upper().replace(" ", "")
             code = "DY-" + code.replace("DY-", "").replace("DY", "")
             phone = "".join(ch for ch in str(body.get("p_phone", "")) if ch.isdigit())[-9:]
-            if code == "DY-1042" and phone == "551401704":
-                return self._json(200, RECEIPT)
-            o = ORDERS.get(code)
-            if o and o["_phone"][-9:] == phone:
-                return self._json(200, {k: v for k, v in o.items() if not k.startswith("_")})
-            return self._json(200, None)
-        if path == "/rest/v1/rpc/validate_promo":
-            ok = str(body.get("p_code", "")).strip().upper() == "TEST10"
-            sub = int(body.get("p_subtotal") or 0)
-            return self._json(200, {"valid": True, "code": "TEST10", "discount_type": "percentage", "discount_value": 10,
-                                    "discount_amount": round(sub * 0.1)} if ok else {"valid": False})
-        if path == "/rest/v1/rpc/place_order":
-            name = str(body.get("p_customer_name", "")).strip().lower()
-            if STATE["holiday"] or name == "paused":
+            o = next((o for o in DB["orders"] if o["tracking_code"] == code and o["phone"][-9:] == phone), None)
+            if not o:
+                return self._json(200, None)
+            hist = [{"status": l["to_status"], "at": l["changed_at"]} for l in DB["order_status_log"] if l["order_id"] == o["id"]]
+            return self._json(200, dict(receipt(o), history=hist))
+        if fn == "place_order":
+            name = str(body.get("p_customer_name", "")).strip()
+            if setting("holiday_mode").get("enabled") or name.lower() == "paused":
                 return self._json(400, {"code": "P0001", "message": "orders_paused", "details": None, "hint": None})
-            if name == "spam":
+            if name.lower() == "spam":
                 return self._json(400, {"code": "P0001", "message": "too_many_orders", "details": None, "hint": None})
-            if name == "slow":
+            if name.lower() == "slow":
                 time.sleep(2)
-            for o in ORDERS.values():   # idempotency, like the request_id unique key
-                if body.get("p_request_id") and o["_req"] == body.get("p_request_id"):
-                    return self._json(200, {k: v for k, v in o.items() if not k.startswith("_")})
-            receipt, error = compute_receipt(body)
-            if error:
-                return self._json(400, {"code": "P0001", "message": error, "details": None, "hint": None})
-            code = f"DY-{NEXT_CODE[0]}"
-            NEXT_CODE[0] += 1
-            receipt.update({"tracking_code": code, "history": [{"status": "pending", "at": "2026-10-19T10:30:00Z"}]})
-            ORDERS[code] = dict(receipt, _phone=str(body.get("p_phone", "")), _req=body.get("p_request_id"),
-                                _image=body.get("p_inspiration_image_url"), _notes=body.get("p_custom_notes"))
-            print("ORDER", code, json.dumps(body, ensure_ascii=False), flush=True)
-            return self._json(200, {k: v for k, v in receipt.items() if k != "history"})
-        if path.startswith("/storage/v1/object/inspirations/"):
-            return self._json(200, {"Key": path.split("/storage/v1/object/", 1)[1]})
-        return self._json(404, {"message": "not found"})
+            req = body.get("p_request_id")
+            hit = next((o for o in DB["orders"] if req and o.get("request_id") == req), None)
+            if hit:
+                return self._json(200, receipt(hit))
+            items = body.get("p_items") or []
+            if sum(int(i.get("qty", 0)) for i in items) != int(body.get("p_box_size") or 0):
+                return self._json(400, {"code": "P0001", "message": "invalid_box_size", "details": None, "hint": None})
+            o, err = insert_order(name, str(body.get("p_phone", "")), body.get("p_wilaya"), body.get("p_commune"),
+                                  body.get("p_delivery_type"), body.get("p_event_date"), items,
+                                  notes=body.get("p_custom_notes"), image=body.get("p_inspiration_image_url"),
+                                  promo=body.get("p_promo_code"), req=req)
+            if err:
+                return self._json(400, {"code": "P0001", "message": err, "details": None, "hint": None})
+            print("ORDER", o["tracking_code"], json.dumps(body, ensure_ascii=True), flush=True)
+            return self._json(200, receipt(o))
+        return self._json(404, {"code": "PGRST202", "message": "function %s not found" % fn})
 
 
 if __name__ == "__main__":
-    print(f"Mock Supabase + site on http://localhost:{PORT}", flush=True)
-    sys.stdout.flush()
+    seed_orders()
+    print("Mock Supabase + site on http://localhost:%d  (atelier: /admin.html)" % PORT, flush=True)
     ThreadingHTTPServer(("127.0.0.1", PORT), Handler).serve_forever()
