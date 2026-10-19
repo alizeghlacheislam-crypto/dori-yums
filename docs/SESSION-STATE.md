@@ -5,11 +5,22 @@
 **DEFINITION OF DONE:** M1–M4 in [ROADMAP.md](ROADMAP.md) meet their acceptance criteria; the site still works with no Supabase keys.
 **NON-GOALS:** redesign, new stack for the public site, online payment.
 
-**CURRENT MILESTONE:** none — M1–M4 built; next is go-live (see ROADMAP.md checklist).
-**LAST COMPLETED STEP:** M4 — owner atelier PWA at /admin (2026-10-19).
-**NEXT STEP:** go-live with a real Supabase project (needs the owner's account), then a real end-to-end test order. M1–M4 pushed to GitHub (a950dc8) and live on Vercel since 2026-10-19 in no-keys mode (WhatsApp ordering; /admin shows the setup screen).
+**CURRENT MILESTONE:** go-live (ROADMAP.md checklist) — steps 1–3 done, 4–5 open.
+**LAST COMPLETED STEP:** real Supabase project connected on production; `/admin` reaches its login screen (verified 2026-10-20).
+**NEXT STEP:** the owner signs in at `/admin` on the phone (checklist step 4), then one real end-to-end test order (step 5). M1–M4 live on Vercel since 2026-10-19; `/api/config` fixes 413561b and d4424e7 pushed and deployed. See *Admin access* below.
 **DEPLOY NOTES:** pushes go through the GitHub account ragnarfloki414-source (collaborator on alizeghlacheislam-crypto/dori-yums); the network to github.com from this machine is flaky — retry the push a few times.
-**BLOCKERS:** none. Real Supabase keys are not needed until go-live (mock: `python tools/mock_supabase.py`).
+**BLOCKERS:** none on our side — the next step is the owner's sign-in. Local tests still run without keys (mock: `python tools/mock_supabase.py`).
+
+## Admin access — 2026-10-20
+
+- Environment: production · `https://dori-yums.vercel.app` — established from the canonical tag, `og:url`, README; the live HTML matched local HEAD (`dy-data.js?v=3`, `geo.region`).
+- Admin entry: `/admin` — `admin.html` + `vercel.json` `cleanUrls`; manifest `start_url`/`scope` and service-worker scope `/admin`; README.
+- Current state: **login screen** (the expected end state) — no setup screen any more.
+- FACT (2026-10-20): `/admin` 200 · `/admin/` 200 · `/admin.html` 308 → `/admin`, all with `X-Robots-Tag: noindex, nofollow`; in the browser only `scrLogin` is shown, no console errors; `/api/config` returns its two config fields (values not recorded).
+- FACT: how it got here — the setup screen came from `/api/config` returning `{}`; the endpoint learned the Vercel–Supabase integration's variable names and a shape-only status (413561b), then URL normalisation (d4424e7); the status then read "key missing" and the owner added the public key and redeployed.
+- REPORTED by the owner: schema run in the Supabase project; the owner's e-mail added to `private.admin_users`.
+- NOT TESTED: signing in, the admin role taking effect (an "access denied" screen after sign-in would mean the `admin_users` entry does not match the signed-in account), public sign-ups turned off (checklist step 2), realtime, storage, phone sound/notifications, a real order.
+- OWNER ACTION: open `/admin` on the phone → sign in → "Add to Home screen" → turn the bell on once (checklist step 4); in Supabase → Authentication → confirm public sign-ups are off.
 
 ## Decisions
 - D1 (2026-10-19) Keep the no-build static architecture (index.html + js/ + one Vercel function). Reason: owner rule "modify, don't rebuild"; zero risk to the design.
