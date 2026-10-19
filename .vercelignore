@@ -1,0 +1,7 @@
+# kept in the repository, not published on the website
+supabase_schema.sql
+docs/
+README.md
+.env.example
+.claude/
+tools/

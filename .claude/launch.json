@@ -6,6 +6,12 @@
       "runtimeExecutable": "python",
       "runtimeArgs": ["-m", "http.server", "4173", "--directory", "C:\\Users\\islam\\Desktop\\dori-yums"],
       "port": 4173
+    },
+    {
+      "name": "dori-yums-mock-supabase",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["C:\\Users\\islam\\Desktop\\dori-yums\\tools\\mock_supabase.py"],
+      "port": 4175
     }
   ]
 }

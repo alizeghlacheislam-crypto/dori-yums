@@ -1480,6 +1480,8 @@ html[lang="ar"] .om-tier{font-style:normal}
   </a>
 </div>
 
+<!-- data layer: Supabase when configured, local catalog otherwise (bump ?v= when the file changes) -->
+<script src="js/dy-data.js?v=1" defer></script>
 <script>
 /* ══════════════════════════════════════════════════════════
    Dori Yums — interactions
@@ -1787,6 +1789,63 @@ html[lang="ar"] .om-tier{font-style:normal}
 
   function waHref(msg){ return 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(msg); }
 
+  /* ─── live catalog (Supabase, through js/dy-data.js) ───
+     Local mode: the static markup of this page IS the catalog — nothing is re-rendered.
+     Remote mode: placards, atelier cards and testimonials are rebuilt from the database
+     with the exact same markup, and their texts follow the language switch. */
+  var LIVE = null;
+  var DEFAULT_TIERS = [{ min_qty:60, discount_per_piece:5 }, { min_qty:120, discount_per_piece:10 }];
+  var PRICING = { base_unit_price:120, tiers:DEFAULT_TIERS };
+
+  function esc(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+      return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c];
+    });
+  }
+  function safeUrl(u){ u = String(u || ''); return /^(https:\/\/|assets\/)/.test(u) ? u : ''; }
+
+  /* tier with the highest min_qty reached wins — the same rule as place_order() in the database */
+  function tierDiscount(q){
+    var best = null;
+    (PRICING.tiers || []).forEach(function(x){
+      if(q >= x.min_qty && (!best || x.min_qty > best.min_qty)) best = x;
+    });
+    return best ? best.discount_per_piece : 0;
+  }
+  function tiersAreDefault(){
+    var a = PRICING.tiers || [];
+    return a.length === DEFAULT_TIERS.length && DEFAULT_TIERS.every(function(d){
+      return a.some(function(x){ return x.min_qty === d.min_qty && x.discount_per_piece === d.discount_per_piece; });
+    });
+  }
+  /* the hand-written md.tiers sentence stays unless the owner changed the tiers */
+  function renderTierNote(){
+    var el = document.querySelector('.om-tier');
+    if(!el || tiersAreDefault()) return;
+    var tiers = (PRICING.tiers || []).slice().sort(function(a, b){ return a.min_qty - b.min_qty; });
+    el.textContent = tiers.length ? t('md.tiersLead') + ' ' + tiers.map(function(x){
+      return t('md.tierItem').replace('{d}', x.discount_per_piece).replace('{q}', x.min_qty);
+    }).join(t('md.tierJoin')) + '.' : '';
+  }
+
+  function liveText(kind, id, field){
+    var list = kind === 'f' ? LIVE.flavors : LIVE.gallery;
+    for(var i = 0; i < list.length; i++){
+      if(String(list[i].id) === String(id)){
+        var row = list[i];
+        return row[field + '_' + LANG] || row[field + '_fr'] || row[field + '_en'] || '';
+      }
+    }
+    return '';
+  }
+  function localizeLive(){
+    if(!LIVE) return;
+    document.querySelectorAll('[data-live]').forEach(function(el){
+      var p = el.getAttribute('data-live').split(':');
+      el.textContent = liveText(p[0], p[1], p[2]);
+    });
+  }
+
   function applyLang(){
     document.documentElement.lang = LANG;
     document.querySelectorAll('[data-i18n]').forEach(function(el){
@@ -1807,6 +1866,8 @@ html[lang="ar"] .om-tier{font-style:normal}
     document.querySelectorAll('a.wa-flavor').forEach(function(a){
       a.href = waHref(I18N.fr['wa.flavor'].replace('{f}', a.getAttribute('data-flavor')));
     });
+    localizeLive();
+    renderTierNote();
     if(typeof refreshModal === 'function') refreshModal();
     try{ localStorage.setItem('doriyums_lang', LANG); }catch(e){}
   }
@@ -1928,12 +1989,8 @@ html[lang="ar"] .om-tier{font-style:normal}
     });
   })();
 
-  /* < 60 → base · 60–119 → base−5 · ≥ 120 → base−10 (flat, forever) */
-  function unitPrice(base, q){
-    if(q >= 120) return base - 10;
-    if(q >= 60)  return base - 5;
-    return base;
-  }
+  /* tiers from site_settings.pricing — default: < 60 → base · 60–119 → base−5 · ≥ 120 → base−10 (flat) */
+  function unitPrice(base, q){ return Math.max(base - tierDiscount(q), 0); }
   function fmt(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
 
   function renderQty(){
@@ -1975,11 +2032,12 @@ html[lang="ar"] .om-tier{font-style:normal}
     if(lastTrigger) lastTrigger.focus();
   }
 
-  document.querySelectorAll('a.wa-flavor').forEach(function(a){
-    a.addEventListener('click', function(e){
-      e.preventDefault();
-      openModal(a);
-    });
+  /* delegated: the placards may be rebuilt from the live catalog */
+  document.querySelector('.placards').addEventListener('click', function(e){
+    var a = e.target.closest('a.wa-flavor');
+    if(!a) return;
+    e.preventDefault();
+    openModal(a);
   });
 
   modalEl.querySelectorAll('.qty-preset').forEach(function(b){
@@ -2018,6 +2076,92 @@ html[lang="ar"] .om-tier{font-style:normal}
       '• Wilaya : ' + wilaya;
     window.open(waHref(msg), '_blank', 'noopener');
   });
+
+  /* ─── live catalog: rebuild sections from the database (same markup as above) ─── */
+  var ORDER_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.7 8.7 0 0 1-3.9-.9L3 20l1-4.9a8.4 8.4 0 1 1 17-3.6z"/></svg>';
+  var IG_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".8" fill="currentColor" stroke="none"/></svg>';
+
+  /* keep the reveal state: if the static cards were already shown, the new ones appear shown */
+  function swapCards(container, cardSel, html){
+    var cls = container.querySelector(cardSel + '.in') ? 'reveal in' : 'reveal';
+    container.querySelectorAll('.reveal').forEach(function(el){ io.unobserve(el); });
+    container.innerHTML = html.replace(/__REVEAL__/g, cls);
+    container.querySelectorAll('.reveal:not(.in)').forEach(function(el){ io.observe(el); });
+  }
+
+  function renderLiveFlavors(){
+    var grid = document.querySelector('.placards');
+    if(!grid) return;
+    swapCards(grid, '.placard', LIVE.flavors.map(function(f){
+      var price = f.price != null ? f.price : PRICING.base_unit_price;
+      return '<article class="placard __REVEAL__">' +
+        '<div class="placard-mat"><img src="' + esc(safeUrl(f.image_url)) + '" alt="' + esc((f.name_en || f.name_fr) + ' macarons') + '" loading="lazy" decoding="async" /></div>' +
+        '<div class="placard-body">' +
+          '<div class="placard-roman">' + esc(f.roman_numeral) + '</div>' +
+          '<h3 class="placard-name">' + esc(f.name_fr) + '</h3>' +
+          '<div class="placard-en" data-live="f:' + f.id + ':name"></div>' +
+          '<hr class="placard-rule" />' +
+          '<p class="placard-desc" data-live="f:' + f.id + ':desc"></p>' +
+          '<a class="placard-order wa-flavor" data-flavor-id="' + f.id + '" data-flavor="' + esc(f.name_fr) + '" data-price="' + (parseInt(price, 10) || 0) + '" href="https://wa.me/' + WA_NUMBER + '" target="_blank" rel="noopener">' +
+            ORDER_ICON + '<span data-i18n="col.order"></span>' +
+          '</a>' +
+        '</div>' +
+      '</article>';
+    }).join(''));
+  }
+
+  function renderLiveGallery(){
+    var atelier = LIVE.gallery.filter(function(g){ return g.category === 'atelier'; });
+    var quotes  = LIVE.gallery.filter(function(g){ return g.category === 'testimonial'; });
+    var ag = document.querySelector('.atelier-grid');
+    if(ag && atelier.length){
+      swapCards(ag, '.atelier-card', atelier.map(function(g){
+        return '<figure class="frame atelier-card __REVEAL__" style="margin:0">' +
+          '<div class="frame-mat"><img src="' + esc(safeUrl(g.image_url)) + '" alt="' + esc([g.title_en || g.title_fr, g.caption_en || g.caption_fr].filter(Boolean).join(' — ')) + '" loading="lazy" decoding="async" /></div>' +
+          '<figcaption class="atelier-caption">' +
+            '<h3 data-live="g:' + g.id + ':title"></h3>' +
+            '<p data-live="g:' + g.id + ':caption"></p>' +
+          '</figcaption>' +
+        '</figure>';
+      }).join(''));
+    }
+    var qg = document.querySelector('.quotes-grid');
+    if(qg && quotes.length){
+      swapCards(qg, '.quote', quotes.map(function(g){
+        var who = String(g.title_en || g.title_fr || '').replace(/^@/, '');
+        var said = g.caption_en || g.caption_fr || '';
+        return '<figure class="quote __REVEAL__">' +
+          '<span class="mark">“</span>' +
+          '<div class="quote-shot"><img src="' + esc(safeUrl(g.image_url)) + '" alt="' + esc('Instagram comment' + (who ? ' by ' + who : '') + (said ? ': “' + said + '”' : '')) + '" loading="lazy" decoding="async" /></div>' +
+          '<figcaption class="quote-src">' + IG_ICON + '<span data-i18n="te.via"></span></figcaption>' +
+        '</figure>';
+      }).join(''));
+    }
+  }
+
+  function startLive(){
+    if(!window.DY || typeof window.DY.load !== 'function') return;
+    window.DY.load().then(function(data){
+      if(!data || data.source !== 'remote') return;
+      LIVE = data;
+      var p = data.settings && data.settings.pricing;
+      if(data.parts.settings === 'remote' && p){
+        PRICING = {
+          base_unit_price: parseInt(p.base_unit_price, 10) || 120,
+          tiers: Array.isArray(p.tiers) ? p.tiers.filter(function(x){
+            return x && isFinite(x.min_qty) && isFinite(x.discount_per_piece);
+          }).map(function(x){ return { min_qty:+x.min_qty, discount_per_piece:+x.discount_per_piece }; }) : DEFAULT_TIERS
+        };
+      }
+      if(data.parts.flavors === 'remote') renderLiveFlavors();
+      if(data.parts.gallery === 'remote') renderLiveGallery();
+      applyLang();
+      document.documentElement.setAttribute('data-catalog', 'live');
+    }).catch(function(){ /* stay on the static catalog */ });
+  }
+  /* js/dy-data.js is deferred: it has run by DOMContentLoaded */
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', startLive);
+  else startLive();
 
   /* ─── footer year ─── */
   document.getElementById('year').textContent = new Date().getFullYear();

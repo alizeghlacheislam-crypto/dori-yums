@@ -1,0 +1,12 @@
+{
+  "name": "dori-yums-schema-test",
+  "private": true,
+  "description": "Runs supabase_schema.sql on in-memory Postgres (PGlite) and checks RLS, grants and the order functions.",
+  "type": "module",
+  "scripts": {
+    "test": "node test.mjs ../../supabase_schema.sql"
+  },
+  "dependencies": {
+    "@electric-sql/pglite": "0.5.8"
+  }
+}
