@@ -5,7 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
 <title>Dori Yums — Homemade &amp; Custom Macarons · Algiers</title>
-<meta name="description" content="Homemade and custom macarons, baked to order in Algiers. Baby showers, weddings, birthdays and graduations — order on WhatsApp." />
+<meta name="description" content="Homemade &amp; custom macarons baked to order in Algiers — 12 signature flavors for weddings, baby showers, birthdays and graduations. Delivery &amp; pickup in Algiers." />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<meta name="author" content="Dori Yums" />
+<link rel="canonical" href="https://dori-yums.vercel.app/" />
+
+<!-- Geo (Algiers, wilaya 16) -->
+<meta name="geo.region" content="DZ-16" />
+<meta name="geo.placename" content="Algiers" />
+<meta name="geo.position" content="36.7538;3.0588" />
+<meta name="ICBM" content="36.7538, 3.0588" />
 
 <!-- PWA -->
 <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -55,25 +64,105 @@
 
 <!-- Open Graph / Twitter -->
 <meta property="og:type" content="website" />
+<meta property="og:site_name" content="Dori Yums" />
+<meta property="og:url" content="https://dori-yums.vercel.app/" />
 <meta property="og:title" content="Dori Yums — Homemade & Custom Macarons · Algiers" />
-<meta property="og:description" content="Homemade and custom macarons, made with love for your sweetest moments. Order on WhatsApp." />
+<meta property="og:description" content="Homemade and custom macarons, made with love for your sweetest moments. Twelve signature flavors, baked to order in Algiers." />
 <meta property="og:image" content="https://dori-yums.vercel.app/assets/macarons_hero.webp" />
+<meta property="og:image:secure_url" content="https://dori-yums.vercel.app/assets/macarons_hero.webp" />
+<meta property="og:image:type" content="image/webp" />
+<meta property="og:image:width" content="1408" />
+<meta property="og:image:height" content="768" />
+<meta property="og:image:alt" content="A Dori Yums coffret of assorted macarons on a marble table" />
 <meta property="og:locale" content="en_US" />
 <meta property="og:locale:alternate" content="fr_FR" />
+<meta property="og:locale:alternate" content="ar_DZ" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Dori Yums — Homemade & Custom Macarons · Algiers" />
-<meta name="twitter:description" content="Homemade and custom macarons, made with love for your sweetest moments. Order on WhatsApp." />
+<meta name="twitter:description" content="Homemade and custom macarons, made with love for your sweetest moments. Twelve signature flavors, baked to order in Algiers." />
 <meta name="twitter:image" content="https://dori-yums.vercel.app/assets/macarons_hero.webp" />
+<meta name="twitter:image:alt" content="A Dori Yums coffret of assorted macarons on a marble table" />
 
+<!-- Structured data: bakery + menu (unit prices in DZD, mirror the placards' data-price) + FAQ (mirrors the visible EN answers) -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Bakery",
-  "name": "Dori Yums",
-  "description": "Home-based atelier for handmade and custom macarons in Algiers, Algeria.",
-  "areaServed": "Algiers, Algeria",
-  "telephone": "+213551401704",
-  "sameAs": ["https://instagram.com/dori_yums"]
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://dori-yums.vercel.app/#website",
+      "url": "https://dori-yums.vercel.app/",
+      "name": "Dori Yums",
+      "inLanguage": ["en", "fr", "ar"],
+      "publisher": { "@id": "https://dori-yums.vercel.app/#bakery" }
+    },
+    {
+      "@type": "Bakery",
+      "@id": "https://dori-yums.vercel.app/#bakery",
+      "name": "Dori Yums",
+      "alternateName": "Dori Yums — Maison de macarons",
+      "description": "Home-based atelier for handmade and custom macarons in Algiers, Algeria — baked to order for weddings, baby showers, birthdays and graduations.",
+      "url": "https://dori-yums.vercel.app/",
+      "logo": { "@type": "ImageObject", "url": "https://dori-yums.vercel.app/assets/logo.png", "width": 1563, "height": 1563 },
+      "image": [
+        "https://dori-yums.vercel.app/assets/macarons_hero.webp",
+        "https://dori-yums.vercel.app/assets/atelier-0.webp",
+        "https://dori-yums.vercel.app/assets/atelier-3.webp"
+      ],
+      "telephone": "+213551401704",
+      "priceRange": "120–180 DZD",
+      "currenciesAccepted": "DZD",
+      "servesCuisine": ["French pastry", "Macarons"],
+      "address": { "@type": "PostalAddress", "addressLocality": "Alger", "addressRegion": "Alger", "addressCountry": "DZ" },
+      "geo": { "@type": "GeoCoordinates", "latitude": 36.7538, "longitude": 3.0588 },
+      "areaServed": { "@type": "City", "name": "Algiers" },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+213551401704",
+        "contactType": "customer service",
+        "availableLanguage": ["fr", "ar", "en"]
+      },
+      "sameAs": [
+        "https://instagram.com/dori_yums",
+        "https://www.facebook.com/share/1BqEueMstJ/"
+      ],
+      "hasMenu": {
+        "@type": "Menu",
+        "name": "La Collection",
+        "hasMenuSection": {
+          "@type": "MenuSection",
+          "name": "Twelve signature macarons",
+          "description": "Unit prices per piece. Tiered pricing: −5 DZD per piece from 60, −10 DZD per piece from 120.",
+          "hasMenuItem": [
+            { "@type": "MenuItem", "name": "Fraise", "alternateName": "Strawberry", "description": "Delicate strawberry cream in a blush-pink shell.", "image": "https://dori-yums.vercel.app/assets/m-rose.webp", "offers": { "@type": "Offer", "price": 120, "priceCurrency": "DZD" } },
+            { "@type": "MenuItem", "name": "Pistache", "alternateName": "Pistachio", "description": "Slow-roasted pistachio, gently sweet and nutty.", "image": "https://dori-yums.vercel.app/assets/m-pistachio.webp", "offers": { "@type": "Offer", "price": 180, "priceCurrency": "DZD" } },
+            { "@type": "MenuItem", "name": "Chocolat Noir", "alternateName": "Dark chocolate", "description": "Deep dark-chocolate ganache, barely sweet.", "image": "https://dori-yums.vercel.app/assets/m-chocolate.webp", "offers": { "@type": "Offer", "price": 150, "priceCurrency": "DZD" } },
+            { "@type": "MenuItem", "name": "Banane Chocolat", "alternateName": "Banana chocolate", "description": "Ripe banana folded into milk-chocolate cream.", "image": "https://dori-yums.vercel.app/assets/m-banana.webp", "offers": { "@type": "Offer", "price": 120, "priceCurrency": "DZD" } },
+            { "@type": "MenuItem", "name": "Fraise Framboise", "alternateName": "Strawberry raspberry", "description": "Strawberry and raspberry, bright and tangy.", "image": "https://dori-yums.vercel.app/assets/m-strawberry.webp", "offers": { "@type": "Offer", "price": 140, "priceCurrency": "DZD" } },
+            { "@type": "MenuItem", "name": "Citron", "alternateName": "Lemon", "description": "Sun-bright lemon cream, sharp then sweet.", "image": "https://dori-yums.vercel.app/assets/m-lemon.webp", "offers": { "@type": "Offer", "price": 120, "priceCurrency": "DZD" } },
+            { "@type": "MenuItem", "name": "Coco Ananas", "alternateName": "Coconut pineapple", "description": "A coconut shell with a pineapple heart.", "image": "https://dori-yums.vercel.app/assets/m-coconut.webp", "offers": { "@type": "Offer", "price": 120, "priceCurrency": "DZD" } },
+            { "@type": "MenuItem", "name": "Noisette Praliné", "alternateName": "Hazelnut praliné", "description": "Toasted hazelnut praliné, warm and buttery.", "image": "https://dori-yums.vercel.app/assets/m-pecan.webp", "offers": { "@type": "Offer", "price": 180, "priceCurrency": "DZD" } },
+            { "@type": "MenuItem", "name": "Vanille Caramel", "alternateName": "Vanilla caramel", "description": "Vanilla cream with a soft caramel ribbon.", "image": "https://dori-yums.vercel.app/assets/m-vanilla.webp", "offers": { "@type": "Offer", "price": 140, "priceCurrency": "DZD" } },
+            { "@type": "MenuItem", "name": "Cerise Chocolat", "alternateName": "Cherry chocolate", "description": "Dark cherry over a chocolate cream heart.", "image": "https://dori-yums.vercel.app/assets/m-cherry.webp", "offers": { "@type": "Offer", "price": 140, "priceCurrency": "DZD" } },
+            { "@type": "MenuItem", "name": "Coco Chocolat", "alternateName": "Coconut chocolate", "description": "Coconut and chocolate, the classic pairing.", "image": "https://dori-yums.vercel.app/assets/m-coconut-choc.webp", "offers": { "@type": "Offer", "price": 120, "priceCurrency": "DZD" } },
+            { "@type": "MenuItem", "name": "Orange", "alternateName": "Orange", "description": "Candied orange zest, gently bitter.", "image": "https://dori-yums.vercel.app/assets/m-orange.webp", "offers": { "@type": "Offer", "price": 120, "priceCurrency": "DZD" } }
+          ]
+        }
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://dori-yums.vercel.app/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Where do you deliver?", "acceptedAnswer": { "@type": "Answer", "text": "We are based in Algiers. Both delivery around the city and pickup are possible — send us your neighborhood on WhatsApp and we will confirm the options for your address." } },
+        { "@type": "Question", "name": "How far in advance should I order?", "acceptedAnswer": { "@type": "Answer", "text": "A few days ahead is ideal for standard boxes; large or fully custom event orders need more notice. Message us your date first and we will confirm what is possible." } },
+        { "@type": "Question", "name": "Can I customize colors and flavors?", "acceptedAnswer": { "@type": "Answer", "text": "Yes — shells and fillings can be matched to your theme, and boxes can be personalized. Send inspiration photos on WhatsApp and we will build the order around them." } },
+        { "@type": "Question", "name": "How does payment work?", "acceptedAnswer": { "@type": "Answer", "text": "Everything is agreed in the WhatsApp conversation — price, payment method and timing are confirmed together before baking starts." } },
+        { "@type": "Question", "name": "How should I store macarons?", "acceptedAnswer": { "@type": "Answer", "text": "Keep them in their closed box in the fridge (around 4 °C), away from strong-smelling foods, and enjoy them within 3 days — 5 days at most. Take them out 15–20 minutes before serving: that is when the texture is perfect. Avoid sun, heat and humidity, and never leave the box in a hot car." } },
+        { "@type": "Question", "name": "Can I change or cancel my order?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, free of charge up to 48 hours before your delivery or pickup date: flavors, quantity, date or address can be changed (subject to availability), or the order cancelled. Within the last 48 hours your macarons are already being made — shells need a day to mature — so the order can no longer be cancelled; small adjustments may still be possible, just ask on WhatsApp. Fully custom event orders can be cancelled up to 5 days before the date." } }
+      ]
+    }
+  ]
 }
 </script>
 
@@ -549,7 +638,7 @@ html[lang="ar"] body{font-weight:400}
 /* plaintext repairs intra-sentence ordering ONLY where Arabic mixes with Latin/digits
    (tier note, story paragraphs with the Latin brand name); explicit text-align keeps
    these blocks left-aligned so alignment stays identical to EN/FR */
-html[lang="ar"] :is(.om-tier, .story-copy p){unicode-bidi:plaintext;text-align:left}
+html[lang="ar"] :is(.om-tier, .story-copy p, .faq-a p, .om-policy p){unicode-bidi:plaintext;text-align:left}
 html[lang="ar"] .eyebrow,
 html[lang="ar"] .hero h1 em,
 html[lang="ar"] .story-sign,
@@ -619,6 +708,10 @@ html[lang="ar"] .om-tier{font-style:normal}
 .phone-wrap .om-input{border-radius:0 10px 10px 0}
 .om-err{color:#B0304A;font-size:.85rem;margin:2px 0 0}
 .om-confirm{width:100%;justify-content:center;margin-top:14px}
+.om-policy{margin-top:18px;padding-top:12px;border-top:1px dashed rgba(156,86,102,.3);display:grid;gap:6px}
+.om-policy p{margin:0;font-size:.78rem;line-height:1.55;color:#6d4a44}
+.om-policy b{font-weight:600;color:#9C5666;letter-spacing:.02em}
+.om-policy b::after{content:" ·"}
 @media (max-width: 760px){
   .modal-inner{grid-template-columns:1fr;padding:20px;gap:18px}
   .modal-media img{aspect-ratio:16/10}
@@ -768,7 +861,7 @@ html[lang="ar"] .om-tier{font-style:normal}
   <div class="wrap story-grid">
     <figure class="frame story-frame reveal" style="margin:0">
       <div class="frame-mat">
-        <img src="assets/atelier-0.webp" alt="Two ribboned Dori Yums gift boxes of pink and berry macarons" loading="lazy" />
+        <img src="assets/atelier-0.webp" alt="Two ribboned Dori Yums gift boxes of pink and berry macarons" loading="lazy" decoding="async" />
       </div>
     </figure>
     <div class="story-copy reveal">
@@ -797,7 +890,7 @@ html[lang="ar"] .om-tier{font-style:normal}
     <div class="placards">
       <!-- 1 -->
       <article class="placard reveal">
-        <div class="placard-mat"><img src="assets/m-rose.webp" alt="Strawberry macarons" loading="lazy" /></div>
+        <div class="placard-mat"><img src="assets/m-rose.webp" alt="Strawberry macarons" loading="lazy" decoding="async" /></div>
         <div class="placard-body">
           <div class="placard-roman">Ⅰ</div>
           <h3 class="placard-name">Fraise</h3>
@@ -812,7 +905,7 @@ html[lang="ar"] .om-tier{font-style:normal}
       </article>
       <!-- 2 -->
       <article class="placard reveal">
-        <div class="placard-mat"><img src="assets/m-pistachio.webp" alt="Pistachio macarons" loading="lazy" /></div>
+        <div class="placard-mat"><img src="assets/m-pistachio.webp" alt="Pistachio macarons" loading="lazy" decoding="async" /></div>
         <div class="placard-body">
           <div class="placard-roman">Ⅱ</div>
           <h3 class="placard-name">Pistache</h3>
@@ -827,7 +920,7 @@ html[lang="ar"] .om-tier{font-style:normal}
       </article>
       <!-- 3 -->
       <article class="placard reveal">
-        <div class="placard-mat"><img src="assets/m-chocolate.webp" alt="Dark chocolate macarons" loading="lazy" /></div>
+        <div class="placard-mat"><img src="assets/m-chocolate.webp" alt="Dark chocolate macarons" loading="lazy" decoding="async" /></div>
         <div class="placard-body">
           <div class="placard-roman">Ⅲ</div>
           <h3 class="placard-name">Chocolat Noir</h3>
@@ -842,7 +935,7 @@ html[lang="ar"] .om-tier{font-style:normal}
       </article>
       <!-- 4 -->
       <article class="placard reveal">
-        <div class="placard-mat"><img src="assets/m-banana.webp" alt="Banana chocolate macarons" loading="lazy" /></div>
+        <div class="placard-mat"><img src="assets/m-banana.webp" alt="Banana chocolate macarons" loading="lazy" decoding="async" /></div>
         <div class="placard-body">
           <div class="placard-roman">Ⅳ</div>
           <h3 class="placard-name">Banane Chocolat</h3>
@@ -857,7 +950,7 @@ html[lang="ar"] .om-tier{font-style:normal}
       </article>
       <!-- 5 -->
       <article class="placard reveal">
-        <div class="placard-mat"><img src="assets/m-strawberry.webp" alt="Strawberry raspberry macarons" loading="lazy" /></div>
+        <div class="placard-mat"><img src="assets/m-strawberry.webp" alt="Strawberry raspberry macarons" loading="lazy" decoding="async" /></div>
         <div class="placard-body">
           <div class="placard-roman">Ⅴ</div>
           <h3 class="placard-name">Fraise Framboise</h3>
@@ -872,7 +965,7 @@ html[lang="ar"] .om-tier{font-style:normal}
       </article>
       <!-- 6 -->
       <article class="placard reveal">
-        <div class="placard-mat"><img src="assets/m-lemon.webp" alt="Lemon macarons" loading="lazy" /></div>
+        <div class="placard-mat"><img src="assets/m-lemon.webp" alt="Lemon macarons" loading="lazy" decoding="async" /></div>
         <div class="placard-body">
           <div class="placard-roman">Ⅵ</div>
           <h3 class="placard-name">Citron</h3>
@@ -887,7 +980,7 @@ html[lang="ar"] .om-tier{font-style:normal}
       </article>
       <!-- 7 -->
       <article class="placard reveal">
-        <div class="placard-mat"><img src="assets/m-coconut.webp" alt="Coconut pineapple macarons" loading="lazy" /></div>
+        <div class="placard-mat"><img src="assets/m-coconut.webp" alt="Coconut pineapple macarons" loading="lazy" decoding="async" /></div>
         <div class="placard-body">
           <div class="placard-roman">Ⅶ</div>
           <h3 class="placard-name">Coco Ananas</h3>
@@ -902,7 +995,7 @@ html[lang="ar"] .om-tier{font-style:normal}
       </article>
       <!-- 8 -->
       <article class="placard reveal">
-        <div class="placard-mat"><img src="assets/m-pecan.webp" alt="Hazelnut praliné macarons" loading="lazy" /></div>
+        <div class="placard-mat"><img src="assets/m-pecan.webp" alt="Hazelnut praliné macarons" loading="lazy" decoding="async" /></div>
         <div class="placard-body">
           <div class="placard-roman">Ⅷ</div>
           <h3 class="placard-name">Noisette Praliné</h3>
@@ -917,7 +1010,7 @@ html[lang="ar"] .om-tier{font-style:normal}
       </article>
       <!-- 9 -->
       <article class="placard reveal">
-        <div class="placard-mat"><img src="assets/m-vanilla.webp" alt="Vanilla caramel macarons" loading="lazy" /></div>
+        <div class="placard-mat"><img src="assets/m-vanilla.webp" alt="Vanilla caramel macarons" loading="lazy" decoding="async" /></div>
         <div class="placard-body">
           <div class="placard-roman">Ⅸ</div>
           <h3 class="placard-name">Vanille Caramel</h3>
@@ -932,7 +1025,7 @@ html[lang="ar"] .om-tier{font-style:normal}
       </article>
       <!-- 10 -->
       <article class="placard reveal">
-        <div class="placard-mat"><img src="assets/m-cherry.webp" alt="Cherry chocolate macarons" loading="lazy" /></div>
+        <div class="placard-mat"><img src="assets/m-cherry.webp" alt="Cherry chocolate macarons" loading="lazy" decoding="async" /></div>
         <div class="placard-body">
           <div class="placard-roman">Ⅹ</div>
           <h3 class="placard-name">Cerise Chocolat</h3>
@@ -947,7 +1040,7 @@ html[lang="ar"] .om-tier{font-style:normal}
       </article>
       <!-- 11 -->
       <article class="placard reveal">
-        <div class="placard-mat"><img src="assets/m-coconut-choc.webp" alt="Coconut chocolate macarons" loading="lazy" /></div>
+        <div class="placard-mat"><img src="assets/m-coconut-choc.webp" alt="Coconut chocolate macarons" loading="lazy" decoding="async" /></div>
         <div class="placard-body">
           <div class="placard-roman">Ⅺ</div>
           <h3 class="placard-name">Coco Chocolat</h3>
@@ -962,7 +1055,7 @@ html[lang="ar"] .om-tier{font-style:normal}
       </article>
       <!-- 12 -->
       <article class="placard reveal">
-        <div class="placard-mat"><img src="assets/m-orange.webp" alt="Orange macarons" loading="lazy" /></div>
+        <div class="placard-mat"><img src="assets/m-orange.webp" alt="Orange macarons" loading="lazy" decoding="async" /></div>
         <div class="placard-body">
           <div class="placard-roman">Ⅻ</div>
           <h3 class="placard-name">Orange</h3>
@@ -979,7 +1072,7 @@ html[lang="ar"] .om-tier{font-style:normal}
 
     <!-- custom cakes band -->
     <div class="cakes-band reveal">
-      <img src="assets/logo.webp" alt="" aria-hidden="true" loading="lazy" />
+      <img src="assets/logo.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" />
       <div>
         <h3 data-i18n="cakes.title">Also from the atelier: custom cakes</h3>
         <p data-i18n="cakes.p">Layer cakes and dessert towers, designed around your theme — send us your inspiration and we will sketch it together on WhatsApp.</p>
@@ -1000,21 +1093,21 @@ html[lang="ar"] .om-tier{font-style:normal}
     </div>
     <div class="atelier-grid">
       <figure class="frame atelier-card reveal" style="margin:0">
-        <div class="frame-mat"><img src="assets/atelier-0.webp" alt="Ribboned Dori Yums gift boxes of assorted macarons" loading="lazy" /></div>
+        <div class="frame-mat"><img src="assets/atelier-0.webp" alt="Ribboned Dori Yums gift boxes of assorted macarons" loading="lazy" decoding="async" /></div>
         <figcaption class="atelier-caption">
           <h3 data-i18n="at.c1">Gift coffrets</h3>
           <p data-i18n="at.c1p">Boxed and ribboned, ready to offer.</p>
         </figcaption>
       </figure>
       <figure class="frame atelier-card reveal" style="margin:0">
-        <div class="frame-mat"><img src="assets/atelier-2.webp" alt="Blue and chocolate macarons plated with rosebuds for a baby shower" loading="lazy" /></div>
+        <div class="frame-mat"><img src="assets/atelier-2.webp" alt="Blue and chocolate macarons plated with rosebuds for a baby shower" loading="lazy" decoding="async" /></div>
         <figcaption class="atelier-caption">
           <h3 data-i18n="at.c2">Plated moments</h3>
           <p data-i18n="at.c2p">Color-matched to your celebration.</p>
         </figcaption>
       </figure>
       <figure class="frame atelier-card reveal" style="margin:0">
-        <div class="frame-mat"><img src="assets/atelier-3.webp" alt="A party tray of blue, vanilla, chocolate and pink macarons" loading="lazy" /></div>
+        <div class="frame-mat"><img src="assets/atelier-3.webp" alt="A party tray of blue, vanilla, chocolate and pink macarons" loading="lazy" decoding="async" /></div>
         <figcaption class="atelier-caption">
           <h3 data-i18n="at.c3">Event trays</h3>
           <p data-i18n="at.c3p">Ready to serve, from shower to soirée.</p>
@@ -1126,7 +1219,7 @@ html[lang="ar"] .om-tier{font-style:normal}
       <figure class="quote reveal">
         <span class="mark">“</span>
         <div class="quote-shot">
-          <img src="assets/testimonial-1.jpg" alt="Instagram comment by perrie_chapier: “masterpiece” with four heart-eyes emojis" loading="lazy" />
+          <img src="assets/testimonial-1.jpg" alt="Instagram comment by perrie_chapier: “masterpiece” with four heart-eyes emojis" loading="lazy" decoding="async" />
         </div>
         <figcaption class="quote-src">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".8" fill="currentColor" stroke="none"/></svg>
@@ -1136,7 +1229,7 @@ html[lang="ar"] .om-tier{font-style:normal}
       <figure class="quote reveal">
         <span class="mark">“</span>
         <div class="quote-shot">
-          <img src="assets/testimonial-2.jpg" alt="Instagram comment by _meriem_mer._: “Je valide a 100% les meilleurs, mais vraiment la variété des goûts parfait”" loading="lazy" />
+          <img src="assets/testimonial-2.jpg" alt="Instagram comment by _meriem_mer._: “Je valide a 100% les meilleurs, mais vraiment la variété des goûts parfait”" loading="lazy" decoding="async" />
         </div>
         <figcaption class="quote-src">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".8" fill="currentColor" stroke="none"/></svg>
@@ -1146,7 +1239,7 @@ html[lang="ar"] .om-tier{font-style:normal}
       <figure class="quote reveal">
         <span class="mark">“</span>
         <div class="quote-shot">
-          <img src="assets/testimonial-3.jpg" alt="Instagram comment by sabrinahalouane: “Je confirme c'est un délice au palais et un plaisir à déguster”" loading="lazy" />
+          <img src="assets/testimonial-3.jpg" alt="Instagram comment by sabrinahalouane: “Je confirme c'est un délice au palais et un plaisir à déguster”" loading="lazy" decoding="async" />
         </div>
         <figcaption class="quote-src">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".8" fill="currentColor" stroke="none"/></svg>
@@ -1206,7 +1299,14 @@ html[lang="ar"] .om-tier{font-style:normal}
           <span data-i18n="fq.q5">How should I store macarons?</span>
           <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
         </button>
-        <div class="faq-a"><p data-i18n="fq.a5">Keep them refrigerated in their box and enjoy them within a few days. Let them rest a few minutes at room temperature before serving — that is when the texture is perfect.</p></div>
+        <div class="faq-a"><p data-i18n="fq.a5">Keep them in their closed box in the fridge (around 4 °C), away from strong-smelling foods, and enjoy them within 3 days — 5 days at most. Take them out 15–20 minutes before serving: that is when the texture is perfect. Avoid sun, heat and humidity, and never leave the box in a hot car.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" type="button" aria-expanded="false">
+          <span data-i18n="fq.q6">Can I change or cancel my order?</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="faq-a"><p data-i18n="fq.a6">Yes, free of charge up to 48 hours before your delivery or pickup date: flavors, quantity, date or address can be changed (subject to availability), or the order cancelled. Within the last 48 hours your macarons are already being made — shells need a day to mature — so the order can no longer be cancelled; small adjustments may still be possible, just ask on WhatsApp. Fully custom event orders can be cancelled up to 5 days before the date.</p></div>
       </div>
     </div>
   </div>
@@ -1258,7 +1358,7 @@ html[lang="ar"] .om-tier{font-style:normal}
     <div class="footer-grid">
       <div>
         <a class="brand" href="#top">
-          <img src="assets/logo.webp" alt="" width="44" height="44" loading="lazy" />
+          <img src="assets/logo.webp" alt="" width="44" height="44" loading="lazy" decoding="async" />
           <span class="brand-name">Dori Yums</span>
         </a>
         <p class="footer-tag" data-i18n="ft.tag">Homemade and custom macarons, made with love for your sweetest moments — from a home atelier in Algiers.</p>
@@ -1356,6 +1456,11 @@ html[lang="ar"] .om-tier{font-style:normal}
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a9.9 9.9 0 0 0-8.6 14.9L2 22l5.3-1.4A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.6-6.1c-.3-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.3-.6.8-.8 1-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4 0-.5.1-.7l.4-.5c.1-.2.1-.3.2-.5s0-.4 0-.5l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.4 3.9.6.3 1.1.4 1.5.5.6.2 1.2.2 1.6.1.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.6-.3z"/></svg>
             <span data-i18n="md.confirm">Confirm order via WhatsApp</span>
           </button>
+        </div>
+
+        <div class="om-policy">
+          <p><b data-i18n="md.polStoreT">Storage</b> <span data-i18n="md.polStore">Refrigerate in the closed box; best within 3 days. Take out 15–20 min before serving.</span></p>
+          <p><b data-i18n="md.polCancelT">Changes &amp; cancellation</b> <span data-i18n="md.polCancel">Free up to 48 h before your date (5 days for fully custom event orders).</span></p>
         </div>
       </div>
     </div>
@@ -1467,7 +1572,9 @@ html[lang="ar"] .om-tier{font-style:normal}
       'fq.q4':'How does payment work?',
       'fq.a4':'Everything is agreed in the WhatsApp conversation — price, payment method and timing are confirmed together before baking starts.',
       'fq.q5':'How should I store macarons?',
-      'fq.a5':'Keep them refrigerated in their box and enjoy them within a few days. Let them rest a few minutes at room temperature before serving — that is when the texture is perfect.',
+      'fq.a5':'Keep them in their closed box in the fridge (around 4 °C), away from strong-smelling foods, and enjoy them within 3 days — 5 days at most. Take them out 15–20 minutes before serving: that is when the texture is perfect. Avoid sun, heat and humidity, and never leave the box in a hot car.',
+      'fq.q6':'Can I change or cancel my order?',
+      'fq.a6':'Yes, free of charge up to 48 hours before your delivery or pickup date: flavors, quantity, date or address can be changed (subject to availability), or the order cancelled. Within the last 48 hours your macarons are already being made — shells need a day to mature — so the order can no longer be cancelled; small adjustments may still be possible, just ask on WhatsApp. Fully custom event orders can be cancelled up to 5 days before the date.',
       'ct.eyebrow':'We answer personally','ct.title':'Order & contact',
       'ct.sub':'WhatsApp is the fastest way to order; Instagram DMs work too.',
       'ct.wa':'Orders, questions and custom requests.',
@@ -1483,6 +1590,9 @@ html[lang="ar"] .om-tier{font-style:normal}
       'md.wilaya':'Wilaya','md.wilayaPick':'Choose your wilaya',
       'md.fill':'Please fill in your name, phone number and wilaya.',
       'md.confirm':'Confirm order via WhatsApp',
+      'md.polStoreT':'Storage','md.polStore':'Refrigerate in the closed box; best within 3 days. Take out 15–20 min before serving.',
+      'md.polCancelT':'Changes & cancellation','md.polCancel':'Free up to 48 h before your date (5 days for fully custom event orders).',
+      'md.tiersLead':'Tiered pricing:','md.tierItem':'−{d} DZD per piece from {q}','md.tierJoin':', ',
       'wa.msg':"Hello Dori Yums! I'd like to place an order.",
       'wa.flavor':"Hello Dori Yums! I'd like to order the {f} macarons.",
       'wa.cake':"Hello Dori Yums! I'd like to ask about a custom cake."
@@ -1554,7 +1664,9 @@ html[lang="ar"] .om-tier{font-style:normal}
       'fq.q4':'Comment se passe le paiement ?',
       'fq.a4':"Tout se décide dans la conversation WhatsApp — prix, mode de paiement et délais sont confirmés ensemble avant la cuisson.",
       'fq.q5':'Comment conserver les macarons ?',
-      'fq.a5':"Gardez-les au réfrigérateur dans leur boîte et dégustez-les sous quelques jours. Sortez-les quelques minutes avant de servir — c'est là que la texture est parfaite.",
+      'fq.a5':"Gardez-les dans leur boîte fermée au réfrigérateur (environ 4 °C), à l'écart des aliments odorants, et dégustez-les dans les 3 jours — 5 jours au maximum. Sortez-les 15 à 20 minutes avant de servir : c'est là que la texture est parfaite. Évitez le soleil, la chaleur et l'humidité, et ne laissez jamais la boîte dans une voiture chaude.",
+      'fq.q6':'Puis-je modifier ou annuler ma commande ?',
+      'fq.a6':"Oui, gratuitement jusqu'à 48 heures avant la date de livraison ou de retrait : parfums, quantité, date ou adresse peuvent être modifiés (selon disponibilité), ou la commande annulée. Dans les dernières 48 heures, vos macarons sont déjà en préparation — les coques ont besoin d'une journée de maturation — la commande ne peut donc plus être annulée ; de petits ajustements restent parfois possibles, demandez-nous sur WhatsApp. Les commandes d'événement entièrement personnalisées sont annulables jusqu'à 5 jours avant la date.",
       'ct.eyebrow':'Nous répondons personnellement','ct.title':'Commander & contact',
       'ct.sub':"WhatsApp est le moyen le plus rapide de commander ; les DM Instagram fonctionnent aussi.",
       'ct.wa':'Commandes, questions et demandes sur mesure.',
@@ -1570,6 +1682,9 @@ html[lang="ar"] .om-tier{font-style:normal}
       'md.wilaya':'Wilaya','md.wilayaPick':'Choisissez votre wilaya',
       'md.fill':'Veuillez renseigner votre nom, votre téléphone et votre wilaya.',
       'md.confirm':'Confirmer la commande via WhatsApp',
+      'md.polStoreT':'Conservation','md.polStore':'Au réfrigérateur dans la boîte fermée, idéalement sous 3 jours. Sortir 15 à 20 min avant de servir.',
+      'md.polCancelT':'Modification & annulation','md.polCancel':"Gratuites jusqu'à 48 h avant votre date (5 jours pour les commandes d'événement sur mesure).",
+      'md.tiersLead':'Tarif dégressif :','md.tierItem':'−{d} DZD par pièce dès {q}','md.tierJoin':', ',
       'wa.msg':'Bonjour Dori Yums ! Je voudrais passer une commande.',
       'wa.flavor':'Bonjour Dori Yums ! Je voudrais commander des macarons {f}.',
       'wa.cake':'Bonjour Dori Yums ! Je voudrais parler d\'un gâteau personnalisé.'
@@ -1642,7 +1757,9 @@ html[lang="ar"] .om-tier{font-style:normal}
       'fq.q4':'كيف يتم الدفع؟',
       'fq.a4':'كل شيء يُتَّفق عليه في محادثة واتساب — السعر وطريقة الدفع والتوقيت تُؤكَّد معًا قبل بدء الخبز.',
       'fq.q5':'كيف أحفظ الماكارون؟',
-      'fq.a5':'احفظوه مبرَّدًا في علبته وتمتعوا به خلال أيام قليلة. أخرجوه دقائق قبل التقديم — حينها يكون القوام مثاليًا.',
+      'fq.a5':'احفظوه في علبته المغلقة داخل الثلاجة (حوالي 4 درجات)، بعيدًا عن الأطعمة ذات الروائح القوية، وتناولوه خلال 3 أيام — 5 أيام كحدّ أقصى. أخرجوه قبل التقديم بـ 15 إلى 20 دقيقة: حينها يكون القوام مثاليًا. تجنّبوا الشمس والحرارة والرطوبة، ولا تتركوا العلبة أبدًا في سيارة ساخنة.',
+      'fq.q6':'هل يمكنني تعديل طلبي أو إلغاؤه؟',
+      'fq.a6':'نعم، مجانًا حتى 48 ساعة قبل موعد التوصيل أو الاستلام: يمكن تعديل النكهات أو الكمية أو التاريخ أو العنوان (حسب التوفّر)، أو إلغاء الطلب. خلال الـ 48 ساعة الأخيرة يكون الماكارون قيد التحضير — فالقشرات تحتاج يومًا كاملًا لتنضج — لذا لا يمكن إلغاء الطلب؛ وقد تبقى بعض التعديلات الصغيرة ممكنة، فقط اسألونا عبر واتساب. أما طلبيات المناسبات المخصّصة بالكامل فيمكن إلغاؤها حتى 5 أيام قبل الموعد.',
       'ct.eyebrow':'نردّ شخصيًا','ct.title':'الطلب والتواصل',
       'ct.sub':'واتساب أسرع طريقة للطلب؛ رسائل إنستغرام تعمل أيضًا.',
       'ct.wa':'طلبيات وأسئلة وطلبات مخصّصة.',
@@ -1657,7 +1774,10 @@ html[lang="ar"] .om-tier{font-style:normal}
       'md.name':'الاسم الكامل','md.namePh':'اسمك','md.phone':'رقم الهاتف',
       'md.wilaya':'الولاية','md.wilayaPick':'اختر ولايتك',
       'md.fill':'يرجى إدخال الاسم ورقم الهاتف والولاية.',
-      'md.confirm':'أكّد الطلب عبر واتساب'
+      'md.confirm':'أكّد الطلب عبر واتساب',
+      'md.polStoreT':'الحفظ','md.polStore':'في الثلاجة داخل العلبة المغلقة، ويُفضَّل تناوله خلال 3 أيام. أخرجوه قبل التقديم بـ 15 إلى 20 دقيقة.',
+      'md.polCancelT':'التعديل والإلغاء','md.polCancel':'مجانًا حتى 48 ساعة قبل موعدكم (5 أيام لطلبيات المناسبات المخصّصة بالكامل).',
+      'md.tiersLead':'تسعير تنازلي:','md.tierItem':'خصم {d} DZD للقطعة ابتداءً من {q} قطعة','md.tierJoin':'، و'
     }
   };
 
