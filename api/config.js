@@ -5,14 +5,15 @@
 //   SUPABASE_ANON_KEY  the anon / publishable key (public by design, protected by RLS)
 // The names created by the Vercel ↔ Supabase integration are accepted too
 // (NEXT_PUBLIC_SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, NEXT_PUBLIC_SUPABASE_ANON_KEY, …).
-// Without them it answers { status } and the site runs on its local catalog.
-// A secret key (service_role / sb_secret_…) is refused, never forwarded.
+// Harmless URL mistakes are corrected (missing https://, /rest/v1 suffix, dashboard link).
+// Without a usable URL + key it answers { status, url, key } describing what is wrong —
+// never a value. A secret key (service_role / sb_secret_…) is refused, never forwarded.
 
 var URL_VARS = ['SUPABASE_URL', 'NEXT_PUBLIC_SUPABASE_URL'];
 var KEY_VARS = ['SUPABASE_ANON_KEY', 'SUPABASE_PUBLISHABLE_KEY',
                 'NEXT_PUBLIC_SUPABASE_ANON_KEY', 'NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY'];
 
-function env(name) { return String(process.env[name] || '').trim(); }
+function env(name) { return String(process.env[name] || '').trim().replace(/^['"]+|['"]+$/g, '').trim(); }
 
 function isSecretKey(key) {
   if (/^sb_secret_/.test(key)) return true;
@@ -26,9 +27,23 @@ function isSecretKey(key) {
   }
 }
 
+/* → { url } when usable, else { problem } — the problem names a shape, never the value */
+function normalizeUrl(raw) {
+  if (!raw) return { problem: 'missing' };
+  var dash = /supabase\.com\/dashboard\/project\/([a-z0-9]{10,40})/i.exec(raw);
+  if (dash) return { url: 'https://' + dash[1].toLowerCase() + '.supabase.co' };
+  var v = /^[a-z][a-z0-9+.-]*:\/\//i.test(raw) ? raw : 'https://' + raw;
+  var u;
+  try { u = new URL(v); } catch (e) { return { problem: 'unreadable' }; }
+  if (u.protocol !== 'https:') return { problem: 'not_https:' + u.protocol.replace(':', '') };   // e.g. a postgresql:// connection string
+  if (!/\./.test(u.hostname)) return { problem: 'unreadable' };
+  return { url: u.origin };   /* drops /rest/v1, trailing slashes, query strings */
+}
+
 module.exports = function handler(req, res) {
-  var url = '';
-  URL_VARS.some(function (n) { url = env(n); return !!url; });
+  var rawUrl = '';
+  URL_VARS.some(function (n) { rawUrl = env(n); return !!rawUrl; });
+  var u = normalizeUrl(rawUrl);
 
   var key = '', refused = false;
   KEY_VARS.forEach(function (n) {
@@ -38,17 +53,20 @@ module.exports = function handler(req, res) {
     key = v;
   });
 
-  /* status is only a hint for whoever sets the project up — it never contains a key */
   var body;
-  if (!url) body = { status: 'missing_url' };
-  else if (!/^https:\/\/[^\s/]+$/.test(url.replace(/\/+$/, ''))) body = { status: 'bad_url' };
-  else if (!key) body = { status: refused ? 'secret_key_refused' : 'missing_key' };
-  else body = { supabaseUrl: url.replace(/\/+$/, ''), supabaseAnonKey: key };
-
+  if (u.url && key) {
+    body = { supabaseUrl: u.url, supabaseAnonKey: key };
+  } else {
+    body = {
+      status: 'not_configured',
+      url: u.url ? 'ok' : u.problem,
+      key: key ? 'ok' : (refused ? 'secret_key_refused' : 'missing')
+    };
+    console.warn('[api/config] Supabase not configured: url=' + body.url + ' key=' + body.key);
+  }
   if (refused) {
     console.error('[api/config] a Supabase secret/service_role key was found in a public variable — refused. Use the anon or publishable key.');
   }
-  if (body.status) console.warn('[api/config] Supabase not configured: ' + body.status);
 
   res.statusCode = 200;
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
