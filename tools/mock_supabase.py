@@ -8,8 +8,12 @@ Serves the site itself, plus:
   GET  /rest/v1/flavors            -> fixture flavors (deliberately different from the static page)
   GET  /rest/v1/gallery_posts      -> fixture gallery
   GET  /rest/v1/site_settings      -> fixture settings (changed price tiers)
-  POST /rest/v1/rpc/<fn>           -> canned answers for place_order / track_order / validate_promo
+  POST /rest/v1/rpc/place_order    -> simplified pricing, stores the order in memory (DY-1043, DY-1044…)
+  POST /rest/v1/rpc/track_order    -> stored orders, plus fixture DY-1042 / 0551401704 (status "baking")
+  POST /rest/v1/rpc/validate_promo -> TEST10 = 10 %
   POST /storage/v1/object/inspirations/<name> -> accepts uploads
+  GET  /mock/set?holiday=1         -> switch holiday mode on (holiday=0 off)
+  Customer names "paused" / "spam" / "slow" trigger orders_paused / too_many_orders / a 2 s delay.
 
 Fixture differences you should see on the page:
   * Pistache costs 200 DZD and its EN/FR/AR descriptions start with "[DB]"
@@ -21,6 +25,7 @@ Dev tool only — excluded from the Vercel deployment (.vercelignore).
 import json
 import os
 import sys
+import time
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse
 
@@ -86,6 +91,50 @@ RECEIPT = {
 }
 
 
+ORDERS = {}          # tracking_code -> receipt (+ phone, request_id)
+NEXT_CODE = [1043]
+STATE = {"holiday": False}
+
+
+def compute_receipt(body):
+    """Simplified place_order(): same pricing rule as the database (tier on the whole box)."""
+    pricing = SETTINGS[0]["value"]
+    delivery = SETTINGS[2]["value"]
+    items = body.get("p_items") or []
+    total_qty = sum(int(i.get("qty", 0)) for i in items)
+    tier = 0
+    for t in sorted(pricing["tiers"], key=lambda t: t["min_qty"]):
+        if total_qty >= t["min_qty"]:
+            tier = t["discount_per_piece"]
+    by_id = {f["id"]: f for f in FLAVORS}
+    lines, sub = [], 0
+    for i in items:
+        f = by_id.get(int(i["flavor_id"]))
+        if not f:
+            return None, "invalid_items"
+        if not f["is_available"]:
+            return None, "flavor_unavailable"
+        unit = max((f["price"] if f["price"] is not None else pricing["base_unit_price"]) - tier, 0)
+        lines.append({"flavor_id": f["id"], "name_fr": f["name_fr"], "name_en": f["name_en"], "name_ar": f["name_ar"],
+                      "qty": int(i["qty"]), "unit_price": unit, "line_total": unit * int(i["qty"])})
+        sub += unit * int(i["qty"])
+    if total_qty != int(body.get("p_box_size") or 0):
+        return None, "invalid_box_size"
+    if body.get("p_delivery_type") == "pickup":
+        fee = delivery["pickup_fee"]
+    else:
+        code = str(int(str(body.get("p_wilaya", "0")).split(" ")[0] or 0))
+        fee = delivery["wilaya_fees"].get(code, delivery["default_fee"])
+    disc = round(sub * 0.1) if str(body.get("p_promo_code") or "").upper() == "TEST10" else 0
+    return {
+        "status": "pending", "customer_name": body.get("p_customer_name"), "delivery_type": body.get("p_delivery_type"),
+        "wilaya": body.get("p_wilaya"), "commune": body.get("p_commune"), "event_date": body.get("p_event_date"),
+        "box_size": total_qty, "items": lines, "promo_code": (body.get("p_promo_code") or None) and body["p_promo_code"].upper(),
+        "subtotal": sub, "delivery_fee": fee, "discount_amount": disc, "total_price": sub - disc + fee,
+        "created_at": "2026-10-19T10:30:00Z",
+    }, None
+
+
 class Handler(SimpleHTTPRequestHandler):
     def __init__(self, *a, **kw):
         super().__init__(*a, directory=ROOT, **kw)
@@ -108,7 +157,13 @@ class Handler(SimpleHTTPRequestHandler):
         if path == "/rest/v1/gallery_posts":
             return self._json(200, GALLERY)
         if path == "/rest/v1/site_settings":
-            return self._json(200, SETTINGS)
+            rows = json.loads(json.dumps(SETTINGS))
+            rows[4]["value"]["enabled"] = STATE["holiday"]
+            return self._json(200, rows)
+        if path == "/mock/set":   # /mock/set?holiday=1  (test switch)
+            q = urlparse(self.path).query
+            STATE["holiday"] = "holiday=1" in q
+            return self._json(200, STATE)
         return super().do_GET()
 
     def do_POST(self):
@@ -121,17 +176,40 @@ class Handler(SimpleHTTPRequestHandler):
             body = {}
         if path == "/rest/v1/rpc/track_order":
             code = str(body.get("p_tracking_code", "")).upper().replace(" ", "")
+            code = "DY-" + code.replace("DY-", "").replace("DY", "")
             phone = "".join(ch for ch in str(body.get("p_phone", "")) if ch.isdigit())[-9:]
-            return self._json(200, RECEIPT if code in ("DY-1042", "DY1042", "1042") and phone == "551401704" else None)
+            if code == "DY-1042" and phone == "551401704":
+                return self._json(200, RECEIPT)
+            o = ORDERS.get(code)
+            if o and o["_phone"][-9:] == phone:
+                return self._json(200, {k: v for k, v in o.items() if not k.startswith("_")})
+            return self._json(200, None)
         if path == "/rest/v1/rpc/validate_promo":
             ok = str(body.get("p_code", "")).strip().upper() == "TEST10"
             sub = int(body.get("p_subtotal") or 0)
             return self._json(200, {"valid": True, "code": "TEST10", "discount_type": "percentage", "discount_value": 10,
                                     "discount_amount": round(sub * 0.1)} if ok else {"valid": False})
         if path == "/rest/v1/rpc/place_order":
-            if body.get("p_customer_name", "").strip().lower() == "paused":
+            name = str(body.get("p_customer_name", "")).strip().lower()
+            if STATE["holiday"] or name == "paused":
                 return self._json(400, {"code": "P0001", "message": "orders_paused", "details": None, "hint": None})
-            return self._json(200, dict(RECEIPT, status="pending", history=None))
+            if name == "spam":
+                return self._json(400, {"code": "P0001", "message": "too_many_orders", "details": None, "hint": None})
+            if name == "slow":
+                time.sleep(2)
+            for o in ORDERS.values():   # idempotency, like the request_id unique key
+                if body.get("p_request_id") and o["_req"] == body.get("p_request_id"):
+                    return self._json(200, {k: v for k, v in o.items() if not k.startswith("_")})
+            receipt, error = compute_receipt(body)
+            if error:
+                return self._json(400, {"code": "P0001", "message": error, "details": None, "hint": None})
+            code = f"DY-{NEXT_CODE[0]}"
+            NEXT_CODE[0] += 1
+            receipt.update({"tracking_code": code, "history": [{"status": "pending", "at": "2026-10-19T10:30:00Z"}]})
+            ORDERS[code] = dict(receipt, _phone=str(body.get("p_phone", "")), _req=body.get("p_request_id"),
+                                _image=body.get("p_inspiration_image_url"), _notes=body.get("p_custom_notes"))
+            print("ORDER", code, json.dumps(body, ensure_ascii=False), flush=True)
+            return self._json(200, {k: v for k, v in receipt.items() if k != "history"})
         if path.startswith("/storage/v1/object/inspirations/"):
             return self._json(200, {"Key": path.split("/storage/v1/object/", 1)[1]})
         return self._json(404, {"message": "not found"})

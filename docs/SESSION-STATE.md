@@ -5,9 +5,9 @@
 **DEFINITION OF DONE:** M1–M4 in [ROADMAP.md](ROADMAP.md) meet their acceptance criteria; the site still works with no Supabase keys.
 **NON-GOALS:** redesign, new stack for the public site, online payment.
 
-**CURRENT MILESTONE:** M3 (customer ordering) — not started.
-**LAST COMPLETED STEP:** M2 — schema, data layer, hydration (2026-10-19).
-**NEXT STEP:** M3 announcement bar + holiday mode, then sold-out badges, box builder, checkout, tracking.
+**CURRENT MILESTONE:** M4 (owner admin PWA) — not started.
+**LAST COMPLETED STEP:** M3 — box builder, checkout, confirmation, tracking, announcement bar, holiday mode, sold-out badges (2026-10-19).
+**NEXT STEP:** M4 — decide the admin stack (recommendation: same no-build static stack), then login, orders realtime, baking calendar, CMS, settings/promos/stats.
 **BLOCKERS:** none. Real Supabase keys are not needed until go-live (mock: `python tools/mock_supabase.py`).
 
 ## Decisions
@@ -16,9 +16,11 @@
 - D3 Orders are written only through `place_order()` (SECURITY DEFINER), which recomputes every price, tier, fee and discount; the browser never sends prices. Tracking only through `track_order(code, phone)`.
 - D4 Owner = Supabase Auth user listed in `private.admin_users`; public sign-ups must be disabled.
 - D5 Tier rule: the tier with the highest `min_qty` reached by the WHOLE box applies to every piece (same in SQL and in the page).
+- D7 (M3) Box tier = box size: every piece in a box of N gets the tier reached by N (same as `place_order`). Flavors move in steps of `ordering.flavor_step`; a box can only be sent when it is exactly full.
+- D8 (M3) Without Supabase the same builder/checkout sends a French WhatsApp message (no promo field, no photo upload, no tracking code).
 - D6 Public Supabase keys reach the browser through `/api/config` (env vars `SUPABASE_URL`, `SUPABASE_ANON_KEY`); a secret key is refused.
 
-## Assumptions — to confirm with the owner
+## Assumptions — confirmed by the owner on 2026-10-19 ("القيم المبدئية مقبولة")
 - A1 Delivery fees: Alger 500 DZD, other wilayas 1000 DZD, pickup free (`site_settings.delivery`).
 - A2 Change/cancellation: free up to 48 h before the date; fully custom event orders up to 5 days (FAQ + modal + JSON-LD).
 - A3 Storage: fridge ~4 °C, best within 3 days, max 5 days, out 15–20 min before serving.
@@ -26,6 +28,9 @@
 - A5 Mobile numbers only (05/06/07) for orders — confirmation happens on WhatsApp.
 
 ## Known issues
+- Pre-existing: in French, at tablet widths (~641–700 px and ~1021–1150 px) the long nav button "Commander sur WhatsApp" still touches the logo name. Fix needs a copy decision (shorter FR label) — not changed.
+- "How to order" section copy still describes the WhatsApp-only flow; worth updating once Supabase is live.
+- The cart (box + form) lives in localStorage for 14 days on the visitor's device; the inspiration photo itself is not kept (must be re-picked after a reload).
 - With a configured but unreachable database, the live catalog gives up after ~6 s (supabase-js retries); the static page is shown meanwhile, so visitors see no difference.
 
 ## Where things live
