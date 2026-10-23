@@ -1,5 +1,6 @@
 # kept in the repository, not published on the website
 supabase_schema.sql
+sql/
 docs/
 README.md
 .env.example

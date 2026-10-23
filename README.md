@@ -8,7 +8,7 @@ Single-page site for **Dori Yums**, a home-based atelier for handmade and custom
 - **Ordering:** box builder (box sizes from settings + ±20, several flavors per box by steps of 5, live tiered pricing) → checkout (name, Algerian mobile check, delivery or pickup with the wilaya fee, commune, event date, inspiration photo, allergies/notes, promo code) → confirmation with a `DY-XXXX` tracking code and an optional WhatsApp copy. With Supabase the order is saved through `place_order()`; without it the same flow opens WhatsApp (`+213 551 401 704`). Tracking dialog: "Track my order" (nav icon, burger menu, footer) or a `#track=DY-1042` link. The box is kept on the device until sent. All WhatsApp messages are generated in French regardless of UI language.
 - **Announcement bar / holiday mode:** driven by `site_settings.announcement` and `site_settings.holiday_mode` (holiday mode also disables sending orders); dismissible per message.
 - **Socials:** Instagram [@dori_yums](https://instagram.com/dori_yums), [Facebook](https://www.facebook.com/share/1BqEueMstJ/?mibextid=wwXIfr).
-- **Atelier (owner admin):** `/admin` — installable on the phone; sign-in with the Supabase owner account.
+- **Atelier (owner admin):** `/admin` — installable on the phone; sign-in with the Supabase owner account, plus a 6-digit code from an authenticator app once it is turned on (setup, recovery and the `sql/` files: `docs/ADMIN-SECURITY.md`).
 - **Backend (optional):** Supabase. Without keys the site runs on its built-in catalog exactly as before; with keys, flavors, gallery, testimonials and price tiers come from the database. Roadmap and state: [`docs/`](docs/ROADMAP.md).
 
 ## Structure

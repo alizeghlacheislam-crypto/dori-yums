@@ -31,6 +31,28 @@
       'login.submit':'Se connecter','login.busy':'Connexion…','login.bad':'E-mail ou mot de passe incorrect.',
       'login.network':'Connexion impossible — vérifiez internet puis réessayez.',
       'denied.title':'Accès refusé','denied.body':"Ce compte n'est pas autorisé à gérer l'atelier.",
+      'mfa.title':'Code de vérification','mfa.sub':"Saisissez le code à 6 chiffres affiché par votre application d'authentification.",
+      'mfa.device':'Appareil','mfa.code':'Code','mfa.submit':'Vérifier','mfa.busy':'Vérification…',
+      'mfa.six':'Le code compte 6 chiffres.','mfa.bad':"Code incorrect — vérifiez que l'heure du téléphone est juste, puis réessayez.",
+      'mfa.tooMany':"Trop d'essais — patientez une minute puis réessayez.",'mfa.expired':'Le code a expiré — saisissez le nouveau code.',
+      'mfa.lost':"Téléphone perdu ? Saisissez le code de votre appareil de secours. Sans lui, la récupération se fait depuis votre compte Supabase.",
+      'sec.title':'Sécurité du compte','sec.on':'Code de vérification activé',
+      'sec.offHint':"Aujourd'hui, la connexion ne demande que le mot de passe. Ajoutez un code à 6 chiffres donné par une application d'authentification : quelqu'un qui connaît seulement le mot de passe ne pourra plus entrer.",
+      'sec.onHint':'Sur un nouvel appareil, la connexion demande le mot de passe puis le code. Vos appareils habituels restent connectés.',
+      'sec.setup':'Activer le code de vérification','sec.devices':"Applications d'authentification",'sec.added':'ajoutée le {d}',
+      'sec.addBackup':'Ajouter un appareil de secours','sec.backupHint':"Conseillé : un 2e appareil (ou un gestionnaire de mots de passe) garde l'accès si le téléphone est perdu.",
+      'sec.remove':'Retirer','sec.confirmRemove':'Retirer « {n} » ? Ses codes ne permettront plus de se connecter.','sec.removed':'Appareil retiré.',
+      'sec.sessions':'Appareils connectés','sec.logoutAll':'Déconnecter tous les appareils',
+      'sec.logoutAllHint':"Si un téléphone ou un ordinateur est perdu : chaque appareil devra se reconnecter (mot de passe, puis code).",
+      'sec.confirmLogoutAll':'Déconnecter tous les appareils, y compris celui-ci ?','sec.loggedOutAll':'Tous les appareils ont été déconnectés.',
+      'sec.enabled':'Code de vérification activé. Les autres appareils connectés sans code ont été déconnectés.',
+      'sec.nudge':'Protégez le compte : activez le code de vérification.','sec.nudgeBtn':'Activer',
+      'en.title':'Activer le code de vérification','en.titleBackup':'Ajouter un appareil de secours','en.busy':'Préparation…',
+      'en.s1':"Installez une application d'authentification sur le téléphone (Google Authenticator, Microsoft Authenticator…).",
+      'en.s2':"Ajoutez le compte : scannez ce QR code avec l'application ou, sur ce téléphone, touchez « Ouvrir dans l'application ».",
+      'en.open':"Ouvrir dans l'application",'en.key':'Ou saisissez cette clé à la main :','en.copy':'Copier','en.copied':'Clé copiée.',
+      'en.keySecret':'Gardez cette clé pour vous : elle permet de créer les codes.',
+      'en.s3':"Saisissez le code à 6 chiffres affiché par l'application.",'en.confirm':'Confirmer et activer',
       'tab.orders':'Commandes','tab.calendar':'Fournées','tab.flavors':'Parfums','tab.gallery':'Galerie','tab.settings':'Réglages',
       'st.pending':'En attente','st.confirmed':'Confirmée','st.baking':'Au four','st.completed':'Terminée','st.cancelled':'Annulée',
       'act.confirmed':'Confirmer','act.baking':'Mettre au four','act.completed':'Terminée ✓','act.confirmCancel':'Annuler la commande {c} ?',
@@ -107,6 +129,28 @@
       'login.submit':'Sign in','login.busy':'Signing in…','login.bad':'Wrong email or password.',
       'login.network':'Cannot connect — check the internet and try again.',
       'denied.title':'Access denied','denied.body':'This account is not allowed to manage the atelier.',
+      'mfa.title':'Verification code','mfa.sub':'Enter the 6-digit code shown by your authenticator app.',
+      'mfa.device':'Device','mfa.code':'Code','mfa.submit':'Verify','mfa.busy':'Checking…',
+      'mfa.six':'The code has 6 digits.','mfa.bad':'Wrong code — check that the phone’s clock is right, then try again.',
+      'mfa.tooMany':'Too many attempts — wait a minute, then try again.','mfa.expired':'The code expired — enter the new one.',
+      'mfa.lost':'Lost your phone? Enter the code from your backup device. Without one, recovery is done from your Supabase account.',
+      'sec.title':'Account security','sec.on':'Verification code on',
+      'sec.offHint':'Signing in only asks for the password today. Add a 6-digit code from an authenticator app: someone who only knows the password will no longer get in.',
+      'sec.onHint':'A new device asks for the password, then the code. Your usual devices stay signed in.',
+      'sec.setup':'Turn on the verification code','sec.devices':'Authenticator apps','sec.added':'added {d}',
+      'sec.addBackup':'Add a backup device','sec.backupHint':'Recommended: a second device (or a password manager) keeps you in if the phone is lost.',
+      'sec.remove':'Remove','sec.confirmRemove':'Remove “{n}”? Its codes will no longer sign you in.','sec.removed':'Device removed.',
+      'sec.sessions':'Signed-in devices','sec.logoutAll':'Sign out of all devices',
+      'sec.logoutAllHint':'If a phone or a computer is lost: every device will have to sign in again (password, then code).',
+      'sec.confirmLogoutAll':'Sign out of every device, including this one?','sec.loggedOutAll':'Every device has been signed out.',
+      'sec.enabled':'Verification code on. Other devices signed in without the code were signed out.',
+      'sec.nudge':'Protect the account: turn on the verification code.','sec.nudgeBtn':'Turn on',
+      'en.title':'Turn on the verification code','en.titleBackup':'Add a backup device','en.busy':'Preparing…',
+      'en.s1':'Install an authenticator app on the phone (Google Authenticator, Microsoft Authenticator…).',
+      'en.s2':'Add the account: scan this QR code with the app or, on this phone, tap “Open in the app”.',
+      'en.open':'Open in the app','en.key':'Or type this key by hand:','en.copy':'Copy','en.copied':'Key copied.',
+      'en.keySecret':'Keep this key to yourself: it can create the codes.',
+      'en.s3':'Enter the 6-digit code the app shows.','en.confirm':'Confirm and turn on',
       'tab.orders':'Orders','tab.calendar':'Baking','tab.flavors':'Flavors','tab.gallery':'Gallery','tab.settings':'Settings',
       'st.pending':'Pending','st.confirmed':'Confirmed','st.baking':'In the oven','st.completed':'Completed','st.cancelled':'Cancelled',
       'act.confirmed':'Confirm','act.baking':'Start baking','act.completed':'Done ✓','act.confirmCancel':'Cancel order {c}?',
@@ -183,6 +227,28 @@
       'login.submit':'تسجيل الدخول','login.busy':'جارٍ الدخول…','login.bad':'البريد أو كلمة المرور غير صحيحة.',
       'login.network':'تعذّر الاتصال — تحققوا من الإنترنت ثم أعيدوا المحاولة.',
       'denied.title':'الوصول مرفوض','denied.body':'هذا الحساب غير مخوّل بإدارة الورشة.',
+      'mfa.title':'رمز التحقق','mfa.sub':'أدخلوا الرمز المكوّن من 6 أرقام الذي يعرضه تطبيق المصادقة.',
+      'mfa.device':'الجهاز','mfa.code':'الرمز','mfa.submit':'تحقّق','mfa.busy':'جارٍ التحقق…',
+      'mfa.six':'الرمز مكوّن من 6 أرقام.','mfa.bad':'رمز غير صحيح — تأكدوا أن ساعة الهاتف مضبوطة ثم أعيدوا المحاولة.',
+      'mfa.tooMany':'محاولات كثيرة — انتظروا دقيقة ثم أعيدوا المحاولة.','mfa.expired':'انتهت صلاحية الرمز — أدخلوا الرمز الجديد.',
+      'mfa.lost':'ضاع الهاتف؟ أدخلوا رمز جهازكم الاحتياطي. وإن لم يوجد، يتم الاسترجاع من حسابكم في Supabase.',
+      'sec.title':'أمان الحساب','sec.on':'رمز التحقق مفعّل',
+      'sec.offHint':'حاليًا يطلب تسجيل الدخول كلمة المرور فقط. أضيفوا رمزًا من 6 أرقام يعطيه تطبيق المصادقة: من يعرف كلمة المرور وحدها لن يستطيع الدخول.',
+      'sec.onHint':'على جهاز جديد يُطلب كلمة المرور ثم الرمز. أجهزتكم المعتادة تبقى متصلة.',
+      'sec.setup':'تفعيل رمز التحقق','sec.devices':'تطبيقات المصادقة','sec.added':'أُضيف في {d}',
+      'sec.addBackup':'إضافة جهاز احتياطي','sec.backupHint':'يُنصح به: جهاز ثانٍ (أو مدير كلمات المرور) يحفظ الوصول إذا ضاع الهاتف.',
+      'sec.remove':'إزالة','sec.confirmRemove':'إزالة «{n}»؟ لن تعمل رموزه لتسجيل الدخول بعد الآن.','sec.removed':'أُزيل الجهاز.',
+      'sec.sessions':'الأجهزة المتصلة','sec.logoutAll':'تسجيل الخروج من كل الأجهزة',
+      'sec.logoutAllHint':'إذا ضاع هاتف أو حاسوب: سيحتاج كل جهاز إلى تسجيل الدخول من جديد (كلمة المرور ثم الرمز).',
+      'sec.confirmLogoutAll':'تسجيل الخروج من كل الأجهزة بما فيها هذا الجهاز؟','sec.loggedOutAll':'تم تسجيل الخروج من كل الأجهزة.',
+      'sec.enabled':'تم تفعيل رمز التحقق. سُجّل خروج الأجهزة الأخرى التي دخلت بدون رمز.',
+      'sec.nudge':'احموا الحساب: فعّلوا رمز التحقق.','sec.nudgeBtn':'تفعيل',
+      'en.title':'تفعيل رمز التحقق','en.titleBackup':'إضافة جهاز احتياطي','en.busy':'جارٍ التحضير…',
+      'en.s1':'ثبّتوا تطبيق مصادقة على الهاتف (Google Authenticator أو Microsoft Authenticator…).',
+      'en.s2':'أضيفوا الحساب: امسحوا رمز QR هذا بالتطبيق، أو على هذا الهاتف اضغطوا «فتح في التطبيق».',
+      'en.open':'فتح في التطبيق','en.key':'أو أدخلوا هذا المفتاح يدويًا:','en.copy':'نسخ','en.copied':'نُسخ المفتاح.',
+      'en.keySecret':'احتفظوا بهذا المفتاح لأنفسكم: فهو يُنشئ الرموز.',
+      'en.s3':'أدخلوا الرمز المكوّن من 6 أرقام الذي يعرضه التطبيق.','en.confirm':'تأكيد وتفعيل',
       'tab.orders':'الطلبات','tab.calendar':'التحضير','tab.flavors':'النكهات','tab.gallery':'المعرض','tab.settings':'الإعدادات',
       'st.pending':'قيد المراجعة','st.confirmed':'مؤكد','st.baking':'في الفرن','st.completed':'مكتمل','st.cancelled':'ملغى',
       'act.confirmed':'تأكيد','act.baking':'إلى الفرن','act.completed':'تم ✓','act.confirmCancel':'إلغاء الطلب {c}؟',
@@ -278,7 +344,8 @@
     edit:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>',
     trash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>',
     plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
-    refresh:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/></svg>'
+    refresh:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/></svg>',
+    shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.2 7.5 9.5 4.3-1.3 7.5-4.9 7.5-9.5V6z"/><path d="m8.8 12.2 2.3 2.3 4.3-4.5"/></svg>'
   };
 
   /* ─── state ─── */
@@ -287,7 +354,8 @@
     orders:[], flavors:[], gallery:[], settings:{}, promos:[],
     tab:'orders', filter:'all', search:'', calDays:14, calPending:true, galCat:'atelier',
     known:null, unseen:{}, live:'off', channel:null, poll:null, lastLoad:0,
-    drawer:null, sound: store('dy_admin_sound') !== '0', dirtyForms:{}, signed:{}, moveQueue:Promise.resolve()
+    drawer:null, sound: store('dy_admin_sound') !== '0', dirtyForms:{}, signed:{}, moveQueue:Promise.resolve(),
+    mfa:{ known:false, factors:[] }    /* verified authenticator apps of the signed-in account */
   };
 
   /* ─── dates (Algiers) & phone ─── */
@@ -336,7 +404,7 @@
   }
 
   /* ─── screens, language, toasts ─── */
-  var SCREENS = ['scrBoot', 'scrNoConfig', 'scrOffline', 'scrLogin', 'scrDenied', 'scrMain'];
+  var SCREENS = ['scrBoot', 'scrNoConfig', 'scrOffline', 'scrLogin', 'scrMfa', 'scrDenied', 'scrMain'];
   function show(id){ SCREENS.forEach(function(s){ $(s).hidden = s !== id; }); }
 
   function applyLang(){
@@ -373,7 +441,7 @@
   }
   function sessionEnded(){
     toast(t('app.sessionEnded'), 'is-err');
-    if(sb) sb.auth.signOut().catch(function(){});
+    if(sb) sb.auth.signOut({ scope:'local' }).catch(function(){});   /* this device only */
     teardown(); show('scrLogin');
   }
   /* PostgREST result → data, or throw */
@@ -391,7 +459,7 @@
           auth:{ persistSession:true, autoRefreshToken:true, detectSessionInUrl:false, storageKey:'dy-atelier-auth' }
         });
         sb.auth.onAuthStateChange(function(ev){
-          if(ev === 'SIGNED_OUT' && !$('scrMain').hidden){ teardown(); show('scrLogin'); }
+          if(ev === 'SIGNED_OUT' && (!$('scrMain').hidden || !$('scrMfa').hidden)){ teardown(); closeDrawer(); show('scrLogin'); }
         });
         return sb.auth.getSession().then(function(r){
           if(r.data && r.data.session) return enter();
@@ -426,22 +494,42 @@
     }).catch(function(){ setLoginBusy(false); loginErr(t('login.network')); });
   });
 
+  /* After the password: if the account has an authenticator app, the code comes next. The
+     database enforces it (private.is_admin() wants aal2 once a factor is verified); this
+     only decides which screen to show. */
   function enter(){
+    return assurance().then(function(a){
+      if(a.needCode) return askCode(a.factors);
+      return checkAdmin();
+    }).catch(function(e){
+      var gone = /jwt|session|401|403/i.test(errMsg(e)) || (e && (e.status === 401 || e.status === 403));
+      if(gone) sb.auth.signOut({ scope:'local' }).catch(function(){});
+      show('scrLogin');
+      loginErr(t(gone ? 'app.sessionEnded' : 'login.network'));
+    });
+  }
+  function checkAdmin(){
     return sb.rpc('is_admin').then(function(r){
       if(r.error){
         /* anon-level answer = the session is gone; anything else = could not reach the server */
         var gone = /permission denied|jwt|401/i.test(errMsg(r.error));
-        if(gone) sb.auth.signOut().catch(function(){});
+        if(gone) sb.auth.signOut({ scope:'local' }).catch(function(){});
         show('scrLogin');
         loginErr(t(gone ? 'app.sessionEnded' : 'login.network'));
         return;
       }
-      if(r.data !== true){ show('scrDenied'); return; }
+      if(r.data !== true){
+        /* an app added — or the app this session used removed — on another device makes this
+           session too weak: refresh the token so its level is current, then ask for a code */
+        return sb.auth.refreshSession().catch(function(){}).then(function(){ return assurance(); })
+          .then(function(a){ if(a.needCode) return askCode(a.factors); show('scrDenied'); });
+      }
       show('scrMain');
       switchTab(S.tab);
       loadAll(true);
       startLive();
       registerSW();
+      refreshMfa();
     }).catch(function(){ show('scrLogin'); loginErr(t('login.network')); });
   }
   function teardown(){
@@ -449,11 +537,205 @@
     closeDrawer();
     S.orders = []; S.flavors = []; S.gallery = []; S.promos = []; S.settings = {};
     S.known = null; S.unseen = {}; S.dirtyForms = {}; S.signed = {};
+    S.mfa = { known:false, factors:[] };
     updateBadges();
   }
-  function logout(){
+  function logout(){                      /* this device only — the others stay signed in */
     var done = function(){ teardown(); show('scrLogin'); };
-    if(sb) sb.auth.signOut().then(done, done); else done();
+    if(sb) sb.auth.signOut({ scope:'local' }).then(done, done); else done();
+  }
+  function logoutAll(){
+    if(!window.confirm(t('sec.confirmLogoutAll'))) return;
+    var done = function(){ teardown(); show('scrLogin'); loginErr(''); toast(t('sec.loggedOutAll')); };
+    sb.auth.signOut({ scope:'global' }).then(function(r){
+      if(r && r.error) throw r.error;
+      done();
+    }).catch(toastErr);
+  }
+
+  /* ─── two-step sign-in (TOTP authenticator apps) ─── */
+  function verifiedApps(user){
+    return ((user && user.factors) || []).filter(function(f){ return f.status === 'verified' && f.factor_type === 'totp'; });
+  }
+  /* the session's level comes from its token; the apps come fresh from the server
+     (the copy kept with the session can predate an app added on another device) */
+  function assurance(){
+    return Promise.all([sb.auth.mfa.getAuthenticatorAssuranceLevel(), sb.auth.getUser()]).then(function(rs){
+      if(rs[0].error) throw rs[0].error;
+      if(rs[1].error) throw rs[1].error;
+      var apps = verifiedApps(rs[1].data && rs[1].data.user), level = rs[0].data && rs[0].data.currentLevel;
+      return { level:level, factors:apps, needCode:apps.length > 0 && level !== 'aal2' };
+    });
+  }
+  function refreshMfa(){
+    return assurance().then(function(a){
+      S.mfa = { known:true, factors:a.factors };
+      renderSecNudge(); renderSecurity();
+    }).catch(function(){});
+  }
+  function mfaErrKey(e){
+    var code = e && (e.code || e.error_code), m = errMsg(e);
+    if((e && e.status === 429) || /too many|rate limit/i.test(m)) return 'mfa.tooMany';
+    if(code === 'mfa_challenge_expired' || /expired/i.test(m)) return 'mfa.expired';
+    if(code === 'mfa_verification_failed' || /invalid (totp )?code/i.test(m)) return 'mfa.bad';
+    return 'login.network';
+  }
+  function digits(el){ var v = el.value.replace(/\D/g, '').slice(0, 6); if(v !== el.value) el.value = v; return v; }
+
+  function askCode(apps){
+    teardown();
+    var sel = $('mfaFactor');
+    sel.innerHTML = apps.map(function(f){ return '<option value="' + esc(f.id) + '">' + esc(f.friendly_name || 'TOTP') + '</option>'; }).join('');
+    $('mfaFactorField').hidden = apps.length < 2;
+    $('mfaCode').value = '';
+    mfaErr('');
+    show('scrMfa');
+    $('mfaCode').focus();
+  }
+  function mfaErr(msg){ $('mfaErr').textContent = msg; $('mfaErr').hidden = !msg; }
+  var codeBusy = false;
+  function submitCode(){
+    var code = digits($('mfaCode'));
+    if(code.length !== 6){ mfaErr(t('mfa.six')); return; }
+    if(codeBusy) return;
+    codeBusy = true;
+    $('mfaBtn').disabled = true;
+    $('mfaBtn').querySelector('span').textContent = t('mfa.busy');
+    var settle = function(){ codeBusy = false; $('mfaBtn').disabled = false; $('mfaBtn').querySelector('span').textContent = t('mfa.submit'); };
+    sb.auth.mfa.challengeAndVerify({ factorId:$('mfaFactor').value, code:code }).then(function(r){
+      settle();
+      if(r.error){ mfaErr(t(mfaErrKey(r.error))); $('mfaCode').select(); return; }
+      $('mfaCode').value = '';
+      mfaErr('');
+      checkAdmin();
+    }).catch(function(){ settle(); mfaErr(t('login.network')); });
+  }
+  $('mfaForm').addEventListener('submit', function(e){ e.preventDefault(); submitCode(); });
+  $('mfaCode').addEventListener('input', function(){ if(digits(this).length === 6) submitCode(); });
+
+  /* settings card + a reminder on the orders page while no app is set up */
+  function renderSecNudge(){
+    var box = $('secNudge');
+    if(!box) return;
+    box.innerHTML = S.mfa.known && !S.mfa.factors.length ?
+      '<p class="notice notice-row"><span>' + esc(t('sec.nudge')) + '</span>' +
+      '<button class="btn btn-primary btn-sm" type="button" data-action="mfa-setup">' + esc(t('sec.nudgeBtn')) + '</button></p>' : '';
+  }
+  function renderSecurity(){
+    var box = $('secBox');
+    if(!box) return;
+    if(!S.mfa.known){ box.innerHTML = ''; return; }
+    var apps = S.mfa.factors, html;
+    if(apps.length){
+      html = '<p class="sec-state">' + ICON.shield + '<span>' + esc(t('sec.on')) + '</span></p><p class="hint">' + esc(t('sec.onHint')) + '</p>' +
+        '<p class="subhead">' + esc(t('sec.devices')) + '</p>' +
+        apps.map(function(f){
+          return '<div class="dev-row"><span><b>' + esc(f.friendly_name || 'TOTP') + '</b><span class="hint">' + esc(fill(t('sec.added'), { d:fmtDay(f.created_at) })) + '</span></span>' +
+            (apps.length > 1 ? '<button class="btn btn-danger btn-sm" type="button" data-action="mfa-remove" data-id="' + esc(f.id) + '">' + esc(t('sec.remove')) + '</button>' : '') + '</div>';
+        }).join('') +
+        (apps.length < 2 ? '<p class="hint" style="margin-top:8px">' + esc(t('sec.backupHint')) + '</p>' : '') +
+        '<div class="btnrow" style="margin-top:12px"><button class="btn btn-ghost btn-sm" type="button" data-action="mfa-setup">' + ICON.plus + '<span>' + esc(t('sec.addBackup')) + '</span></button></div>';
+    } else {
+      html = '<p class="hint">' + esc(t('sec.offHint')) + '</p>' +
+        '<div class="btnrow" style="margin-top:12px"><button class="btn btn-primary" type="button" data-action="mfa-setup">' + ICON.shield + '<span>' + esc(t('sec.setup')) + '</span></button></div>';
+    }
+    box.innerHTML = html +
+      '<p class="subhead">' + esc(t('sec.sessions')) + '</p><p class="hint">' + esc(t('sec.logoutAllHint')) + '</p>' +
+      '<div class="btnrow" style="margin-top:10px"><button class="btn btn-danger btn-sm" type="button" data-action="logout-all">' + esc(t('sec.logoutAll')) + '</button></div>';
+  }
+
+  /* setting up an app: enroll → show the QR / key → confirm with a first code (that also
+     turns this session into aal2). An unconfirmed app is removed if the panel closes. */
+  function startEnroll(){
+    var backup = S.mfa.factors.length > 0;
+    openDrawer('<h3 id="drawerTitle">' + esc(t(backup ? 'en.titleBackup' : 'en.title')) + '</h3><p class="dsub">' + esc(t('en.busy')) + '</p>');
+    var mine = S.drawer = { type:'mfa', pending:null };
+    sb.auth.mfa.listFactors().then(function(r){
+      if(r.error) throw r.error;
+      var unfinished = ((r.data && r.data.all) || []).filter(function(f){ return f.status !== 'verified'; });
+      return Promise.all(unfinished.map(function(f){ return sb.auth.mfa.unenroll({ factorId:f.id }); }));
+    }).then(function(){
+      return sb.auth.mfa.enroll({ factorType:'totp', friendlyName:appName(), issuer:'Dori Yums' });
+    }).then(function(r){
+      if(r.error) throw r.error;
+      if(S.drawer !== mine){ dropApp(r.data.id); return; }      /* closed while preparing */
+      mine.pending = r.data.id;
+      renderEnroll(r.data, backup);
+    }).catch(function(e){ if(S.drawer === mine) closeDrawer(); toastErr(e); });
+  }
+  /* supabase-js hands the QR as "data:image/svg+xml;utf-8,<raw svg>": unencoded, a "#" in the
+     markup would cut the image short — re-encode it (only an SVG data image is accepted) */
+  function qrSrc(v){
+    v = String(v || '');
+    var head = /^data:image\/svg\+xml(;[^,]*)?,/i.exec(v);
+    if(!head) return '';
+    var body = v.slice(head[0].length);
+    if(/;base64/i.test(head[1] || '') || /^%3C/i.test(body)) return v;   /* already safe */
+    return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(body);
+  }
+  /* Supabase refuses two apps with the same name on one account: number them */
+  function appName(){
+    var used = {}, day = new Date().toISOString().slice(0, 10), n = S.mfa.factors.length + 1, name;
+    S.mfa.factors.forEach(function(f){ used[f.friendly_name] = 1; });
+    do { name = 'Authenticator ' + n + ' · ' + day; n++; } while(used[name]);
+    return name;
+  }
+  function dropApp(id){ if(id && sb) sb.auth.mfa.unenroll({ factorId:id }).catch(function(){}); }
+  function renderEnroll(data, backup){
+    var tp = data.totp || {};
+    var qr = qrSrc(tp.qr_code);
+    var uri = /^otpauth:\/\/totp\//.test(String(tp.uri || '')) ? tp.uri : '';
+    var key = String(tp.secret || '').replace(/[^A-Z2-7]/gi, '');
+    $('drawerBody').innerHTML = '<h3 id="drawerTitle">' + esc(t(backup ? 'en.titleBackup' : 'en.title')) + '</h3>' +
+      '<ol class="enroll">' +
+        '<li><b>1</b><span>' + esc(t('en.s1')) + '</span></li>' +
+        '<li><b>2</b><span>' + esc(t('en.s2')) + '</span>' +
+          (qr ? '<div class="qr"><img src="' + esc(qr) + '" alt="QR code" width="180" height="180" /></div>' : '') +
+          (uri ? '<div><a class="btn btn-ghost btn-sm" href="' + esc(uri) + '">' + esc(t('en.open')) + '</a></div>' : '') +
+          '<span class="hint">' + esc(t('en.key')) + '</span>' +
+          '<div class="secret"><code id="enKey">' + esc(key.replace(/(.{4})/g, '$1 ').trim()) + '</code>' +
+          '<button class="btn btn-ghost btn-sm" type="button" data-action="copy-key" data-key="' + esc(key) + '">' + esc(t('en.copy')) + '</button></div>' +
+          '<span class="hint">' + esc(t('en.keySecret')) + '</span></li>' +
+        '<li><b>3</b><span>' + esc(t('en.s3')) + '</span>' +
+          '<form id="enrollForm" class="stack" novalidate>' +
+            '<input class="input code-input" id="enCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" spellcheck="false" aria-label="' + esc(t('mfa.code')) + '" />' +
+            '<p class="err" id="enErr" role="alert" hidden></p>' +
+            '<button class="btn btn-primary" id="enBtn" type="submit">' + ICON.shield + '<span>' + esc(t('en.confirm')) + '</span></button>' +
+          '</form></li>' +
+      '</ol>';
+  }
+  var enrollBusy = false;
+  function confirmEnroll(){
+    var d = S.drawer, input = $('enCode');
+    if(!d || d.type !== 'mfa' || !d.pending || !input || enrollBusy) return;
+    var code = digits(input), err = $('enErr');
+    if(code.length !== 6){ err.textContent = t('mfa.six'); err.hidden = false; return; }
+    enrollBusy = true;
+    $('enBtn').disabled = true;
+    sb.auth.mfa.challengeAndVerify({ factorId:d.pending, code:code }).then(function(r){
+      enrollBusy = false;
+      if($('enBtn')) $('enBtn').disabled = false;
+      if(r.error){ err.textContent = t(mfaErrKey(r.error)); err.hidden = false; input.select(); return; }
+      d.pending = null;                   /* confirmed: keep it */
+      closeDrawer();
+      toast(t('sec.enabled'));
+      refreshMfa();
+    }).catch(function(){ enrollBusy = false; if($('enBtn')) $('enBtn').disabled = false; err.textContent = t('login.network'); err.hidden = false; });
+  }
+  function removeApp(id){
+    var apps = S.mfa.factors, f = apps.filter(function(x){ return x.id === id; })[0];
+    if(!f || apps.length < 2) return;   /* the last app is removed only through the recovery procedure */
+    if(!window.confirm(fill(t('sec.confirmRemove'), { n:f.friendly_name || 'TOTP' }))) return;
+    sb.auth.mfa.unenroll({ factorId:id }).then(function(r){
+      if(r.error) throw r.error;
+      toast(t('sec.removed'));
+      /* if this session had used that app, it is back to aal1: ask for a code from the other one */
+      return sb.auth.refreshSession().then(function(){ return assurance(); }).then(function(a){
+        if(a.needCode) return askCode(a.factors);
+        S.mfa = { known:true, factors:a.factors };
+        renderSecNudge(); renderSecurity();
+      });
+    }).catch(toastErr);
   }
 
   /* ─── data ─── */
@@ -668,11 +950,12 @@
     var el = $('view-orders');
     el.innerHTML = head('ord.eyebrow', 'tab.orders',
         '<button class="btn btn-ghost btn-sm" type="button" data-action="refresh">' + ICON.refresh + '<span>' + esc(t('app.refresh')) + '</span></button>') +
-      '<div id="alertHint"></div><div id="ordHoliday"></div>' +
+      '<div id="secNudge"></div><div id="alertHint"></div><div id="ordHoliday"></div>' +
       '<div class="chips" id="ordChips" role="group"></div>' +
       '<input class="input search" id="ordSearch" type="search" autocomplete="off" placeholder="' + esc(t('ord.search')) + '" value="' + esc(S.search) + '" />' +
       '<div id="ordList"></div>';
     updateOrders();
+    renderSecNudge();
     renderAlertHint();
   }
   function updateOrders(){
@@ -818,6 +1101,7 @@
   }
   function closeDrawer(){
     if($('drawer').hidden) return;
+    if(S.drawer && S.drawer.type === 'mfa' && S.drawer.pending) dropApp(S.drawer.pending);   /* never confirmed */
     $('drawer').hidden = true;
     $('drawerBody').innerHTML = '';
     document.body.style.overflow = '';
@@ -1188,6 +1472,7 @@
     var tiers = Array.isArray(pr.tiers) ? pr.tiers : [], sizes = Array.isArray(od.box_sizes) ? od.box_sizes : [];
     S.dirtyForms = {};
     $('view-settings').innerHTML = head('se.eyebrow', 'tab.settings') + '<div class="scards">' +
+      '<div class="card scard" id="secCard"><h3>' + esc(t('sec.title')) + '</h3><div id="secBox" style="margin-top:8px"></div></div>' +
       '<div class="card scard"><h3>' + esc(t('se.stats')) + '</h3><div id="statsBox" style="margin-top:12px"></div></div>' +
 
       '<form class="card scard" data-form="pricing" novalidate><h3>' + esc(t('se.pricing')) + '</h3><p class="hint">' + esc(t('se.pricingHint')) + '</p>' +
@@ -1230,6 +1515,7 @@
         '</form></div>' +
     '</div>';
     updateStats();
+    renderSecurity();
   }
   function updateStats(){
     var box = $('statsBox');
@@ -1380,6 +1666,13 @@
     if(!a || a.disabled) return;
     var act = a.getAttribute('data-action'), id = a.getAttribute('data-id');
     if(act === 'logout') logout();
+    else if(act === 'logout-all') logoutAll();
+    else if(act === 'mfa-setup') startEnroll();
+    else if(act === 'mfa-remove') removeApp(id);
+    else if(act === 'copy-key'){
+      var key = a.getAttribute('data-key') || '';
+      if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(key).then(function(){ toast(t('en.copied')); }, function(){});
+    }
     else if(act === 'toggle-sound') toggleSound();
     else if(act === 'close-drawer') closeDrawer();
     else if(act === 'refresh'){ refreshOrders(); loadAll(false); }
@@ -1420,9 +1713,11 @@
   });
   document.addEventListener('input', function(e){
     if(e.target.id === 'ordSearch'){ S.search = e.target.value; updateOrders(); }
+    else if(e.target.id === 'enCode') digits(e.target);
     else markDirty(e.target);
   });
   document.addEventListener('submit', function(e){
+    if(e.target.id === 'enrollForm'){ e.preventDefault(); confirmEnroll(); return; }
     var form = e.target.closest('form[data-form]');
     if(!form) return;
     e.preventDefault();

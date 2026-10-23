@@ -12,6 +12,10 @@ create schema auth;
 create table auth.users (id uuid primary key, email text);
 create or replace function auth.uid() returns uuid language sql stable
   as $$ select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid $$;
+create or replace function auth.jwt() returns jsonb language sql stable
+  as $$ select coalesce(nullif(current_setting('request.jwt.claims', true), ''), '{}')::jsonb $$;
+create table auth.mfa_factors (id uuid default gen_random_uuid() primary key, user_id uuid not null references auth.users(id),
+  factor_type text not null default 'totp', status text not null);
 grant usage on schema auth to anon, authenticated;
 create schema storage;
 create table storage.buckets (id text primary key, name text, public boolean, file_size_limit bigint, allowed_mime_types text[]);
@@ -34,8 +38,11 @@ function ok(name, cond, extra) {
   if (cond) { pass++; console.log('  PASS', name); }
   else { fail++; console.log('  FAIL', name, extra !== undefined ? JSON.stringify(extra) : ''); }
 }
-async function as(role, sub, fn) {
-  await db.exec(`reset role; select set_config('request.jwt.claim.sub', '${sub || ''}', false); set role ${role};`);
+/* aal: the session's assurance level claim ('aal1' after the password, 'aal2' after the code; null = no claim) */
+async function as(role, sub, fn, aal = 'aal1') {
+  const claims = JSON.stringify(sub ? { sub, role, ...(aal ? { aal } : {}) } : { role });
+  await db.exec(`reset role; select set_config('request.jwt.claim.sub', '${sub || ''}', false);
+                 select set_config('request.jwt.claims', '${claims}', false); set role ${role};`);
   try { return await fn(); } finally { await db.exec('reset role;'); }
 }
 async function q(sql, params) { return (await db.query(sql, params)).rows; }
@@ -219,6 +226,75 @@ await as('authenticated', '11111111-1111-1111-1111-111111111111', async () => {
   ok('admin uploads to gallery', !(await err(`insert into storage.objects (bucket_id, name) values ('gallery', 'new.webp')`)));
   ok('admin reads inspirations', (await q(`select count(*)::int n from storage.objects where bucket_id = 'inspirations'`))[0].n === 1);
 });
+
+console.log('\n[two-step sign-in (MFA)]');
+const OWNER = '11111111-1111-1111-1111-111111111111', STRANGER = '22222222-2222-2222-2222-222222222222';
+const adminView = async () => ({
+  isAdmin: (await q('select public.is_admin() a'))[0].a,
+  orders: (await q('select count(*)::int n from public.orders'))[0].n,
+  promos: (await q('select count(*)::int n from public.promo_codes'))[0].n,
+  settingsUpdated: (await db.query(`update public.site_settings set value = value where key = 'announcement'`)).affectedRows,
+  flavorInsert: await err(`insert into public.flavors (name_fr) values ('MFA test') returning id`),
+  inspirations: (await q(`select count(*)::int n from storage.objects where bucket_id = 'inspirations'`))[0].n,
+  galleryUpload: await err(`insert into storage.objects (bucket_id, name) values ('gallery', 'mfa-test.webp')`),
+});
+const cleanup = () => db.exec(`delete from public.flavors where name_fr = 'MFA test'; delete from storage.objects where name = 'mfa-test.webp';`);
+await as('authenticated', OWNER, async () => {
+  const v = await adminView();
+  ok('before any factor: password session (aal1) is still admin — no lockout', v.isAdmin === true && v.orders >= 10 && v.settingsUpdated === 1, v);
+});
+await cleanup();
+await db.exec(`insert into auth.mfa_factors (user_id, status) values ('${OWNER}', 'unverified');`);
+await as('authenticated', OWNER, async () => {
+  ok('an unfinished (unverified) factor does not lock the owner out', (await q('select public.is_admin() a'))[0].a === true);
+});
+await db.exec(`update auth.mfa_factors set status = 'verified' where user_id = '${OWNER}';`);
+await as('authenticated', OWNER, async () => {
+  const v = await adminView();
+  ok('verified factor + aal1 → is_admin() = false', v.isAdmin === false, v);
+  ok('verified factor + aal1 → 0 orders, 0 promo codes', v.orders === 0 && v.promos === 0, v);
+  ok('verified factor + aal1 → settings update affects 0 rows', v.settingsUpdated === 0, v);
+  ok('verified factor + aal1 → cannot add a flavor', /row-level security/.test(v.flavorInsert || ''), v.flavorInsert);
+  ok('verified factor + aal1 → cannot read inspiration photos', v.inspirations === 0, v);
+  ok('verified factor + aal1 → cannot upload to the gallery', /row-level security/.test(v.galleryUpload || ''), v.galleryUpload);
+});
+await as('authenticated', OWNER, async () => {
+  ok('verified factor + no aal claim → treated as aal1 (refused)', (await q('select public.is_admin() a'))[0].a === false);
+}, null);
+await as('authenticated', OWNER, async () => {
+  const v = await adminView();
+  ok('verified factor + aal2 → admin again (orders, settings, flavors, photos)',
+     v.isAdmin === true && v.orders >= 10 && v.settingsUpdated === 1 && !v.flavorInsert && v.inspirations === 1 && !v.galleryUpload, v);
+}, 'aal2');
+await cleanup();
+await as('authenticated', STRANGER, async () => {
+  ok('a stranger with aal2 is still not admin (the allowlist decides)', (await q('select public.is_admin() a'))[0].a === false);
+}, 'aal2');
+await db.exec(`insert into auth.mfa_factors (user_id, status) values ('${STRANGER}', 'verified');`);
+await as('authenticated', OWNER, async () => {
+  ok("another user's factor does not change the owner's rule", (await q('select public.is_admin() a'))[0].a === true);
+}, 'aal2');
+await as('anon', null, async () => {
+  ok('customers are unaffected: anon can still place an order', !!(await q(ORDER, order({ phone: '0551000011', box: 20, items: [{ flavor_id: 1, qty: 20 }] })))[0].r.tracking_code);
+});
+await db.exec(`delete from auth.mfa_factors where user_id = '${OWNER}';`);
+await as('authenticated', OWNER, async () => {
+  ok('factors removed (recovery) → password session works again', (await q('select public.is_admin() a'))[0].a === true);
+});
+
+console.log('\n[the owner\'s SQL files: rollback · rule · recovery]');
+const sqlFile = f => readFileSync(new URL('../../sql/' + f, import.meta.url), 'utf8');
+const ownerIsAdmin = aal => as('authenticated', OWNER, async () => (await q('select public.is_admin() a'))[0].a, aal);
+await db.exec(`insert into auth.mfa_factors (user_id, status) values ('${OWNER}', 'verified');`);
+await db.exec(sqlFile('2026-10-23-admin-mfa-rollback.sql'));
+ok('rollback file → password session is admin again, even with a verified app', (await ownerIsAdmin('aal1')) === true);
+await db.exec(sqlFile('2026-10-23-admin-mfa.sql'));
+ok('rule file → verified app + aal1 refused, aal2 admitted', (await ownerIsAdmin('aal1')) === false && (await ownerIsAdmin('aal2')) === true);
+ok('rule file → anon still cannot call private.is_admin()', /permission denied/.test(await as('anon', null, () => err('select private.is_admin()')) || ''));
+await db.exec(sqlFile('admin-mfa-recovery.sql'));
+ok('recovery file → the owner\'s apps are gone, password session works again',
+   (await q(`select count(*)::int n from auth.mfa_factors where user_id = '${OWNER}'`))[0].n === 0 && (await ownerIsAdmin('aal1')) === true);
+ok('recovery file → a non-admin account keeps its apps', (await q(`select count(*)::int n from auth.mfa_factors where user_id = '${STRANGER}'`))[0].n === 1);
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

@@ -16,9 +16,7 @@
 <link rel="icon" type="image/png" href="icons/icon-192.png" />
 <link rel="apple-touch-icon" href="icons/apple-touch-icon-180.png" />
 
-<script>
-(function(){ try{ var l = localStorage.getItem('dy_admin_lang'); document.documentElement.lang = (l === 'en' || l === 'ar') ? l : 'fr'; }catch(e){} })();
-</script>
+<script src="js/admin-lang.js?v=1"></script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -307,6 +305,21 @@ html[lang="ar"] .subhead{letter-spacing:0;font-size:.82rem}
 .promo-row .hint{display:block}
 .save-row{display:flex;justify-content:flex-end;margin-top:14px}
 
+/* two-step sign-in (TOTP) */
+.code-input{font-size:1.55rem;letter-spacing:.42em;text-align:center;font-variant-numeric:tabular-nums;padding:12px 10px}
+.frame-mat .mfa-alt{margin-top:18px;display:grid;gap:10px;justify-items:center}
+.sec-state{display:flex;align-items:center;gap:8px;color:var(--ok);font-weight:600;margin:4px 0 2px}
+.sec-state svg{width:20px;height:20px;flex:none}
+.dev-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px dashed var(--line-soft)}
+.dev-row b{display:block;font-weight:600;color:var(--ink-strong);overflow-wrap:anywhere}
+.enroll{list-style:none;margin:18px 0 0;padding:0;display:grid;gap:18px}
+.enroll > li{display:grid;gap:10px;font-size:.95rem}
+.enroll > li > b{font-weight:600;color:var(--ink-strong)}
+.qr{justify-self:start;background:#fff;padding:10px;border-radius:14px;border:1px solid rgba(62,36,24,.18)}
+.qr img{width:180px;height:180px}
+.secret{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.secret code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.95rem;letter-spacing:.06em;background:#FFFAEC;border:1px solid var(--line);border-radius:8px;padding:7px 10px;user-select:all;overflow-wrap:anywhere;direction:ltr;unicode-bidi:isolate}
+
 /* toasts */
 .toasts{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--tab-h) + 16px + env(safe-area-inset-bottom));z-index:60;display:grid;gap:8px;width:min(440px, calc(100% - 32px))}
 .toast{background:#33191C;color:#FAF3E0;border-radius:12px;padding:11px 14px;box-shadow:0 14px 34px rgba(0,0,0,.25);font-size:.88rem;animation:toast-in .3s var(--ease)}
@@ -374,6 +387,29 @@ html[lang="ar"] :is(p, .hint, .notice, .empty, .ometa, .ometa > span, .fi-meta, 
       <button type="button" data-lang="fr" aria-pressed="true">FR</button>
       <button type="button" data-lang="ar" aria-pressed="false">AR</button>
       <button type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+  </div></div>
+</section>
+
+<!-- two-step sign-in: the code from the authenticator app -->
+<section class="screen-center" id="scrMfa" hidden>
+  <div class="frame"><div class="frame-mat">
+    <img class="logo" src="assets/logo.webp" alt="Dori Yums" width="86" height="86" />
+    <h1 data-i18n="mfa.title">Code de vérification</h1>
+    <p class="sub" data-i18n="mfa.sub">Saisissez le code à 6 chiffres de votre application d'authentification.</p>
+    <form id="mfaForm" novalidate>
+      <label class="field" id="mfaFactorField" hidden><span data-i18n="mfa.device">Appareil</span>
+        <select class="select" id="mfaFactor"></select>
+      </label>
+      <label class="field"><span data-i18n="mfa.code">Code</span>
+        <input class="input code-input" id="mfaCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" spellcheck="false" />
+      </label>
+      <p class="err" id="mfaErr" role="alert" hidden></p>
+      <button class="btn btn-primary btn-block" id="mfaBtn" type="submit"><span data-i18n="mfa.submit">Vérifier</span></button>
+    </form>
+    <div class="mfa-alt">
+      <p class="hint" data-i18n="mfa.lost"></p>
+      <button class="btn btn-ghost btn-sm" type="button" data-action="logout"><span data-i18n="app.logout">Se déconnecter</span></button>
     </div>
   </div></div>
 </section>
@@ -458,6 +494,6 @@ html[lang="ar"] :is(p, .hint, .notice, .empty, .ometa, .ometa > span, .fi-meta, 
 
 <!-- bump ?v= (and admin-sw.js SHELL + VERSION) whenever these files change -->
 <script src="js/dy-data.js?v=3"></script>
-<script src="js/admin.js?v=2"></script>
+<script src="js/admin.js?v=3"></script>
 </body>
 </html>

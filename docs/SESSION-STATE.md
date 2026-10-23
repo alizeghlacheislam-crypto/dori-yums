@@ -21,6 +21,7 @@
 - REPORTED by the owner: schema run in the Supabase project; the owner's e-mail added to `private.admin_users`.
 - NOT TESTED: signing in, the admin role taking effect (an "access denied" screen after sign-in would mean the `admin_users` entry does not match the signed-in account), public sign-ups turned off (checklist step 2), realtime, storage, phone sound/notifications, a real order.
 - OWNER ACTION: open `/admin` on the phone → sign in → "Add to Home screen" → turn the bell on once (checklist step 4); in Supabase → Authentication → confirm public sign-ups are off.
+- Two-step sign-in (D14, 2026-10-23): built and tested locally, **not deployed, rule not applied on production** — follow `docs/ADMIN-SECURITY.md` → *Going live* (deploy → owner sets up the code + a backup → owner runs `sql/2026-10-23-admin-mfa.sql`).
 
 ## Decisions
 - D1 (2026-10-19) Keep the no-build static architecture (index.html + js/ + one Vercel function). Reason: owner rule "modify, don't rebuild"; zero risk to the design.
@@ -36,6 +37,7 @@
 - D6 Public Supabase keys reach the browser through `/api/config` (env vars `SUPABASE_URL`, `SUPABASE_ANON_KEY`); a secret key is refused.
 - D12 (2026-10-23) The announcement bar drifts right → left in all three languages: a CSS `transform` marquee (38 px/s) over `aria-hidden` copies of the one readable `#annText`, built by `layoutBar()`; it pauses on hover and while the close button has focus; with `prefers-reduced-motion` it is the original static, centred line. Text, colours, font and the 38px height are unchanged.
 - D13 (2026-10-23, owner) Order conditions: confirm at least 5 days before the delivery date, 50 % deposit of the total, deposit not refunded if the customer cancels. Shown above "Continue" in the box step (owner's Arabic text verbatim; FR/EN translated); "Continue" stays `aria-disabled` until the box is ticked, ticked again for each order, not stored in the database. The order-window note, the FAQ answer and the FAQ JSON-LD now say the same (the 48 h free-cancellation promise is gone). **Owner action:** set the atelier's Ordering rules → minimum days ahead to 5 — until then the date picker still allows 2.
+- D14 (2026-10-23, owner approved "option 2" of the security assessment) Atelier two-step sign-in with an authenticator app (Supabase TOTP, free). Enforced in the database: `private.is_admin()` needs `aal2` once the admin has a verified app (password alone still works before that — no lockout); the same function in `supabase_schema.sql` and `sql/2026-10-23-admin-mfa.sql`, with `…-rollback.sql` and `admin-mfa-recovery.sql`. Atelier: code screen, set-up panel (QR + key), backup app, "sign out" = this device, "sign out of all devices"; CSP on `/admin` (no inline script — the language bootstrap moved to `js/admin-lang.js`) and on public pages. Passkeys rejected for now (Supabase: experimental). Guide: `docs/ADMIN-SECURITY.md`. Built partly in a forked session (stopped) and finished here.
 
 ## Assumptions — confirmed by the owner on 2026-10-19 ("القيم المبدئية مقبولة")
 - A1 Delivery fees: Alger 500 DZD, other wilayas 1000 DZD, pickup free (`site_settings.delivery`).

@@ -41,6 +41,10 @@ create table if not exists private.admin_users (
 alter table private.admin_users enable row level security;   -- no policies: unreadable from the API
 revoke all on table private.admin_users from public, anon, authenticated;
 
+-- Two-step sign-in (MFA): once an admin has a verified authenticator factor, admin rights
+-- need a session that passed the code step (JWT "aal" = 'aal2'). Before the first factor
+-- is verified the password session (aal1) still works, so running this never locks the
+-- owner out. Every RLS and storage policy goes through this one function.
 create or replace function private.is_admin()
 returns boolean
 language sql
@@ -49,7 +53,15 @@ security definer
 set search_path = ''
 as $$
   select exists (
-    select 1 from private.admin_users a where a.user_id = (select auth.uid())
+    select 1 from private.admin_users a
+    where a.user_id = (select auth.uid())
+      and (
+        coalesce((select auth.jwt()) ->> 'aal', 'aal1') = 'aal2'
+        or not exists (
+          select 1 from auth.mfa_factors f
+          where f.user_id = a.user_id and f.status = 'verified'
+        )
+      )
   );
 $$;
 revoke all on function private.is_admin() from public, anon, authenticated;

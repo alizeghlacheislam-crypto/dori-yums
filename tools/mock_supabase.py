@@ -9,7 +9,11 @@ What it imitates (same permissions as supabase_schema.sql, in spirit):
     - flavors, gallery_posts, site_settings: readable by everyone; writes need the admin account
     - orders, promo_codes, order_status_log: admin only (anon -> 401, signed-in stranger -> no rows)
   * RPC: place_order, track_order, validate_promo, is_admin
-  * Auth: password sign-in, refresh, user, logout
+  * Auth: password sign-in, refresh, user, logout (scope global / local / others)
+  * MFA (TOTP): enroll, challenge, verify, unenroll — real RFC 6238 codes from the factor's secret;
+    the same rules as Supabase Auth: a new factor needs aal2 once one is verified, removing a
+    verified factor needs aal2, verifying ends the user's other aal1 sessions. Admin rights follow
+    private.is_admin(): once a factor is verified, only an aal2 session is admin.
   * Storage: uploads (multipart), public URLs (flavor-images, gallery), signed URLs (inspirations), removal
   * No realtime websocket: the atelier falls back to polling here.
 
@@ -20,6 +24,7 @@ Test accounts — local mock only, not real credentials:
 Test switches:
   GET /mock/set?holiday=1 (holiday=0)  -> holiday mode on / off
   GET /mock/new-order                   -> a customer order arrives (to test the atelier alert)
+  GET /mock/mfa-reset                   -> forget every MFA factor and session (start the MFA tests again)
   Customer names "paused" / "spam" / "slow" -> orders_paused / too_many_orders / a 2 s delay
 
 Fixture differences visible on the site: Pistache 200 DZD with "[DB]" descriptions, a 13th
@@ -27,7 +32,10 @@ flavor "Rose Litchi" (sold out), 2 atelier cards, tiers -5 DZD from 40 / -15 DZD
 """
 import base64
 import datetime
+import hashlib
+import hmac
 import json
+import struct
 import os
 import re
 import sys
@@ -40,6 +48,20 @@ from urllib.parse import parse_qsl, unquote, urlparse
 
 PORT = int(os.environ.get("PORT", "4175"))
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+def load_vercel_headers():
+    """The header rules of vercel.json (CSP, frame and robots headers), so local pages run under them."""
+    try:
+        with open(os.path.join(ROOT, "vercel.json"), encoding="utf-8") as fh:
+            rules = json.load(fh).get("headers", [])
+        return [(re.compile("^" + r["source"] + "$"), [(h["key"], h["value"]) for h in r["headers"]]) for r in rules]
+    except (OSError, ValueError, KeyError, re.error) as e:
+        print("vercel.json headers not applied:", e, flush=True)
+        return []
+
+
+VERCEL_HEADERS = load_vercel_headers()
 ANON_KEY = "mock-anon-key-0123456789abcdef"
 
 F = lambda i, r, fr, en, ar, dfr, den, dar, img, price, ok=True: {
@@ -102,7 +124,10 @@ USERS = {
     "owner@example.test": {"id": "11111111-1111-4111-8111-111111111111", "admin": True},
     "stranger@example.test": {"id": "22222222-2222-4222-8222-222222222222", "admin": False},
 }
-TOKENS = {}      # access or refresh token -> email
+TOKENS = {}      # access or refresh token -> session id
+SESSIONS = {}    # session id -> {"email", "aal", "factor"}
+FACTORS = {}     # email -> [factor dicts, with the TOTP secret]
+CHALLENGES = {}  # challenge id -> {"factor", "expires"}
 STATE = {"holiday": False}
 
 # ── in-memory database ──────────────────────────────────────────────────────
@@ -316,17 +341,46 @@ def b64url(obj):
     return base64.urlsafe_b64encode(json.dumps(obj).encode()).rstrip(b"=").decode()
 
 
-def make_session(email):
+def make_session(email, sid=None):
+    """New tokens for a session (a new aal1 session when sid is None); the JWT carries aal like Supabase's."""
+    if sid is None:
+        sid = str(uuid.uuid4())
+        SESSIONS[sid] = {"email": email, "aal": "aal1", "factor": None}
+    s = SESSIONS[sid]
     u = USERS[email]
     now = int(time.time())
+    amr = [{"method": "password", "timestamp": now}] + ([{"method": "totp", "timestamp": now}] if s["aal"] == "aal2" else [])
     access = b64url({"alg": "HS256", "typ": "JWT"}) + "." + b64url(
         {"sub": u["id"], "email": email, "role": "authenticated", "aud": "authenticated",
-         "iat": now, "exp": now + 3600, "session_id": str(uuid.uuid4())}) + ".mock"
+         "iat": now, "exp": now + 3600, "session_id": sid, "aal": s["aal"], "amr": amr}) + ".mock"
     refresh = "r-" + uuid.uuid4().hex
-    TOKENS[access] = email
-    TOKENS[refresh] = email
+    TOKENS[access] = sid
+    TOKENS[refresh] = sid
     return {"access_token": access, "token_type": "bearer", "expires_in": 3600, "expires_at": now + 3600,
             "refresh_token": refresh, "user": user_json(email)}
+
+
+def end_sessions(sids):
+    for sid in list(sids):
+        SESSIONS.pop(sid, None)
+    for tok in [t for t, sid in TOKENS.items() if sid not in SESSIONS]:
+        TOKENS.pop(tok, None)
+
+
+def verified_factors(email):
+    return [f for f in FACTORS.get(email, []) if f["status"] == "verified"]
+
+
+def factor_json(f):
+    return {k: f[k] for k in ("id", "friendly_name", "factor_type", "status", "created_at", "updated_at")}
+
+
+def totp(secret, at):
+    """RFC 6238: 6 digits, 30 s step, HMAC-SHA1 — what authenticator apps compute."""
+    key = base64.b32decode(secret + "=" * (-len(secret) % 8))
+    h = hmac.new(key, struct.pack(">Q", int(at // 30)), hashlib.sha1).digest()
+    o = h[-1] & 15
+    return "%06d" % ((struct.unpack(">I", h[o:o + 4])[0] & 0x7FFFFFFF) % 1000000)
 
 
 def user_json(email):
@@ -334,6 +388,7 @@ def user_json(email):
     return {"id": u["id"], "aud": "authenticated", "role": "authenticated", "email": email,
             "email_confirmed_at": "2026-10-01T09:00:00Z", "phone": "", "confirmed_at": "2026-10-01T09:00:00Z",
             "app_metadata": {"provider": "email", "providers": ["email"]}, "user_metadata": {}, "identities": [],
+            "factors": [factor_json(f) for f in FACTORS.get(email, [])],
             "created_at": "2026-10-01T09:00:00Z", "updated_at": now_iso(), "is_anonymous": False}
 
 
@@ -351,6 +406,17 @@ def multipart_file(ctype, body):
 class Handler(SimpleHTTPRequestHandler):
     def __init__(self, *a, **kw):
         super().__init__(*a, directory=ROOT, **kw)
+
+    def end_headers(self):
+        path = urlparse(self.path).path
+        seen = set()
+        for rx, headers in VERCEL_HEADERS:          # every matching rule applies, like on Vercel
+            if rx.match(path):
+                for k, v in headers:
+                    if k.lower() not in seen and k.lower() != "cache-control":
+                        self.send_header(k, v)
+                        seen.add(k.lower())
+        super().end_headers()
 
     # ── helpers ──
     def _send(self, status, data=b"", ctype="application/json; charset=utf-8", headers=None):
@@ -380,15 +446,23 @@ class Handler(SimpleHTTPRequestHandler):
         except ValueError:
             return {}
 
-    def _who(self):
+    def _sid(self):
         h = self.headers.get("Authorization", "")
-        tok = h[7:] if h.startswith("Bearer ") else ""
-        email = TOKENS.get(tok)
+        sid = TOKENS.get(h[7:] if h.startswith("Bearer ") else "")
+        return sid if sid in SESSIONS else None
+
+    def _who(self):
+        sid = self._sid()
+        email = SESSIONS[sid]["email"] if sid else None
         return (email, USERS[email]) if email else (None, None)
 
     def _admin(self):
-        _, u = self._who()
-        return bool(u and u["admin"])
+        """private.is_admin(): on the allowlist, and aal2 once a factor is verified."""
+        sid = self._sid()
+        if not sid:
+            return False
+        email = SESSIONS[sid]["email"]
+        return bool(USERS[email]["admin"] and (SESSIONS[sid]["aal"] == "aal2" or not verified_factors(email)))
 
     def _prefer(self, word):
         return word in (self.headers.get("Prefer") or "")
@@ -405,6 +479,9 @@ class Handler(SimpleHTTPRequestHandler):
                 if r["key"] == "holiday_mode":
                     r["value"]["enabled"] = STATE["holiday"]
             return self._json(200, STATE)
+        if path == "/mock/mfa-reset":
+            FACTORS.clear(); CHALLENGES.clear(); SESSIONS.clear(); TOKENS.clear()
+            return self._json(200, {"mfa": "reset"})
         if path == "/mock/new-order":   # simulate a customer order arriving
             o, _ = insert_order("Client test", "+213661234567", "16 - Alger", "El Biar", "delivery", day(3),
                                 [{"flavor_id": 4, "qty": 20}])
@@ -439,15 +516,22 @@ class Handler(SimpleHTTPRequestHandler):
                     return self._json(200, make_session(email))
                 return self._json(400, {"code": 400, "error_code": "invalid_credentials", "msg": "Invalid login credentials"})
             if grant == "refresh_token":
-                email = TOKENS.get(body.get("refresh_token"))
-                if email:
-                    return self._json(200, make_session(email))
+                sid = TOKENS.pop(body.get("refresh_token"), None)      # single use
+                if sid in SESSIONS:
+                    return self._json(200, make_session(SESSIONS[sid]["email"], sid))   # keeps the session's aal
                 return self._json(400, {"code": 400, "error_code": "refresh_token_not_found", "msg": "Invalid Refresh Token"})
             return self._json(400, {"code": 400, "msg": "unsupported grant"})
         if path == "/auth/v1/logout":
-            h = self.headers.get("Authorization", "")
-            TOKENS.pop(h[7:], None)
+            sid = self._sid()
+            if sid:
+                scope = dict(parse_qsl(url.query)).get("scope", "global")
+                email = SESSIONS[sid]["email"]
+                mine = [k for k, s in SESSIONS.items() if s["email"] == email]
+                end_sessions({"local": [sid], "others": [k for k in mine if k != sid]}.get(scope, mine))
             return self._send(204, None)
+        m = re.match(r"^/auth/v1/factors(?:/([0-9a-f-]{36})/(challenge|verify))?$", path)
+        if m:
+            return self._mfa(m.group(1), m.group(2), self._body())
         if path.startswith("/rest/v1/rpc/"):
             return self._rpc(path[len("/rest/v1/rpc/"):], self._body())
         if path.startswith("/rest/v1/"):
@@ -482,6 +566,9 @@ class Handler(SimpleHTTPRequestHandler):
     def do_DELETE(self):
         url = urlparse(self.path)
         path = url.path
+        m = re.match(r"^/auth/v1/factors/([0-9a-f-]{36})$", path)
+        if m:
+            return self._mfa_unenroll(m.group(1))
         if path.startswith("/rest/v1/"):
             return self._rest_delete(path[len("/rest/v1/"):], url.query)
         if path.startswith("/storage/v1/object/"):
@@ -602,13 +689,78 @@ class Handler(SimpleHTTPRequestHandler):
             return self._json(200, [public_row(table, r) for r in out])
         return self._send(204, None)
 
+    # ── MFA (TOTP), with Supabase Auth's rules ──
+    def _mfa(self, factor_id, action, body):
+        sid = self._sid()
+        if not sid:
+            return self._json(401, {"code": 401, "error_code": "bad_jwt", "msg": "invalid JWT"})
+        s = SESSIONS[sid]
+        email = s["email"]
+        mine = FACTORS.setdefault(email, [])
+        if not action:                                    # POST /factors — enroll
+            if verified_factors(email) and s["aal"] != "aal2":
+                return self._json(403, {"code": 403, "error_code": "insufficient_aal", "msg": "AAL2 required to enroll a new factor"})
+            name = str(body.get("friendly_name") or "").strip()
+            if name and any(f["friendly_name"] == name for f in mine):
+                return self._json(422, {"code": 422, "error_code": "mfa_factor_name_conflict",
+                                        "msg": "A factor with the friendly name \"%s\" for this user already exists" % name})
+            secret = base64.b32encode(os.urandom(20)).decode().rstrip("=")
+            f = {"id": str(uuid.uuid4()), "friendly_name": name, "factor_type": "totp", "status": "unverified",
+                 "secret": secret, "created_at": now_iso(), "updated_at": now_iso()}
+            mine.append(f)
+            issuer = str(body.get("issuer") or "Mock")
+            uri = "otpauth://totp/%s:%s?secret=%s&issuer=%s" % (issuer.replace(" ", "%20"), email, secret, issuer.replace(" ", "%20"))
+            svg = ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><rect width="120" height="120" fill="#fff"/>'
+                   '<rect x="10" y="10" width="30" height="30"/><rect x="80" y="10" width="30" height="30"/><rect x="10" y="80" width="30" height="30"/>'
+                   '<text x="60" y="66" font-size="11" text-anchor="middle">MOCK QR</text></svg>')
+            return self._json(200, {"id": f["id"], "type": "totp", "friendly_name": name,
+                                    "totp": {"qr_code": svg, "secret": secret, "uri": uri}})
+        f = next((x for x in mine if x["id"] == factor_id), None)
+        if not f:
+            return self._json(404, {"code": 404, "error_code": "mfa_factor_not_found", "msg": "Factor not found"})
+        if action == "challenge":
+            cid = str(uuid.uuid4())
+            CHALLENGES[cid] = {"factor": f["id"], "expires": time.time() + 300}
+            return self._json(200, {"id": cid, "type": "totp", "expires_at": int(time.time()) + 300})
+        ch = CHALLENGES.get(str(body.get("challenge_id") or ""))
+        if not ch or ch["factor"] != f["id"] or ch["expires"] < time.time():
+            return self._json(422, {"code": 422, "error_code": "mfa_challenge_expired", "msg": "MFA challenge has expired, verify against another challenge"})
+        code = str(body.get("code") or "").strip()
+        if not any(totp(f["secret"], time.time() + d * 30) == code for d in (-1, 0, 1)):
+            return self._json(422, {"code": 422, "error_code": "mfa_verification_failed", "msg": "Invalid TOTP code entered"})
+        CHALLENGES.pop(str(body.get("challenge_id")), None)
+        if f["status"] != "verified":
+            f["status"] = "verified"
+            f["updated_at"] = now_iso()
+            mine[:] = [x for x in mine if x["status"] == "verified"]          # other unfinished factors go
+        s["aal"], s["factor"] = "aal2", f["id"]
+        end_sessions([k for k, x in SESSIONS.items() if x["email"] == email and x["aal"] != "aal2"])
+        return self._json(200, make_session(email, sid))
+
+    def _mfa_unenroll(self, factor_id):
+        sid = self._sid()
+        if not sid:
+            return self._json(401, {"code": 401, "error_code": "bad_jwt", "msg": "invalid JWT"})
+        email = SESSIONS[sid]["email"]
+        mine = FACTORS.setdefault(email, [])
+        f = next((x for x in mine if x["id"] == factor_id), None)
+        if not f:
+            return self._json(404, {"code": 404, "error_code": "mfa_factor_not_found", "msg": "Factor not found"})
+        if f["status"] == "verified" and SESSIONS[sid]["aal"] != "aal2":
+            return self._json(422, {"code": 422, "error_code": "insufficient_aal", "msg": "AAL2 required to unenroll verified factor"})
+        mine.remove(f)
+        for s in SESSIONS.values():                        # sessions that used it fall back to aal1
+            if s["factor"] == factor_id:
+                s["aal"], s["factor"] = "aal1", None
+        return self._json(200, {"id": factor_id})
+
     # ── RPC ──
     def _rpc(self, fn, body):
         email, u = self._who()
         if fn == "is_admin":
             if not email:
                 return self._json(401, {"code": "42501", "message": "permission denied for function is_admin"})
-            return self._json(200, bool(u["admin"]))
+            return self._json(200, self._admin())
         if fn == "validate_promo":
             code = str(body.get("p_code", "")).strip().upper()
             sub = int(body.get("p_subtotal") or 0)

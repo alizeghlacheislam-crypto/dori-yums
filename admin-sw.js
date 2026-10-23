@@ -4,10 +4,10 @@
    come from Supabase. Everything is network-first (bypassing the HTTP cache), so
    a new deployment is picked up at the next open.
    When admin.html / js/admin.js / js/dy-data.js change: bump their ?v= here and VERSION. */
-var VERSION = 'dy-atelier-v2';
+var VERSION = 'dy-atelier-v3';
 var SHELL = [
   '/admin', '/admin.html', '/admin.webmanifest',
-  '/js/admin.js?v=2', '/js/dy-data.js?v=3',
+  '/js/admin-lang.js?v=1', '/js/admin.js?v=3', '/js/dy-data.js?v=3',
   '/assets/logo.webp', '/icons/icon-192.png'
 ];
 
