@@ -34,7 +34,7 @@ Single-page site for **Dori Yums**, a home-based atelier for handmade and custom
 
 - **Prices** appear only inside the order modal. Until Supabase is live, unit prices (DZD) live in three places to keep in sync: `data-price` on each card's order link, the JSON-LD menu in `<head>`, and `LOCAL.flavors` in `js/dy-data.js`. Once Supabase is live, the `flavors` table is the source of truth. Tiers: base under 60 pcs, −5 DZD/pc from 60, −10 DZD/pc from 120 (flat) — `site_settings.pricing`.
 - **Testimonials** show real Instagram comment screenshots (`assets/testimonial-*.jpg`, cropped to avatar + username + comment). To add more, drop another cropped capture in `assets/` and duplicate a `.quote` figure — the grid wraps to extra rows automatically (with Supabase: add a `gallery_posts` row, category `testimonial`).
-- **Policies** (storage, changes & cancellation 48 h / 5 days for custom events) are starting values: confirm them, then update the FAQ, the modal note and the FAQ JSON-LD together.
+- **Policies:** storage advice is a starting value; the order conditions are the owner's (2026-10-23): confirm at least 5 days before the date, 50 % deposit, deposit not refunded on cancellation — the customer ticks them before "Continue". When a policy changes, update the conditions block, the order-window note, the FAQ and the FAQ JSON-LD together, in the three languages.
 
 ## Deploy
 
