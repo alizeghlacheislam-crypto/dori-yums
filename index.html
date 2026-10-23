@@ -724,7 +724,36 @@ html[lang="ar"] .om-tier{font-style:normal}
 .ann-bar[hidden]{display:none}
 .ann-bar.is-holiday{background:#33191C;color:#F2C2C9}
 html[data-theme="gallery"] .ann-bar{background:#141414;color:var(--accent-soft);border-bottom:1px solid var(--line)}
-.ann-text{margin:0;max-width:var(--maxw);unicode-bidi:plaintext}
+html[lang="ar"] .ann-bar{letter-spacing:0}
+.ann-text{margin:0 auto;max-width:var(--maxw);unicode-bidi:plaintext}
+/* marquee: the message drifts right → left in every language. The track holds identical
+   copies (only the first is read aloud); moving it by exactly half its width lands on an
+   identical frame, so the loop has no seam. JS sets the copy count and the duration
+   (constant speed). Reduced motion keeps the original static, centred line. */
+.ann-viewport{flex:1 1 0;min-width:0}
+.ann-bar.is-marquee .ann-viewport{
+  overflow:hidden;direction:ltr;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 24px,#000 calc(100% - 24px),transparent);
+          mask-image:linear-gradient(90deg,transparent,#000 24px,#000 calc(100% - 24px),transparent);
+}
+.ann-bar.is-marquee .ann-track{
+  display:flex;width:max-content;
+  animation:ann-drift var(--ann-dur,30s) linear infinite;will-change:transform;
+}
+.ann-bar.is-marquee .ann-text{
+  flex:none;position:relative;margin:0;max-width:none;white-space:nowrap;padding-right:2.6em;
+}
+.ann-bar.is-marquee .ann-text::after{
+  content:"";position:absolute;right:1.3em;top:50%;width:4px;height:4px;margin:-2px -2px 0 0;
+  border-radius:50%;background:currentColor;opacity:.5;
+}
+@keyframes ann-drift{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
+@media (hover:hover){.ann-bar.is-marquee:hover .ann-track{animation-play-state:paused}}
+.ann-bar.is-marquee:focus-within .ann-track{animation-play-state:paused}
+@media (prefers-reduced-motion: reduce){
+  .ann-bar .ann-track{animation:none}
+  .ann-bar .ann-text[aria-hidden]{display:none}
+}
 .ann-close{
   position:absolute;right:12px;top:50%;transform:translateY(-50%);
   appearance:none;border:0;background:transparent;color:inherit;opacity:.8;
@@ -962,7 +991,9 @@ html[lang="ar"] .om-center{text-align:center}
 
 <!-- ═══════════ ANNOUNCEMENT BAR (site_settings.announcement / holiday_mode) ═══════════ -->
 <div class="ann-bar" id="annBar" role="region" aria-label="Announcement" hidden>
-  <p class="ann-text" id="annText"></p>
+  <div class="ann-viewport" id="annViewport">
+    <div class="ann-track" id="annTrack"><p class="ann-text" id="annText"></p></div>
+  </div>
   <button class="ann-close" id="annClose" type="button" aria-label="Close announcement" data-i18n-aria="bar.close">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
   </button>
@@ -2456,7 +2487,47 @@ html[lang="ar"] .om-center{text-align:center}
       bar.classList.toggle('is-holiday', src.holiday);
       document.getElementById('annText').textContent = src.text;
     }
+    layoutBar();
     syncBarHeight();
+  }
+  /* marquee: enough aria-hidden copies of #annText to fill twice the visible width, and a
+     duration that keeps the drift at the same speed whatever the message length */
+  var ANN_SPEED = 38;   /* px per second */
+  var annMotion = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  var annSig = '';
+  function layoutBar(){
+    var bar = document.getElementById('annBar'), vp = document.getElementById('annViewport'),
+        track = document.getElementById('annTrack'), item = document.getElementById('annText');
+    if(!bar || bar.hidden || !vp || !track || !item) return;
+    var still = !!(annMotion && annMotion.matches);
+    bar.classList.toggle('is-marquee', !still);          /* measuring needs the one-line layout */
+    var unit = still ? 0 : item.getBoundingClientRect().width, view = vp.clientWidth;
+    var copies = unit > 0 && view > 0 ? 2 * Math.ceil(view / unit) : 1;
+    bar.classList.toggle('is-marquee', copies > 1);
+    var sig = copies + '|' + unit.toFixed(2) + '|' + item.textContent;
+    if(sig === annSig) return;
+    annSig = sig;
+    while(track.children.length > 1) track.removeChild(track.lastChild);
+    for(var i = 1; i < copies; i++){
+      var c = item.cloneNode(true);
+      c.removeAttribute('id');
+      c.setAttribute('aria-hidden', 'true');
+      track.appendChild(c);
+    }
+    track.style.setProperty('--ann-dur', (copies / 2 * unit / ANN_SPEED).toFixed(2) + 's');
+    syncBarHeight();
+  }
+  if(window.ResizeObserver){
+    new ResizeObserver(function(){ layoutBar(); }).observe(document.getElementById('annViewport'));
+  }
+  if(document.fonts){
+    if(document.fonts.ready) document.fonts.ready.then(layoutBar);
+    if(document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', layoutBar);
+  }
+  if(annMotion){
+    var onMotion = function(){ annSig = ''; layoutBar(); };
+    if(annMotion.addEventListener) annMotion.addEventListener('change', onMotion);
+    else if(annMotion.addListener) annMotion.addListener(onMotion);
   }
   document.getElementById('annClose').addEventListener('click', function(){
     var src = barSource();
@@ -2464,7 +2535,7 @@ html[lang="ar"] .om-center{text-align:center}
     document.getElementById('annBar').hidden = true;
     syncBarHeight();
   });
-  window.addEventListener('resize', syncBarHeight, { passive:true });
+  window.addEventListener('resize', function(){ if(!window.ResizeObserver) layoutBar(); syncBarHeight(); }, { passive:true });
 
   function esc(s){
     return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
