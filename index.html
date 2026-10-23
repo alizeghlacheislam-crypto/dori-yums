@@ -40,6 +40,7 @@
     var l = localStorage.getItem('doriyums_lang');
     if(l !== 'fr' && l !== 'ar') l = 'en';
     document.documentElement.lang = l;
+    document.documentElement.dir = l === 'ar' ? 'rtl' : 'ltr';
     var t = localStorage.getItem('doriyums_theme');
     document.documentElement.setAttribute('data-theme', t === 'gallery' ? 'gallery' : 'maison');
     /* cinematic logo splash — once per browser session */
@@ -159,7 +160,7 @@
         { "@type": "Question", "name": "Can I customize colors and flavors?", "acceptedAnswer": { "@type": "Answer", "text": "Yes — shells and fillings can be matched to your theme, and boxes can be personalized. Send inspiration photos on WhatsApp and we will build the order around them." } },
         { "@type": "Question", "name": "How does payment work?", "acceptedAnswer": { "@type": "Answer", "text": "Everything is agreed in the WhatsApp conversation — price, payment method and timing are confirmed together before baking starts." } },
         { "@type": "Question", "name": "How should I store macarons?", "acceptedAnswer": { "@type": "Answer", "text": "Keep them in their closed box in the fridge (around 4 °C), away from strong-smelling foods, and enjoy them within 3 days — 5 days at most. Take them out 15–20 minutes before serving: that is when the texture is perfect. Avoid sun, heat and humidity, and never leave the box in a hot car." } },
-        { "@type": "Question", "name": "Can I change or cancel my order?", "acceptedAnswer": { "@type": "Answer", "text": "Please confirm your order at least 5 days before the delivery date, with a 50% deposit of the total amount. If you cancel the order, the deposit is not refunded. For any change, message us on WhatsApp as early as possible." } }
+        { "@type": "Question", "name": "Can I change or cancel my order?", "acceptedAnswer": { "@type": "Answer", "text": "You can confirm your order by paying the full amount or a 50% deposit. If you pay a deposit, the remaining balance must be paid within five days of being notified that your order is ready. If the balance is not paid within this period, the deposit will not be refunded, to cover the cost of preparing your order. Thank you for your understanding. For any change, message us on WhatsApp as early as possible." } }
       ]
     }
   ]
@@ -185,7 +186,7 @@
   --card:#FFFAEC;
   --line:rgba(224,149,158,.45);
   --line-soft:rgba(224,149,158,.22);
-  --on-accent:#FFFAEC;
+  --on-accent:#3A1F1F;        /* brown text on the rose accent: 6.4:1 (cream was 2.25:1) */
 
   /* carved molding around placards */
   --gilt:linear-gradient(135deg,#5d3b2c 0%,#8e6342 12%,#d9b89a 24%,#f1d7c1 31%,#c89479 42%,#7d4e34 55%,#b88762 68%,#ead0b6 80%,#6b3f2a 100%);
@@ -311,12 +312,12 @@ html[data-theme="gallery"] .btn-primary:hover{color:#141414;background:var(--acc
 .brand{display:flex;align-items:center;gap:12px;color:inherit}
 .brand img{width:44px;height:44px;border-radius:50%;box-shadow:0 4px 14px rgba(156,86,102,.25)}
 .brand-name{font-family:var(--serif);font-weight:700;font-size:1.35rem;color:var(--accent-deep);letter-spacing:.02em;white-space:nowrap}
-.brand-loc{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);border-left:1px solid var(--line);padding-left:12px;margin-left:2px;white-space:nowrap}
+.brand-loc{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);border-inline-start:1px solid var(--line);padding-inline-start:12px;margin-inline-start:2px;white-space:nowrap}
 .nav-links{display:flex;gap:26px;list-style:none;margin:0 auto;padding:0}
 .nav-links a{color:var(--ink);font-size:.9rem;font-weight:400;position:relative}
-.nav-links a::after{content:"";position:absolute;left:0;right:100%;bottom:-6px;height:1px;background:var(--accent);transition:right .3s var(--ease)}
-.nav-links a:hover::after{right:0}
-.nav-tools{display:flex;align-items:center;gap:12px;margin-left:auto}
+.nav-links a::after{content:"";position:absolute;inset-inline-start:0;inset-inline-end:100%;bottom:-6px;height:1px;background:var(--accent);transition:inset-inline-end .3s var(--ease)}
+.nav-links a:hover::after{inset-inline-end:0}
+.nav-tools{display:flex;align-items:center;gap:12px;margin-inline-start:auto}
 .nav-links + .nav-tools{margin-left:0}
 
 .lang-switch{
@@ -437,7 +438,7 @@ html[data-theme="gallery"] .theme-btn .moon{display:block}
   transition:all .3s var(--ease);
 }
 .placard-order svg{width:14px;height:14px}
-.placard-order:hover{background:#E0959E;border-color:#E0959E;color:#FFFAEC}
+.placard-order:hover{background:#E0959E;border-color:#E0959E;color:#3A1F1F}
 
 /* ── custom cakes band ── */
 .cakes-band{
@@ -483,7 +484,7 @@ html[data-theme="gallery"] .theme-btn .moon{display:block}
 .order-tab{
   appearance:none;background:transparent;border:1px solid transparent;border-radius:14px;
   display:flex;align-items:center;gap:16px;padding:16px 18px;cursor:pointer;
-  text-align:left;color:var(--ink);font-family:var(--sans);
+  text-align:start;color:var(--ink);font-family:var(--sans);
   transition:all .35s var(--ease);
 }
 .order-tab .num{
@@ -543,7 +544,7 @@ html[data-theme="gallery"] .quote-shot{border-color:rgba(212,175,55,.35);box-sha
 .faq-q{
   appearance:none;width:100%;background:transparent;border:0;cursor:pointer;
   display:flex;align-items:center;justify-content:space-between;gap:18px;
-  padding:20px 24px;text-align:left;color:var(--ink-strong);
+  padding:20px 24px;text-align:start;color:var(--ink-strong);
   font-family:var(--serif);font-size:1.22rem;font-weight:600;
 }
 .faq-q .chev{flex:none;width:22px;height:22px;color:var(--accent-deep);transition:transform .35s var(--ease)}
@@ -590,7 +591,7 @@ html[data-theme="gallery"] .footer .brand-name{color:var(--accent-soft)}
 }
 
 /* ── floating buttons ── */
-.floats{position:fixed;right:22px;bottom:22px;z-index:70;display:flex;flex-direction:column;gap:12px}
+.floats{position:fixed;inset-inline-end:22px;bottom:22px;z-index:70;display:flex;flex-direction:column;gap:12px}
 .float-btn{
   width:54px;height:54px;border-radius:50%;display:grid;place-items:center;color:#FFF;
   box-shadow:0 10px 26px rgba(0,0,0,.22);transition:transform .3s var(--ease), box-shadow .3s var(--ease);
@@ -639,7 +640,7 @@ html[lang="ar"] body{font-weight:400}
 /* plaintext repairs intra-sentence ordering ONLY where Arabic mixes with Latin/digits
    (tier note, story paragraphs with the Latin brand name); explicit text-align keeps
    these blocks left-aligned so alignment stays identical to EN/FR */
-html[lang="ar"] :is(.om-tier, .story-copy p, .faq-a p, .om-policy p, .om-terms-text){unicode-bidi:plaintext;text-align:left}
+/* Arabic reads right to left: the page direction (html dir=rtl) aligns and orders it — no per-block bidi patches */
 html[lang="ar"] .eyebrow,
 html[lang="ar"] .hero h1 em,
 html[lang="ar"] .story-sign,
@@ -665,12 +666,12 @@ html[data-theme="gallery"] .modal-backdrop{background:rgba(0,0,0,.74)}
 }
 .modal-inner{background:var(--mat);padding:26px;position:relative;display:grid;grid-template-columns:.85fr 1.15fr;gap:26px}
 .modal-close{
-  position:absolute;top:12px;right:12px;z-index:2;
+  position:absolute;top:12px;inset-inline-end:12px;z-index:2;
   appearance:none;border:1px solid rgba(156,86,102,.45);background:rgba(255,250,236,.85);
   color:#9C5666;width:36px;height:36px;border-radius:50%;cursor:pointer;display:grid;place-items:center;
   transition:all .3s var(--ease);
 }
-.modal-close:hover{background:#E0959E;border-color:#E0959E;color:#FFFAEC}
+.modal-close:hover{background:#E0959E;border-color:#E0959E;color:#3A1F1F}
 .modal-close svg{width:16px;height:16px}
 .modal-media img{width:100%;aspect-ratio:1/1;object-fit:cover;border:1px solid rgba(62,36,24,.25)}
 .om-name{font-family:var(--serif);font-size:2rem;font-weight:600;color:#3A1F1F;margin:0 0 4px}
@@ -683,7 +684,7 @@ html[data-theme="gallery"] .modal-backdrop{background:rgba(0,0,0,.74)}
   border-radius:999px;padding:9px 18px;transition:all .25s var(--ease);
 }
 .qty-btn:hover{border-color:#E0959E;color:#9C5666}
-.qty-btn.active{background:#E0959E;border-color:#E0959E;color:#FFFAEC}
+.qty-btn.active{background:#E0959E;border-color:#E0959E;color:#3A1F1F}
 .qty-current{margin:12px 0 4px;font-size:.95rem;color:#6d4a44}
 .qty-current b{font-family:var(--serif);font-size:1.5rem;color:#3A1F1F;font-weight:600}
 .om-price-row{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:7px 0;border-bottom:1px dashed rgba(156,86,102,.3);font-size:.92rem;color:#6d4a44}
@@ -700,7 +701,7 @@ html[lang="ar"] .om-tier{font-style:normal}
 }
 .om-input:focus, .om-select:focus{border-color:#E0959E;box-shadow:0 0 0 3px rgba(224,149,158,.2)}
 .om-input::placeholder{color:#B08F8F}
-.phone-wrap{display:flex;align-items:stretch}
+.phone-wrap{display:flex;align-items:stretch;direction:ltr}   /* +213 then the number, in every language */
 .phone-wrap .cc{
   display:flex;align-items:center;padding:0 12px;font-weight:500;color:#9C5666;
   background:rgba(224,149,158,.14);border:1px solid rgba(156,86,102,.45);border-right:0;
@@ -768,7 +769,7 @@ html[lang="ar"] .ann-bar{letter-spacing:0}
   .ann-bar .ann-text[aria-hidden]{display:none}
 }
 .ann-close{
-  position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  position:absolute;inset-inline-end:12px;top:50%;transform:translateY(-50%);
   appearance:none;border:0;background:transparent;color:inherit;opacity:.8;
   width:30px;height:30px;border-radius:50%;cursor:pointer;display:grid;place-items:center;transition:all .25s var(--ease);
 }
@@ -824,7 +825,7 @@ html[lang="ar"] .om-restored{font-style:normal}
   border:1px solid rgba(156,86,102,.45);background:#FFFAEC;color:#9C5666;
   font-family:var(--sans);font-size:1.15rem;line-height:1;display:grid;place-items:center;transition:all .2s var(--ease);
 }
-.bx-btn:hover:not(:disabled){background:#E0959E;border-color:#E0959E;color:#FFFAEC}
+.bx-btn:hover:not(:disabled){background:#E0959E;border-color:#E0959E;color:#3A1F1F}
 .bx-btn:disabled{opacity:.32;cursor:not-allowed}
 .bx-qty{min-width:30px;text-align:center;font-family:var(--serif);font-size:1.2rem;font-weight:600;color:#3A1F1F;font-variant-numeric:tabular-nums}
 .bx-row .soldout-badge{font-size:.56rem;padding:5px 9px;box-shadow:none}
@@ -858,7 +859,7 @@ html[lang="ar"] .bx-row .soldout-badge{font-size:.7rem}
   transition:all .25s var(--ease);
 }
 .om-seg label:hover .om-seg-opt{border-color:#E0959E;color:#9C5666}
-.om-field .om-seg input:checked + .om-seg-opt{background:#E0959E;border-color:#E0959E;color:#FFFAEC}
+.om-field .om-seg input:checked + .om-seg-opt{background:#E0959E;border-color:#E0959E;color:#3A1F1F}
 .om-seg input:focus-visible + .om-seg-opt{box-shadow:0 0 0 3px rgba(224,149,158,.35)}
 .om-file{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
 .om-file-btn{position:relative;overflow:hidden}
@@ -908,18 +909,19 @@ html[lang="ar"] .bx-row .soldout-badge{font-size:.7rem}
 .tr-steps{list-style:none;margin:0;padding:0}
 .tr-step{display:grid;grid-template-columns:28px 1fr;gap:14px;position:relative;padding-bottom:20px}
 .tr-step:last-child{padding-bottom:0}
-.tr-step:not(:last-child)::before{content:"";position:absolute;left:13px;top:30px;bottom:2px;width:2px;border-radius:2px;background:rgba(156,86,102,.18)}
+.tr-step:not(:last-child)::before{content:"";position:absolute;inset-inline-start:13px;top:30px;bottom:2px;width:2px;border-radius:2px;background:rgba(156,86,102,.18)}
 .tr-step.is-done:not(:last-child)::before{background:#E0959E}
 .tr-dot{width:28px;height:28px;border-radius:50%;border:2px solid rgba(156,86,102,.28);background:#FFFAEC;display:grid;place-items:center;color:#FFFAEC}
 .tr-dot svg{width:14px;height:14px}
-.tr-step.is-done .tr-dot{background:#E0959E;border-color:#E0959E}
+.tr-step.is-done .tr-dot{background:#E0959E;border-color:#E0959E;color:#3A1F1F}
 .tr-step.is-current:not(.is-done) .tr-dot{border-color:#9C5666;box-shadow:0 0 0 5px rgba(224,149,158,.25)}
 .tr-step.is-current:not(.is-done) .tr-dot::after{content:"";width:10px;height:10px;border-radius:50%;background:#9C5666}
 .tr-step b{display:block;font-family:var(--serif);font-size:1.15rem;font-weight:600;color:#3A1F1F;line-height:1.3}
 .tr-step small{display:block;font-size:.78rem;color:#9C7B7B;margin-top:1px}
 .tr-step.is-next b{color:#B08F8F;font-weight:500}
-html[lang="ar"] :is(.om-name, .om-notice, .om-hint, .bx-progress-text, .om-err, .om-desc, .om-sum-meta, .om-feature-desc, .bx-meta, .tr-sum, .tr-step small, .om-price-row > span){unicode-bidi:plaintext;text-align:left}
 html[lang="ar"] .om-center{text-align:center}
+[dir="rtl"] :is(#bxNext, #coBack) svg{transform:scaleX(-1)}
+[dir="rtl"] .bx-bar span{background:linear-gradient(270deg,#F2C2C9,#E0959E 45%,#9C5666)}
 @media (max-width: 760px){
   .modal-inner{grid-template-columns:1fr;padding:20px;gap:18px}
   .modal-media img{aspect-ratio:16/10}
@@ -983,8 +985,8 @@ html[lang="ar"] .om-center{text-align:center}
   .occasions-grid{grid-template-columns:1fr}
   .order-tab{flex:1 1 100%}
   .order-panel{padding:30px 24px}
-  .floats{right:16px;bottom:16px}
-  .ann-bar{padding:8px 44px 8px 16px;font-size:.78rem}
+  .floats{display:none}   /* on phones the fixed buttons covered text and buttons while scrolling (measured, even WhatsApp alone); the hero, menu and flavor WhatsApp buttons and the footer links remain */
+  .ann-bar{padding:8px 16px;padding-inline-end:44px;font-size:.78rem}
   .placard-mat .soldout-badge{top:12px;font-size:.5rem;letter-spacing:.1em;padding:4px 8px;max-width:calc(100% - 18px);white-space:normal}
   html[lang="ar"] .placard-mat .soldout-badge{font-size:.62rem}
   .bx-row{grid-template-columns:38px minmax(0,1fr) auto;gap:9px;padding:7px 8px}
@@ -1496,7 +1498,7 @@ html[lang="ar"] .om-center{text-align:center}
       <p data-i18n="te.p">Our clients share their tables with us every week on Instagram — see the latest orders, reels and reviews there.</p>
       <a class="btn btn-ghost" href="https://instagram.com/dori_yums" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".8" fill="currentColor" stroke="none"/></svg>
-        <span>@dori_yums</span>
+        <span dir="ltr">@dori_yums</span>
       </a>
     </div>
   </div>
@@ -1551,7 +1553,7 @@ html[lang="ar"] .om-center{text-align:center}
           <span data-i18n="fq.q6">Can I change or cancel my order?</span>
           <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
         </button>
-        <div class="faq-a"><p data-i18n="fq.a6">Please confirm your order at least 5 days before the delivery date, with a 50% deposit of the total amount. If you cancel the order, the deposit is not refunded. For any change, message us on WhatsApp as early as possible.</p></div>
+        <div class="faq-a"><p data-i18n="fq.a6">You can confirm your order by paying the full amount or a 50% deposit. If you pay a deposit, the remaining balance must be paid within five days of being notified that your order is ready. If the balance is not paid within this period, the deposit will not be refunded, to cover the cost of preparing your order. Thank you for your understanding. For any change, message us on WhatsApp as early as possible.</p></div>
       </div>
     </div>
   </div>
@@ -1573,7 +1575,7 @@ html[lang="ar"] .om-center{text-align:center}
         </div>
         <h3>WhatsApp</h3>
         <p data-i18n="ct.wa">Orders, questions and custom requests.</p>
-        <a class="link wa-link" href="https://wa.me/213551401704" target="_blank" rel="noopener">+213 551 401 704</a>
+        <a class="link wa-link" href="https://wa.me/213551401704" target="_blank" rel="noopener" dir="ltr">+213 551 401 704</a>
       </div>
       <div class="contact-card reveal">
         <div class="occasion-icon">
@@ -1581,7 +1583,7 @@ html[lang="ar"] .om-center{text-align:center}
         </div>
         <h3>Instagram</h3>
         <p data-i18n="ct.ig">Daily bakes, reels and client tables.</p>
-        <a class="link" href="https://instagram.com/dori_yums" target="_blank" rel="noopener">@dori_yums</a>
+        <a class="link" href="https://instagram.com/dori_yums" target="_blank" rel="noopener" dir="ltr">@dori_yums</a>
       </div>
       <div class="contact-card reveal">
         <div class="occasion-icon">
@@ -1635,7 +1637,7 @@ html[lang="ar"] .om-center{text-align:center}
         <div class="footer-contact">
           <div class="row">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a9.9 9.9 0 0 0-8.6 14.9L2 22l5.3-1.4A10 10 0 1 0 12 2z"/></svg>
-            <a class="wa-link" href="https://wa.me/213551401704" target="_blank" rel="noopener" style="color:inherit">+213 551 401 704</a>
+            <a class="wa-link" href="https://wa.me/213551401704" target="_blank" rel="noopener" style="color:inherit" dir="ltr">+213 551 401 704</a>
           </div>
           <div class="row">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/></svg>
@@ -1693,7 +1695,7 @@ html[lang="ar"] .om-center{text-align:center}
           <p class="om-tier" data-i18n="md.tiers">Tiered pricing: −5 DZD per piece from 60, −10 DZD per piece from 120.</p>
           <div class="om-terms">
             <p class="om-terms-title" data-i18n="bx.termsT">Order conditions</p>
-            <p class="om-terms-text" id="bxTermsText" data-i18n="bx.terms">Please confirm your order at least 5 days before the delivery date, with a 50% deposit of the total amount. If the customer cancels the order, the deposit is not refunded. Thank you for trusting Dori_Yums.</p>
+            <p class="om-terms-text" id="bxTermsText" data-i18n="bx.terms">You can confirm your order by paying the full amount or a 50% deposit. If you pay a deposit, the remaining balance must be paid within five days of being notified that your order is ready. If the balance is not paid within this period, the deposit will not be refunded, to cover the cost of preparing your order. Thank you for your understanding.</p>
             <label class="om-check">
               <input type="checkbox" id="bxAgree" aria-describedby="bxTermsText" />
               <span data-i18n="bx.agree">I have read and accept the conditions</span>
@@ -1802,7 +1804,7 @@ html[lang="ar"] .om-center{text-align:center}
           <h3 class="om-name" id="okTitle"></h3>
           <p class="om-desc" id="okSub"></p>
           <div class="om-code" id="okCodeWrap">
-            <span id="okCode"></span>
+            <span id="okCode" dir="ltr"></span>
             <button class="qty-btn" type="button" id="okCopy">Copy</button>
           </div>
           <div class="om-summary" id="okSummary"></div>
@@ -1815,7 +1817,7 @@ html[lang="ar"] .om-center{text-align:center}
 
         <div class="om-policy">
           <p><b data-i18n="md.polStoreT">Storage</b> <span data-i18n="md.polStore">Refrigerate in the closed box; best within 3 days. Take out 15–20 min before serving.</span></p>
-          <p class="om-pol-cancel"><b data-i18n="md.polCancelT">Deposit &amp; cancellation</b> <span data-i18n="md.polCancel">Confirm at least 5 days before your date, with a 50% deposit; if you cancel, the deposit is not refunded.</span></p>
+          <p class="om-pol-cancel"><b data-i18n="md.polCancelT">Payment &amp; deposit</b> <span data-i18n="md.polCancel">You can confirm your order by paying the full amount or a 50% deposit. If you pay a deposit, the remaining balance must be paid within five days of being notified that your order is ready. If the balance is not paid within this period, the deposit will not be refunded, to cover the cost of preparing your order. Thank you for your understanding.</span></p>
         </div>
       </div>
     </div>
@@ -1835,7 +1837,7 @@ html[lang="ar"] .om-center{text-align:center}
         <form class="om-form" id="trForm" novalidate>
           <label class="om-field">
             <span data-i18n="tr.code">Order code</span>
-            <input class="om-input tr-code-input" id="trCode" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="16" placeholder="DY-1042" />
+            <input class="om-input tr-code-input" id="trCode" dir="ltr" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="16" placeholder="DY-1042" />
           </label>
           <label class="om-field">
             <span data-i18n="md.phone">Phone number</span>
@@ -1966,7 +1968,7 @@ html[lang="ar"] .om-center{text-align:center}
       'fq.q5':'How should I store macarons?',
       'fq.a5':'Keep them in their closed box in the fridge (around 4 °C), away from strong-smelling foods, and enjoy them within 3 days — 5 days at most. Take them out 15–20 minutes before serving: that is when the texture is perfect. Avoid sun, heat and humidity, and never leave the box in a hot car.',
       'fq.q6':'Can I change or cancel my order?',
-      'fq.a6':'Please confirm your order at least 5 days before the delivery date, with a 50% deposit of the total amount. If you cancel the order, the deposit is not refunded. For any change, message us on WhatsApp as early as possible.',
+      'fq.a6':'You can confirm your order by paying the full amount or a 50% deposit. If you pay a deposit, the remaining balance must be paid within five days of being notified that your order is ready. If the balance is not paid within this period, the deposit will not be refunded, to cover the cost of preparing your order. Thank you for your understanding. For any change, message us on WhatsApp as early as possible.',
       'ct.eyebrow':'We answer personally','ct.title':'Order & contact',
       'ct.sub':'WhatsApp is the fastest way to order; Instagram DMs work too.',
       'ct.wa':'Orders, questions and custom requests.',
@@ -1983,7 +1985,7 @@ html[lang="ar"] .om-center{text-align:center}
       'md.fill':'Please fill in your name, phone number and wilaya.',
       'md.confirm':'Confirm order via WhatsApp',
       'md.polStoreT':'Storage','md.polStore':'Refrigerate in the closed box; best within 3 days. Take out 15–20 min before serving.',
-      'md.polCancelT':'Deposit & cancellation','md.polCancel':'Confirm at least 5 days before your date, with a 50% deposit; if you cancel, the deposit is not refunded.',
+      'md.polCancelT':'Payment & deposit','md.polCancel':'You can confirm your order by paying the full amount or a 50% deposit. If you pay a deposit, the remaining balance must be paid within five days of being notified that your order is ready. If the balance is not paid within this period, the deposit will not be refunded, to cover the cost of preparing your order. Thank you for your understanding.',
       'md.tiersLead':'Tiered pricing:','md.tierItem':'−{d} DZD per piece from {q}','md.tierJoin':', ',
       'nav.track':'Track my order',
       'bar.close':'Close announcement',
@@ -2003,7 +2005,7 @@ html[lang="ar"] .om-center{text-align:center}
       'bx.saving':'Included tier discount',
       'bx.next':'Continue',
       'bx.termsT':'Order conditions',
-      'bx.terms':'Please confirm your order at least 5 days before the delivery date, with a 50% deposit of the total amount. If the customer cancels the order, the deposit is not refunded. Thank you for trusting Dori_Yums.',
+      'bx.terms':'You can confirm your order by paying the full amount or a 50% deposit. If you pay a deposit, the remaining balance must be paid within five days of being notified that your order is ready. If the balance is not paid within this period, the deposit will not be refunded, to cover the cost of preparing your order. Thank you for your understanding.',
       'bx.agree':'I have read and accept the conditions',
       'bx.agreeErr':'Please read the conditions and tick the box to continue.',
       'bx.back':'Back to the box',
@@ -2157,7 +2159,7 @@ html[lang="ar"] .om-center{text-align:center}
       'fq.q5':'Comment conserver les macarons ?',
       'fq.a5':"Gardez-les dans leur boîte fermée au réfrigérateur (environ 4 °C), à l'écart des aliments odorants, et dégustez-les dans les 3 jours — 5 jours au maximum. Sortez-les 15 à 20 minutes avant de servir : c'est là que la texture est parfaite. Évitez le soleil, la chaleur et l'humidité, et ne laissez jamais la boîte dans une voiture chaude.",
       'fq.q6':'Puis-je modifier ou annuler ma commande ?',
-      'fq.a6':"Merci de confirmer votre commande au moins 5 jours avant la date de livraison, avec un acompte de 50 % du montant total. En cas d'annulation de votre part, l'acompte n'est pas remboursé. Pour toute modification, écrivez-nous sur WhatsApp le plus tôt possible.",
+      'fq.a6':'Vous pouvez confirmer votre commande en réglant la totalité du montant ou en versant un acompte de 50 %. Si vous versez un acompte, le solde doit être réglé dans les cinq jours suivant la notification que votre commande est prête. Si le solde n’est pas réglé dans ce délai, l’acompte versé ne sera pas remboursé, afin de couvrir les frais de préparation de votre commande. Merci de votre compréhension. Pour toute modification, écrivez-nous sur WhatsApp le plus tôt possible.',
       'ct.eyebrow':'Nous répondons personnellement','ct.title':'Commander & contact',
       'ct.sub':"WhatsApp est le moyen le plus rapide de commander ; les DM Instagram fonctionnent aussi.",
       'ct.wa':'Commandes, questions et demandes sur mesure.',
@@ -2174,7 +2176,7 @@ html[lang="ar"] .om-center{text-align:center}
       'md.fill':'Veuillez renseigner votre nom, votre téléphone et votre wilaya.',
       'md.confirm':'Confirmer la commande via WhatsApp',
       'md.polStoreT':'Conservation','md.polStore':'Au réfrigérateur dans la boîte fermée, idéalement sous 3 jours. Sortir 15 à 20 min avant de servir.',
-      'md.polCancelT':'Acompte & annulation','md.polCancel':"Confirmation au moins 5 jours avant votre date, avec un acompte de 50 % ; en cas d'annulation, l'acompte n'est pas remboursé.",
+      'md.polCancelT':'Paiement & acompte','md.polCancel':'Vous pouvez confirmer votre commande en réglant la totalité du montant ou en versant un acompte de 50 %. Si vous versez un acompte, le solde doit être réglé dans les cinq jours suivant la notification que votre commande est prête. Si le solde n’est pas réglé dans ce délai, l’acompte versé ne sera pas remboursé, afin de couvrir les frais de préparation de votre commande. Merci de votre compréhension.',
       'md.tiersLead':'Tarif dégressif :','md.tierItem':'−{d} DZD par pièce dès {q}','md.tierJoin':', ',
       'nav.track':'Suivre ma commande',
       'bar.close':'Fermer l\'annonce',
@@ -2194,7 +2196,7 @@ html[lang="ar"] .om-center{text-align:center}
       'bx.saving':'Remise dégressive incluse',
       'bx.next':'Continuer',
       'bx.termsT':'Conditions de commande',
-      'bx.terms':"Merci de confirmer votre commande au moins 5 jours avant la date de livraison, avec le versement d'un acompte de 50 % du montant total. En cas d'annulation de la commande par le client, l'acompte n'est pas remboursé. Merci de votre confiance en Dori_Yums.",
+      'bx.terms':'Vous pouvez confirmer votre commande en réglant la totalité du montant ou en versant un acompte de 50 %. Si vous versez un acompte, le solde doit être réglé dans les cinq jours suivant la notification que votre commande est prête. Si le solde n’est pas réglé dans ce délai, l’acompte versé ne sera pas remboursé, afin de couvrir les frais de préparation de votre commande. Merci de votre compréhension.',
       'bx.agree':"J'ai lu les conditions et je les accepte",
       'bx.agreeErr':'Veuillez lire les conditions et cocher la case pour continuer.',
       'bx.back':'Retour au coffret',
@@ -2349,7 +2351,7 @@ html[lang="ar"] .om-center{text-align:center}
       'fq.q5':'كيف أحفظ الماكارون؟',
       'fq.a5':'احفظوه في علبته المغلقة داخل الثلاجة (حوالي 4 درجات)، بعيدًا عن الأطعمة ذات الروائح القوية، وتناولوه خلال 3 أيام — 5 أيام كحدّ أقصى. أخرجوه قبل التقديم بـ 15 إلى 20 دقيقة: حينها يكون القوام مثاليًا. تجنّبوا الشمس والحرارة والرطوبة، ولا تتركوا العلبة أبدًا في سيارة ساخنة.',
       'fq.q6':'هل يمكنني تعديل طلبي أو إلغاؤه؟',
-      'fq.a6':'يُرجى تأكيد الطلب قبل 5 أيام على الأقل من موعد التسليم، مع دفع تسبيق بنسبة 50٪ من المبلغ الإجمالي. في حالة إلغاء الطلب من طرفكم، لا يتم استرجاع مبلغ التسبيق. لأي تعديل، راسلونا على واتساب في أقرب وقت ممكن.',
+      'fq.a6':'يمكنكم تأكيد طلبكم بدفع كامل قيمته أو عربون بنسبة 50%. في حال دفع العربون، يُسدَّد المبلغ المتبقي بعد تجهيز الطلبية، خلال خمسة أيام من تاريخ إبلاغكم بأنها جاهزة. إذا انتهت هذه المهلة دون تسديد المبلغ المتبقي، فلن يُسترد العربون المدفوع، وذلك لتعويض تكاليف تجهيز الطلبية. شكرًا لتفهمكم. لأي تعديل، راسلونا على واتساب في أقرب وقت ممكن.',
       'ct.eyebrow':'نردّ شخصيًا','ct.title':'الطلب والتواصل',
       'ct.sub':'واتساب أسرع طريقة للطلب؛ رسائل إنستغرام تعمل أيضًا.',
       'ct.wa':'طلبيات وأسئلة وطلبات مخصّصة.',
@@ -2366,7 +2368,7 @@ html[lang="ar"] .om-center{text-align:center}
       'md.fill':'يرجى إدخال الاسم ورقم الهاتف والولاية.',
       'md.confirm':'أكّد الطلب عبر واتساب',
       'md.polStoreT':'الحفظ','md.polStore':'في الثلاجة داخل العلبة المغلقة، ويُفضَّل تناوله خلال 3 أيام. أخرجوه قبل التقديم بـ 15 إلى 20 دقيقة.',
-      'md.polCancelT':'التسبيق والإلغاء','md.polCancel':'تأكيد الطلب قبل 5 أيام على الأقل من موعدكم، مع تسبيق بنسبة 50٪؛ في حالة الإلغاء لا يُسترجع التسبيق.',
+      'md.polCancelT':'الدفع والعربون','md.polCancel':'يمكنكم تأكيد طلبكم بدفع كامل قيمته أو عربون بنسبة 50%. في حال دفع العربون، يُسدَّد المبلغ المتبقي بعد تجهيز الطلبية، خلال خمسة أيام من تاريخ إبلاغكم بأنها جاهزة. إذا انتهت هذه المهلة دون تسديد المبلغ المتبقي، فلن يُسترد العربون المدفوع، وذلك لتعويض تكاليف تجهيز الطلبية. شكرًا لتفهمكم.',
       'md.tiersLead':'تسعير تنازلي:','md.tierItem':'خصم {d} DZD للقطعة ابتداءً من {q} قطعة','md.tierJoin':'، و',
       'nav.track':'تتبّع طلبك',
       'bar.close':'إغلاق الإعلان',
@@ -2386,7 +2388,7 @@ html[lang="ar"] .om-center{text-align:center}
       'bx.saving':'خصم الكمية المُحتسب',
       'bx.next':'متابعة',
       'bx.termsT':'شروط الطلب',
-      'bx.terms':'يُرجى تأكيد الطلب قبل 5 أيام على الأقل من موعد التسليم، مع دفع تسبيق بنسبة 50٪ من المبلغ الإجمالي. في حالة إلغاء الطلب من طرف الزبون، لا يتم استرجاع مبلغ التسبيق. شكرًا لثقتكم في Dori_Yums.',
+      'bx.terms':'يمكنكم تأكيد طلبكم بدفع كامل قيمته أو عربون بنسبة 50%. في حال دفع العربون، يُسدَّد المبلغ المتبقي بعد تجهيز الطلبية، خلال خمسة أيام من تاريخ إبلاغكم بأنها جاهزة. إذا انتهت هذه المهلة دون تسديد المبلغ المتبقي، فلن يُسترد العربون المدفوع، وذلك لتعويض تكاليف تجهيز الطلبية. شكرًا لتفهمكم.',
       'bx.agree':'قرأتُ الشروط وأوافق عليها',
       'bx.agreeErr':'يُرجى قراءة الشروط وتحديد مربع الموافقة للمتابعة.',
       'bx.back':'العودة إلى العلبة',
@@ -2623,6 +2625,7 @@ html[lang="ar"] .om-center{text-align:center}
 
   function applyLang(){
     document.documentElement.lang = LANG;
+    document.documentElement.dir = LANG === 'ar' ? 'rtl' : 'ltr';
     document.querySelectorAll('[data-i18n]').forEach(function(el){
       el.textContent = t(el.getAttribute('data-i18n'));
     });
@@ -2805,7 +2808,9 @@ html[lang="ar"] .om-center{text-align:center}
 
   /* tiers from site_settings.pricing — default: < 60 → base · 60–119 → base−5 · ≥ 120 → base−10 (flat) */
   function unitPrice(base, q){ return Math.max(base - tierDiscount(q), 0); }
-  function fmt(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
+  /* thousands joined by a narrow no-break space: one number for the bidi algorithm ("2 400" stays in order
+     inside Arabic), never split across lines, and the French typographic separator */
+  function fmt(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '\u202F'); }
 
   /* ── settings & catalog ── */
   function isRemote(){ return !!(LIVE && LIVE.source === 'remote' && window.DY); }
@@ -3478,7 +3483,11 @@ html[lang="ar"] .om-center{text-align:center}
     tr.modal.classList.remove('open');
     if(!modalEl.classList.contains('open')) document.body.classList.remove('modal-open');
     if(/^#track/i.test(location.hash) && history.replaceState) history.replaceState(null, '', location.pathname + location.search);
-    if(trTrigger && trTrigger.focus && document.contains(trTrigger)) trTrigger.focus();
+    if(trTrigger && trTrigger.focus && document.contains(trTrigger)){
+      /* a link of the phone menu is hidden once the menu has closed: give focus back to the menu button */
+      var back = trTrigger.getClientRects().length ? trTrigger : (trTrigger.closest('#mobileMenu') ? document.getElementById('burger') : null);
+      if(back) back.focus();
+    }
   }
   function showTrErr(msg){ tr.err.textContent = msg; tr.err.hidden = false; }
   function runTrack(){
@@ -3503,7 +3512,7 @@ html[lang="ar"] .om-center{text-align:center}
     if(!o){ tr.result.hidden = true; return; }
     var when = {};
     (o.history || []).forEach(function(h){ when[h.status] = h.at; });
-    var html = '<div class="tr-head"><span class="tr-code">' + esc(o.tracking_code) + '</span>' +
+    var html = '<div class="tr-head"><span class="tr-code" dir="ltr">' + esc(o.tracking_code) + '</span>' +
       '<span class="tr-sum">' + esc(fill(t('tr.summary'), { n:o.box_size, d:fmtDate(o.event_date, LANG), t:fmt(o.total_price) })) + '</span></div>';
     if(o.status === 'cancelled'){
       html += '<p class="om-notice">' + esc(t('tr.cancelled')) + '</p>';
